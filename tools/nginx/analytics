@@ -1,0 +1,50 @@
+server {
+    server_name app.dymaxionlabs.com analytics.dymaxionlabs.com;
+
+    if ($host = analytics.dymaxionlabs.com) {
+        return 301 https://app.dymaxionlabs.com$request_uri;
+    }
+
+    location /static/ {
+        root /home/ubuntu/analytics;
+    }
+
+    location /_next/static/ {
+        alias /home/ubuntu/analytics/.next/static/;
+    }
+
+    location / {
+      # default port, could be changed if you use next with custom server
+      proxy_pass http://localhost:3000;
+    
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+      
+      # if you have try_files like this, remove it from our block
+      # otherwise next app will not work properly
+      # try_files $uri $uri/ =404;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/analytics.dymaxionlabs.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/analytics.dymaxionlabs.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = app.dymaxionlabs.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    if ($host = analytics.dymaxionlabs.com) {
+        return 301 https://app.dymaxionlabs.com$request_uri;
+    }
+
+    server_name app.dymaxionlabs.com analytics.dymaxionlabs.com;
+    listen 80;
+    return 404; # managed by Certbot
+}

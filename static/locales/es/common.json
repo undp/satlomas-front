@@ -1,0 +1,119 @@
+{
+  "confirm_email": {
+    "error_msg": "Un error ha ocurrido. Por favor reintente m\u00e1s tarde.",
+    "success_msg": "Su direcci\u00f3n de correo fue verificada con \u00e9xito."
+  },
+  "confirmation": {
+    "cancel": "Cancelar",
+    "copy": "Copiar"
+  },
+  "crop_lots_desc": "Lotes categorizados por tipo de cultivo",
+  "crop_lots_title": "Lotes de cultivo",
+  "dashboard_btn": "Dashboard",
+  "email": "Email",
+  "floods_desc": "\u00c1reas rurales que se encuentran inundadas y anegadas.",
+  "floods_desc_long": "El servicio de mapeo de \u00e1reas inundadas consiste en un archivo vectorial con la ubicaci\u00f3n de los pol\u00edgonos con \u00e1reas inundadas y las imagenes utilizadas para el \u00e1rea solicitada.",
+  "floods_title": "\u00c1reas inundadas",
+  "informal_settlements_desc": "Asentamientos y barrios precarios",
+  "informal_settlements_title": "Asentamientos informales",
+  "invite": {
+    "already_confirmed": "La invitaci\u00f3n ya ha sido confirmada.",
+    "email_placeholder": "Email",
+    "error_msg": "Un error ha ocurrido. Por favor reintentelo.",
+    "header": "Invitaci\u00f3n a proyecto",
+    "invalid_key": "El enlace de invitaci\u00f3n es inv\u00e1lido. Por favor p\u00f3ngase en contacto con nosotros.",
+    "password1_placeholder": "Contrase\u00f1a",
+    "password2_placeholder": "Confirmar contrase\u00f1a",
+    "subheader": "Ha sido invitado al proyecto \"{{project}}\". Para poder acceder, debe registrarse con un nombre de usuario y contrase\u00f1a.",
+    "submit": "Registrar",
+    "success_msg": "\u00a1Gracias por registrarse! En breve ser\u00e1 redirigido...",
+    "username_placeholder": "Nombre de usuario"
+  },
+  "loading": "Cargando...",
+  "login": {
+    "cant_remember": "\u00bfNo recuerda su contrase\u00f1a?",
+    "error_msg": "Usuario o contrase\u00f1a incorrectos",
+    "has_no_account": "\u00bfNo est\u00e1 registrado a\u00fan?",
+    "remember": "Recordar",
+    "request_new_password": "Solicite una nueva",
+    "signup": "Reg\u00edstrese",
+    "submit": "Ingresar",
+    "success_msg": "Inicio de sesi\u00f3n exitoso! Redirigiendo...",
+    "title": "Inicio de sesi\u00f3n"
+  },
+  "login_btn": "Iniciar sesi\u00f3n",
+  "logout_btn": "Cerrar sesi\u00f3n",
+  "ndvi_desc": "Indice de vigor de cultivo",
+  "ndvi_desc_long": "El servicio de mapeo de \u00edndice verde consiste en un archivo r\u00e1ster con el \u00edndice NDVI y las imagenes utilizadas para el \u00e1rea solicitada",
+  "ndvi_title": "Indice NDVI",
+  "password": "Contrase\u00f1a",
+  "pools_desc": "Contorno de piscinas residenciales",
+  "pools_desc_long": "El servicio de contorno de piscinas de alta precisi\u00f3n consiste en un archivo vectorial con la ubicaci\u00f3n de cada una para el \u00e1rea solicitada.",
+  "pools_title": "Piscinas",
+  "quote_btn": {
+    "value": "Cotizar nueva capa"
+  },
+  "recent_construction_desc": "Nuevas construcciones para un per\u00edodo de tiempo",
+  "recent_construction_title": "Nuevas contrucciones",
+  "request": {
+    "state": {
+      "awaiting_payment": "Esperando confirmaci\u00f3n de pago",
+      "canceled": "Cancelado",
+      "evaluating": "Evaluando",
+      "finished": "Terminado",
+      "pending": "Pendiente",
+      "processing": "Procesando"
+    }
+  },
+  "reset_password": {
+    "cancel": "Cancelar",
+    "email_label": "Ingrese la direcci\u00f3n de email asociada a su cuenta",
+    "error_msg": "Email debe ser una direcci\u00f3n de email v\u00e1lida",
+    "submit": "Enviar",
+    "success_msg": "Su requerimiento fue recibido. Revise su email para hacer el cambio de contrase\u00f1a.",
+    "title": "Reestablecer la contrase\u00f1a"
+  },
+  "reset_password_confirm": {
+    "cancel": "Cancelar",
+    "change": "Cambiar",
+    "error_msg": "Un error ha ocurrido. Intente soliciar un nuevo cambio de contrase\u00f1a.",
+    "invalid_password": "El password debe ser de 8 caracteres o m\u00e1s y contener al menos una letra may\u00fascula, una letra min\u00fascula y un n\u00famero.",
+    "password1_label": "Ingrese nueva contrase\u00f1a",
+    "password1_placeholder": "Contrase\u00f1a",
+    "password2_label": "Confirme nueva contrase\u00f1a",
+    "password2_placeholder": "Confirmar contrase\u00f1a",
+    "same_password": "Las contrase\u00f1as deben coincidir.",
+    "success_msg": "\u00a1Cambio de contrase\u00f1a exitoso!",
+    "title": "Confirmar cambio de contrase\u00f1a"
+  },
+  "roads_desc": "Rutas y caminos asfaltados",
+  "roads_desc_long": "El servicio de mapeo de rutas pavimentadas de alta precisi\u00f3n consiste en un archivo vectorial con la ubicaci\u00f3n del contorno de cada una para el \u00e1rea solicitada.",
+  "roads_title": "Rutas",
+  "roofs_desc": "Cotorno de techos de edificaciones",
+  "roofs_desc_long": "El servicio de contorno de techos de alta precisi\u00f3n consiste en un archivo vectorial con la ubicaci\u00f3n de cada uno para el \u00e1rea solicitada.",
+  "roofs_title": "Techos",
+  "signup": {
+    "already_has_account": "\u00bfYa tiene una cuenta?",
+    "cancel": "Cancelar",
+    "email_placeholder": "Email",
+    "error_msg": "Un error ha ocurrido. Por favor reintentelo.",
+    "header": "Registraci\u00f3n",
+    "login": "Iniciar sesi\u00f3n",
+    "password1_placeholder": "Contrase\u00f1a",
+    "password2_placeholder": "Confirmar contrase\u00f1a",
+    "subheader": "Para registrarse por favor ingrese un nombre de usuario, una direcci\u00f3n de correo v\u00e1lida y contrase\u00f1a.",
+    "submit": "Registrar",
+    "success_msg": "\u00a1Gracias por registrarse! En breve ser\u00e1 redirigido...",
+    "username_placeholder": "Nombre de usuario"
+  },
+  "signup_btn": "Registrarse",
+  "signup_href": "https://landings.dymaxionlabs.com/analytics-form-es",
+  "soil_desc": "Suelo utilizado para siembra y cultivo.",
+  "soil_desc_long": "El servicio de mapeo de \u00e1rea sembrada consiste en un archivo vectorial con la ubicaci\u00f3n de los pol\u00edgonos con \u00e1reas sembradas  y las imagenes utilizadas para el \u00e1rea solicitada.",
+  "soil_title": "Area sembrada",
+  "title": "Dymaxion Labs Platform",
+  "true_color_desc": "Imagen satelital de color verdadero",
+  "true_color_title": "Color verdadero",
+  "username": "Usuario",
+  "logout_title":"Cerrar sesión"
+}

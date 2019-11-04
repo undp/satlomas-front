@@ -1,0 +1,13 @@
+[Unit]
+Description=Platform frontend next.js app
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/analytics
+ExecStart=/usr/bin/node server.js
+
+[Install]
+WantedBy=multi-user.target

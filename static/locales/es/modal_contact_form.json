@@ -1,0 +1,26 @@
+{
+  "city_label": "Ciudad",
+  "city_placeholder": "Ingrese su ciudad",
+  "email_label": "Email",
+  "email_placeholder": "Ingrese su direcci\u00f3n de e-mail",
+  "footer": "Linea de ayuda: +54 11 2712-0023",
+  "layer_info": {
+    "agri": "Este servicio se calcula sobre im\u00e1genes satelitales recientes del sensor Sentinel-2.",
+    "urban": "Este servicio se calcula sobre im\u00e1genes satelitales recientes de alta resoluci\u00f3n. El precio no incluye la entrega de la im\u00e1genes utilizadas"
+  },
+  "message_label": "Mensaje",
+  "message_placeholder": "Ingrese un comentario adicional",
+  "name_label": "Nombre",
+  "name_placeholder": "Ingrese su nombre",
+  "only_request_checkbox": "Quiero hacer un pedido diferente y consultar primero.",
+  "pay_btn": "Pagar",
+  "quote": "Cotizar",
+  "quote_error_desc": "Ocurri\u00f3 un error al enviar el pedido. Por favor, intente de nuevo o cont\u00e1ctese con nosotros a {{contactLink}}.",
+  "quote_error_title": "Error al enviar pedido",
+  "quote_success_desc": "Gracias por enviar tu pedido. Le escribiremos en la brevedad con m\u00e1s informaci\u00f3n.",
+  "quote_success_redirecting_desc": "Estamos redirigi\u00e9ndote a la p\u00e1gina de pagos.",
+  "quote_success_title": "Pedido enviado exitosamente",
+  "request_btn": "Consultar",
+  "send": "Enviar",
+  "specifications": "Especificaciones"
+}

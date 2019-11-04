@@ -1,0 +1,87 @@
+{
+  "annotate_step": {
+    "annotations_per_class": "Anotaciones por clase",
+    "cancel": "Cancelar",
+    "continue_btn": "Guardar y continuar",
+    "delete": "Borrar",
+    "explanation": "Indicale a tu modelo algunos objetos de ejemplo para que pueda aprender a encontralos. \u00a1Cuantos m\u00e1s marques mejor!",
+    "loading": "Procesando im\u00e1genes subidas. Por favor aguarde unos minutos...",
+    "remaining": "Restantes",
+    "save_btn": "Guardar",
+    "title": "Anotar im\u00e1genes"
+  },
+  "change_detection_btn": "Detecci\u00f3n de Cambios",
+  "change_detection_desc": "Comparaci\u00f3n entre im\u00e1genes de diferentes fechas para resaltar y clasificar cambios.",
+  "classification_btn": "Clasificaci\u00f3n",
+  "classification_desc": "Mapeo de usos del suelo.",
+  "create_step": {
+    "classes_helper_1": "Ingrese el nombre de una clase y presione la tecla",
+    "classes_helper_2": ". Puede ingresar varias clases de esta manera.",
+    "classes_label": "Clases de objetos",
+    "error_msg_classes": "Debe ingresar al menos una clase de objeto.",
+    "error_msg_duplicate": "Ya existe un modelo con ese nombre, ingrese otro.",
+    "error_msg_internal": "Ha ocurrido un error. Por favor reintente.",
+    "explanation": "Elige un nombre y las clases que van a intervenir en tu modelo.",
+    "name_helper": "Ingrese un nombre para su modelo.",
+    "name_label": "Nombre",
+    "submit_btn": "Crear",
+    "title": "Crear nuevo modelo"
+  },
+  "new": {
+    "consult": {
+      "cancel_btn": "Cancelar",
+      "error_msg": "Ocurri\u00f3 un error al enviar el mensaje. Por favor, intente de nuevo o cont\u00e1ctese con nosotros a {{contactLink}}.",
+      "explanation": "Este tipo de modelo est\u00e1 a\u00fan en desarrollo y evaluaci\u00f3n. Si tiene un caso de uso, por favor escribinos y nos pondremos en contacto.",
+      "message_label": "Mensaje",
+      "send_btn": "Enviar",
+      "success_msg": "Gracias por enviar su mensaje. Le escribiremos en la brevedad con m\u00e1s informaci\u00f3n.",
+      "title": "A\u00fan no disponible"
+    },
+    "explanation": "Elija el tipo de modelo que quiere crear.",
+    "header": "Nuevo Modelo",
+    "od": {
+      "header": "Detecci\u00f3n de Objetos",
+      "steps": {
+        "annotate": "Anotar",
+        "create": "Crear",
+        "initial": "Inicial",
+        "predict": "Predecir",
+        "select": "Seleccionar",
+        "train": "Entrenar",
+        "upload": "Subir"
+      }
+    },
+    "start_building": "Comenzar"
+  },
+  "new_btn": "Nuevo",
+  "new_title": "Nuevo Modelo",
+  "object_btn": "Detecci\u00f3n de Objetos",
+  "object_desc": "Detecci\u00f3n de animales, techos, \u00e1rboles, silobolsas, etc.",
+  "predict_step": {
+    "back": "Ir atr\u00e1s",
+    "explanation": "En este momento se estan analizando sus imagenes. Este proceso puede tardar unas horas. Te avisaremos por correo cuando est\u00e9 listo para ver los resultados.",
+    "title": "Predecir modelo",
+    "undefined_explanation": "El tiempo restante es indefinido",
+    "view": "Ver resultados"
+  },
+  "select_step": {
+    "dropzone": "Arrastr\u00e1 y solt\u00e1 tus im\u00e1genes ac\u00e1, o hac\u00e9 clic.",
+    "explanation": "Selecciona las im\u00e1genes preexistentes o carga nuevas y luego cliquea Predecir",
+    "submit_btn": "Predecir",
+    "title": "Seleccionar im\u00e1genes"
+  },
+  "train_step": {
+    "back": "Ir atr\u00e1s",
+    "continue": "Continuar",
+    "explanation": "En este momento se est\u00e1 entrenando tu modelo. Este proceso puede tardar unas horas. Te avisaremos por correo cuando est\u00e9 listo para ser utilizado.",
+    "finished_explanation": "El proceso de entrenamiento termin\u00f3. Haga clic en continuar para realizar una predicci\u00f3n",
+    "title": "Entrenar modelo",
+    "undefined_explanation": "El tiempo restante es indefinido"
+  },
+  "upload_step": {
+    "dropzone": "Arrastr\u00e1 y solt\u00e1 tus im\u00e1genes ac\u00e1, o hac\u00e9 clic.",
+    "explanation": "Selecciona una o m\u00e1s im\u00e1genes y luego cliquea subir.",
+    "submit_btn": "Subir",
+    "title": "Subir im\u00e1genes"
+  }
+}

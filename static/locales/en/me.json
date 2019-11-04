@@ -1,0 +1,91 @@
+{
+  "download": "Download",
+  "files": {
+    "created_at": "Upload date",
+    "name": "File name",
+    "title": "Your files",
+    "upload_image": "Upload image"
+  },
+  "home": {
+    "api_descrip1": "Generate your API Key from this",
+    "api_descrip2": "and you can integrate our api to your python code. For more information you can access the Documentation",
+    "api_title": "Dymaxion Labs API",
+    "models_descrip": "You can generate your model to detect objects from your images from this",
+    "models_title": "Models",
+    "project_descrip": "The project identifier will be useful to use our API",
+    "project_title": "Project"
+  },
+  "keys": {
+    "active": "Active",
+    "confirmContent": "This action cannot be undone. Are you sure you want to revoke this API Key?",
+    "confirmTitle": "Revoke API Key",
+    "name": "Name",
+    "prefix": "Prefix",
+    "revoke": "Revoke",
+    "revoked": "Revoked",
+    "state": "State",
+    "title": "Your API Keys"
+  },
+  "keys_new": {
+    "button": "New",
+    "cancel": "Cancel",
+    "close": "Close",
+    "content": "Enter a name for the new API Key.",
+    "content_result": "Copy and save your password, if you lose it you must create a new one. Do not share it with anyone.",
+    "copy": "Copy",
+    "create": "Create",
+    "label": "Name",
+    "title": "New API Key"
+  },
+  "layers": {
+    "created_at": "Creation date",
+    "date": "Acquisition date",
+    "description": "Description",
+    "layer_type_R": "Raster",
+    "layer_type_V": "Vector",
+    "name": "Name",
+    "title": "Your layers",
+    "type": "Type"
+  },
+  "maps": {
+    "created_at": "Creation date",
+    "description": "Description",
+    "name": "Name",
+    "title": "Your maps"
+  },
+  "models": {
+    "add_annot": "Add annotations",
+    "add_imgs": "Add images",
+    "classes": "Classes",
+    "created_at": "Creation date",
+    "estimator_type": "Type",
+    "uuid": "Show UUID",
+    "name": "Name",
+    "new_btn": "New Model",
+    "title": "Your Models",
+    "delete_models": "Remove",
+    "title_delete": "Remove Model",
+    "text_delete_warning": "This action is IRREVERSIBLE",
+    "text_delete": "Are you sure you want to delete this model and its annotations?",
+    "types": {
+      "OD": "Object Detection"
+    }
+  },
+  "requests": {
+    "area_km2": "Area (km\u00b2)",
+    "created_at": "Date",
+    "layers": "Layers",
+    "state": "Current state",
+    "title": "Your requests"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "files": "Files",
+    "keys": "API Keys",
+    "layers": "Layers",
+    "models": "Models",
+    "requests": "Requests",
+    "viewer": "Viewer"
+  },
+  "view": "View"
+}

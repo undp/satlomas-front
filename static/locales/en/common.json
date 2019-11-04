@@ -1,0 +1,119 @@
+{
+  "confirm_email": {
+    "error_msg": "An error has occurred. Please try again later.",
+    "success_msg": "Your email address has been verified successfully."
+  },
+  "confirmation": {
+    "cancel": "Cancel",
+    "copy": "Copy"
+  },
+  "crop_lots_desc": "Categorized lots by crop type",
+  "crop_lots_title": "Crop lots",
+  "dashboard_btn": "Dashboard",
+  "email": "Email",
+  "floods_desc": "Rural flooded area.",
+  "floods_desc_long": "The flooded areas map service consists of a vector file containing the polygon of each flooded area and the images used for calculations within the requested territory.",
+  "floods_title": "Flooded area",
+  "informal_settlements_desc": "Slums and informal settlements location.",
+  "informal_settlements_title": "Informal settlements",
+  "invite": {
+    "already_confirmed": "The invitation has already been confirmed.",
+    "email_placeholder": "Email",
+    "error_msg": "An error has occurred. Please retry.",
+    "header": "Invitation to project",
+    "invalid_key": "The invitation link is invalid. Please contact us.",
+    "password1_placeholder": "Password",
+    "password2_placeholder": "Confirm password",
+    "subheader": "You have been invited to the project \"{{project}}\". To access, you must register with a username and password.",
+    "submit": "Sign up",
+    "success_msg": "Thank you for signing up! Soon you will be redirected...",
+    "username_placeholder": "Username"
+  },
+  "loading": "Loading...",
+  "login": {
+    "cant_remember": "Can't remember your password?",
+    "error_msg": "Incorrect username or password",
+    "has_no_account": "Not registered yet?",
+    "remember": "Remember me",
+    "request_new_password": "Request a new one",
+    "signup": "Sign up",
+    "submit": "Enter",
+    "success_msg": "Successful login! Redirecting...",
+    "title": "Login"
+  },
+  "login_btn": "Login",
+  "logout_btn": "Logout",
+  "ndvi_desc": "Graphical indicator of yield index",
+  "ndvi_desc_long": "The green index map service consists of a raster file containing the NDVI index and the images used for calculations within the requested area.",
+  "ndvi_title": "NDVI Index",
+  "password": "Password",
+  "pools_desc": "Residential pools outline.",
+  "pools_desc_long": "The high precision pool outline service consists of a vector file containing the location of each pool within the requested area.",
+  "pools_title": "Pools",
+  "quote_btn": {
+    "value": "Quote new layer"
+  },
+  "recent_construction_desc": "New buildings built between two dates.",
+  "recent_construction_title": "New buildings",
+  "request": {
+    "state": {
+      "awaiting_payment": "Awaiting payment",
+      "canceled": "Canceled",
+      "evaluating": "Evaluating",
+      "finished": "Finished",
+      "pending": "Pending",
+      "processing": "Processing"
+    }
+  },
+  "reset_password": {
+    "cancel": "Cancel",
+    "email_label": "Enter the email address associated with your account",
+    "error_msg": "Email must be a valid email address",
+    "submit": "Send",
+    "success_msg": "Your request was received. Check your email to make the password change.",
+    "title": "Reset password"
+  },
+  "reset_password_confirm": {
+    "cancel": "Cancel",
+    "change": "Change",
+    "error_msg": "An error has occurred. Try requesting a new password change.",
+    "invalid_password": "The password must be 8 characters or more and contain at least one uppercase letter, one lower case letter and one number.",
+    "password1_label": "Enter new password",
+    "password1_placeholder": "Password",
+    "password2_label": "Confirm new password",
+    "password2_placeholder": "Confirm password",
+    "same_password": "Passwords must match.",
+    "success_msg": "Password changed successfully!",
+    "title": "Confirm password change"
+  },
+  "roads_desc": "Area of pavemented roads",
+  "roads_desc_long": "The pavement roads outline service consists of a vector file containing the outline of each pavement road within the requested area.",
+  "roads_title": "Roads",
+  "roofs_desc": "Roofs outline.",
+  "roofs_desc_long": "The high precision roof outline service consists of a vector file containing the location of each roof within the requested area.",
+  "roofs_title": "Roofs",
+  "signup": {
+    "already_has_account": "Already have an account?",
+    "cancel": "Cancel",
+    "email_placeholder": "Email",
+    "error_msg": "An error has occurred. Please retry.",
+    "header": "Sign up",
+    "login": "Login",
+    "password1_placeholder": "Password",
+    "password2_placeholder": "Confirm password",
+    "subheader": "To register, please enter a username, a valid email address and password.",
+    "submit": "Sign up",
+    "success_msg": "Thank you for signing up! Soon you will be redirected...",
+    "username_placeholder": "Username"
+  },
+  "signup_btn": "Sign up",
+  "signup_href": "https://landings.dymaxionlabs.com/analytics-form-en",
+  "soil_desc": "Soil land use for different crops.",
+  "soil_desc_long": "The sown area map service consists of a vector file containing the polygon of each sowned area and the images used for calculations within the requested territory.",
+  "soil_title": "Sown area",
+  "title": "Dymaxion Labs Platform",
+  "true_color_desc": "True color satellite image",
+  "true_color_title": "True color",
+  "username": "Username",
+  "logout_title":"Logout"
+}

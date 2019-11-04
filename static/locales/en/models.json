@@ -1,0 +1,87 @@
+{
+  "annotate_step": {
+    "annotations_per_class": "Annotations per class",
+    "cancel": "Cancel",
+    "continue_btn": "Save and continue",
+    "delete": "Delete",
+    "explanation": "Label some objects to let your model train to find them. More labeled objects give you better accuracy.",
+    "loading": "Processing uploaded images. Please wait a few minutes...",
+    "remaining": "Remaining",
+    "save_btn": "Save",
+    "title": "Annotate images"
+  },
+  "change_detection_btn": "Change Detection",
+  "change_detection_desc": "Comparison between images of different dates to highlight and classify changes.",
+  "classification_btn": "Classification",
+  "classification_desc": "Land use maps.",
+  "create_step": {
+    "classes_helper_1": "Enter the name of a class and press the",
+    "classes_helper_2": "key. You can enter several classes in this way.",
+    "classes_label": "Object classes",
+    "error_msg_classes": "Please add at least one object class.",
+    "error_msg_duplicate": "Model already exists, please enter another name.",
+    "error_msg_internal": "An error has ocurred. Please retry.",
+    "explanation": "Choose a name and labels to setup your model.",
+    "name_helper": "Enter a name for your model.",
+    "name_label": "Name",
+    "submit_btn": "Create",
+    "title": "Create new model"
+  },
+  "new": {
+    "consult": {
+      "cancel_btn": "Cancel",
+      "error_msg": "An error occurred when sending the message. Please try again or contact us at {{contactLink}}.",
+      "explanation": "This type of model is still under development and evaluation. If you have a use case, please write us and we will get in touch.",
+      "message_label": "Message",
+      "send_btn": "Send",
+      "success_msg": "Thanks for sending your message. We will write to you shortly with more information.",
+      "title": "Still not available"
+    },
+    "explanation": "Choose the type of model you want to create.",
+    "header": "New Model",
+    "od": {
+      "header": "Object Detection",
+      "steps": {
+        "annotate": "Annotate",
+        "create": "Create",
+        "initial": "Initial",
+        "predict": "Predict",
+        "select": "Select",
+        "train": "Train",
+        "upload": "Upload"
+      }
+    },
+    "start_building": "Start Building"
+  },
+  "new_btn": "New",
+  "new_title": "New Model",
+  "object_btn": "Object Detection",
+  "object_desc": "Detect animals, roofs, trees, grain silos, etc.",
+  "predict_step": {
+    "back": "Go back",
+    "explanation": "At this time their images are being analyzed. This process may take a few hours. We will notify you by mail when it is ready to see the results.",
+    "title": "Predict model",
+    "undefined_explanation": "The remaining time is undefined",
+    "view": "View results"
+  },
+  "select_step": {
+    "dropzone": "Drag and drop your images here, or click.",
+    "explanation": "Select pre-existing images or upload new ones and then click Predict",
+    "submit_btn": "Predict",
+    "title": "Select images"
+  },
+  "train_step": {
+    "back": "Go back",
+    "continue": "Continue",
+    "explanation": "Your model is currently being trained. This process may take a few hours. We will notify you by mail when it is ready to be used.",
+    "finished_explanation": "The training process is over. Click continue to make a prediction",
+    "title": "Train model",
+    "undefined_explanation": "The remaining time is undefined"
+  },
+  "upload_step": {
+    "dropzone": "Drag and drop your images here, or click.",
+    "explanation": "Select one or more images and then click upload.",
+    "submit_btn": "Upload",
+    "title": "Upload images"
+  }
+}

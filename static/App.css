@@ -1,0 +1,55 @@
+.Control {
+  color: #282c34;
+  font-size: x-small;
+}
+
+.Line-control {
+  line-height: 15px;
+}
+
+.separator {
+  margin: 20px;
+}
+
+.controlButton {
+  position: absolute;
+  bottom: 30px;
+  left: 10px;
+}
+
+.ui.popup.initial {
+  top: 50px;
+  left: 60px;
+}
+
+.ui.popup.search_done {
+  top: 60px;
+  left: 50px;
+}
+
+.ui.popup.polygon_drawn {
+  top: inherit;
+  bottom: 25px;
+  left: 90px;
+}
+
+.ui.popup.layer_selected {
+  top: 50px;
+  right: 390px;
+}
+
+.index .leaflet-container a {
+  color: #222;
+}
+
+.index .leaflet-draw-actions a {
+  background-color: #ccc;
+  font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif;
+  line-height: 30px;
+}
+
+.leaflet-control.leaflet-draw {
+  position: absolute !important;
+  top: 50px;
+  left: 0;
+}

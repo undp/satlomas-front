@@ -1,0 +1,305 @@
+namespace,key,es,en
+common,title,Dymaxion Labs Platform,Dymaxion Labs Platform
+common,loading,Cargando...,Loading...
+common,username,Usuario,Username
+common,password,Contraseña,Password
+common,email,Email,Email
+common,login_btn,Iniciar sesión,Login
+common,logout_btn,Cerrar sesión,Logout
+common,dashboard_btn,Dashboard,Dashboard
+common,signup_btn,Registrarse,Sign up
+common,signup_href,https://landings.dymaxionlabs.com/analytics-form-es,https://landings.dymaxionlabs.com/analytics-form-en
+common,login.title,Inicio de sesión,Login
+common,login.remember,Recordar,Remember me
+common,login.cant_remember,¿No recuerda su contraseña?,Can't remember your password?
+common,login.request_new_password,Solicite una nueva,Request a new one
+common,login.submit,Ingresar,Enter
+common,login.error_msg,Usuario o contraseña incorrectos,Incorrect username or password
+common,login.success_msg,Inicio de sesión exitoso! Redirigiendo...,Successful login! Redirecting...
+common,login.has_no_account,¿No está registrado aún?,Not registered yet?
+common,login.signup,Regístrese,Sign up
+common,signup.header,Registración,Sign up
+common,signup.subheader,"Para registrarse por favor ingrese un nombre de usuario, una dirección de correo válida y contraseña.","To register, please enter a username, a valid email address and password."
+common,signup.username_placeholder,Nombre de usuario,Username
+common,signup.email_placeholder,Email,Email
+common,signup.password1_placeholder,Contraseña,Password
+common,signup.password2_placeholder,Confirmar contraseña,Confirm password
+common,signup.cancel,Cancelar,Cancel
+common,signup.submit,Registrar,Sign up
+common,signup.error_msg,Un error ha ocurrido. Por favor reintentelo.,An error has occurred. Please retry.
+common,signup.success_msg,¡Gracias por registrarse! En breve será redirigido...,Thank you for signing up! Soon you will be redirected...
+common,signup.already_has_account,¿Ya tiene una cuenta?,Already have an account?
+common,signup.login,Iniciar sesión,Login
+common,confirm_email.success_msg,Su dirección de correo fue verificada con éxito.,Your email address has been verified successfully.
+common,confirm_email.error_msg,Un error ha ocurrido. Por favor reintente más tarde.,An error has occurred. Please try again later.
+common,reset_password.success_msg,Su requerimiento fue recibido. Revise su email para hacer el cambio de contraseña.,Your request was received. Check your email to make the password change.
+common,reset_password.error_msg,Email debe ser una dirección de email válida,Email must be a valid email address
+common,reset_password.title,Reestablecer la contraseña,Reset password
+common,reset_password.email_label,Ingrese la dirección de email asociada a su cuenta,Enter the email address associated with your account
+common,reset_password.cancel,Cancelar,Cancel
+common,reset_password.submit,Enviar,Send
+common,reset_password_confirm.success_msg,¡Cambio de contraseña exitoso!,Password changed successfully!
+common,reset_password_confirm.error_msg,Un error ha ocurrido. Intente soliciar un nuevo cambio de contraseña.,An error has occurred. Try requesting a new password change.
+common,reset_password_confirm.title,Confirmar cambio de contraseña,Confirm password change
+common,reset_password_confirm.invalid_password,"El password debe ser de 8 caracteres o más y contener al menos una letra mayúscula, una letra minúscula y un número.","The password must be 8 characters or more and contain at least one uppercase letter, one lower case letter and one number."
+common,reset_password_confirm.same_password,Las contraseñas deben coincidir.,Passwords must match.
+common,reset_password_confirm.password1_label,Ingrese nueva contraseña,Enter new password
+common,reset_password_confirm.password2_label,Confirme nueva contraseña,Confirm new password
+common,reset_password_confirm.password1_placeholder,Contraseña,Password
+common,reset_password_confirm.password2_placeholder,Confirmar contraseña,Confirm password
+common,reset_password_confirm.cancel,Cancelar,Cancel
+common,reset_password_confirm.change,Cambiar,Change
+common,invite.already_confirmed,La invitación ya ha sido confirmada.,The invitation has already been confirmed.
+common,invite.invalid_key,El enlace de invitación es inválido. Por favor póngase en contacto con nosotros.,The invitation link is invalid. Please contact us.
+common,invite.success_msg,¡Gracias por registrarse! En breve será redirigido...,Thank you for signing up! Soon you will be redirected...
+common,invite.error_msg,Un error ha ocurrido. Por favor reintentelo.,An error has occurred. Please retry.
+common,invite.header,Invitación a proyecto,Invitation to project
+common,invite.subheader,"Ha sido invitado al proyecto ""{{project}}"". Para poder acceder, debe registrarse con un nombre de usuario y contraseña.","You have been invited to the project ""{{project}}"". To access, you must register with a username and password."
+common,invite.username_placeholder,Nombre de usuario,Username
+common,invite.email_placeholder,Email,Email
+common,invite.password1_placeholder,Contraseña,Password
+common,invite.password2_placeholder,Confirmar contraseña,Confirm password
+common,quote_btn.value,Cotizar nueva capa,Quote new layer
+common,invite.submit,Registrar,Sign up
+common,confirmation.cancel,Cancelar,Cancel
+common,confirmation.copy,Copiar,Copy
+guide,initial,Escriba una ciudad o busque en el mapa un lugar.,Enter a city or search the map for a place.
+guide,search_done,Dibuje un polígono del área que desea analizar.,Draw a polygon of the area you want to analyze.
+guide,polygon_drawn,Seleccione una o más capas de análisis.,Select one or more layers.
+guide,layer_selected,"Si está de acuerdo con la selección, haga clic en Confirmar.","If you agree with the selected layers, click Confirm."
+geocoder_control,search_placeholder,Buscar localidad...,Search place...
+geocoder_control,no_results_message,No hay resultados.,No results.
+geocoder_control,no_results_desc,Pruebe escribir el nombre de la ciudad o localidad.,Try typing the name of the city or town.
+common,recent_construction_title,Nuevas contrucciones,New buildings
+common,recent_construction_desc,Nuevas construcciones para un período de tiempo,New buildings built between two dates.
+common,roofs_title,Techos,Roofs
+common,roofs_desc,Cotorno de techos de edificaciones,Roofs outline.
+common,pools_title,Piscinas,Pools
+common,pools_desc,Contorno de piscinas residenciales,Residential pools outline.
+common,informal_settlements_title,Asentamientos informales,Informal settlements
+common,informal_settlements_desc,Asentamientos y barrios precarios,Slums and informal settlements location.
+common,roads_title,Rutas,Roads
+common,roads_desc,Rutas y caminos asfaltados,Area of pavemented roads
+common,soil_title,Area sembrada,Sown area
+common,soil_desc,Suelo utilizado para siembra y cultivo.,Soil land use for different crops.
+common,floods_title,Áreas inundadas,Flooded area
+common,floods_desc,Áreas rurales que se encuentran inundadas y anegadas.,Rural flooded area.
+common,ndvi_title,Indice NDVI,NDVI Index
+common,ndvi_desc,Indice de vigor de cultivo,Graphical indicator of yield index
+common,true_color_title,Color verdadero,True color
+common,true_color_desc,Imagen satelital de color verdadero,True color satellite image
+common,crop_lots_title,Lotes de cultivo,Crop lots
+common,crop_lots_desc,Lotes categorizados por tipo de cultivo,Categorized lots by crop type
+common,pools_desc_long,El servicio de contorno de piscinas de alta precisión consiste en un archivo vectorial con la ubicación de cada una para el área solicitada.,The high precision pool outline service consists of a vector file containing the location of each pool within the requested area.
+common,roofs_desc_long,El servicio de contorno de techos de alta precisión consiste en un archivo vectorial con la ubicación de cada uno para el área solicitada.,The high precision roof outline service consists of a vector file containing the location of each roof within the requested area.
+common,roads_desc_long,El servicio de mapeo de rutas pavimentadas de alta precisión consiste en un archivo vectorial con la ubicación del contorno de cada una para el área solicitada.,The pavement roads outline service consists of a vector file containing the outline of each pavement road within the requested area.
+common,soil_desc_long,El servicio de mapeo de área sembrada consiste en un archivo vectorial con la ubicación de los polígonos con áreas sembradas  y las imagenes utilizadas para el área solicitada.,The sown area map service consists of a vector file containing the polygon of each sowned area and the images used for calculations within the requested territory.
+common,floods_desc_long,El servicio de mapeo de áreas inundadas consiste en un archivo vectorial con la ubicación de los polígonos con áreas inundadas y las imagenes utilizadas para el área solicitada.,The flooded areas map service consists of a vector file containing the polygon of each flooded area and the images used for calculations within the requested territory.
+common,ndvi_desc_long,El servicio de mapeo de índice verde consiste en un archivo ráster con el índice NDVI y las imagenes utilizadas para el área solicitada,The green index map service consists of a raster file containing the NDVI index and the images used for calculations within the requested area.
+common,logout_title,Cerrar sesión,Logout
+confirmation_portal,surface_area,tamaño de superficie,surface area
+confirmation_portal,selected_layers,capas seleccionadas,selected layers
+confirmation_portal,price,costo del servicio,service cost
+confirmation_portal,confirm,Confirmar,Confirm
+modal_contact_form,name_label,Nombre,Name
+modal_contact_form,name_placeholder,Ingrese su nombre,Enter your name
+modal_contact_form,email_label,Email,Email
+modal_contact_form,email_placeholder,Ingrese su dirección de e-mail,Enter your email address
+modal_contact_form,city_label,Ciudad,City
+modal_contact_form,city_placeholder,Ingrese su ciudad,Enter your city
+modal_contact_form,message_label,Mensaje,Message
+modal_contact_form,message_placeholder,Ingrese un comentario adicional,Enter an additional message
+modal_contact_form,specifications,Especificaciones,Specifications
+modal_contact_form,send,Enviar,Send
+modal_contact_form,quote,Cotizar,Quote
+modal_contact_form,quote_success_title,Pedido enviado exitosamente,Request sent successfully
+modal_contact_form,quote_success_desc,Gracias por enviar tu pedido. Le escribiremos en la brevedad con más información.,Thanks for sending your request. We will write to you shortly with more information.
+modal_contact_form,quote_success_redirecting_desc,Estamos redirigiéndote a la página de pagos.,We are redirecting you to the payments page.
+modal_contact_form,quote_error_title,Error al enviar pedido,Error when sending request
+modal_contact_form,quote_error_desc,"Ocurrió un error al enviar el pedido. Por favor, intente de nuevo o contáctese con nosotros a {{contactLink}}.",An error occurred when sending the request. Please try again or contact us at {{contactLink}}.
+modal_contact_form,layer_info.agri,Este servicio se calcula sobre imágenes satelitales recientes del sensor Sentinel-2.,We use up-to-date satellite imagery from ESA sensor Sentinel-2.
+modal_contact_form,layer_info.urban,Este servicio se calcula sobre imágenes satelitales recientes de alta resolución. El precio no incluye la entrega de la imágenes utilizadas,We use recent high resolution satellite imagery to run our algorithms. The price doesn't include the delivery of the images involved.
+modal_contact_form,only_request_checkbox,Quiero hacer un pedido diferente y consultar primero.,I want to make a different order and consult first.
+modal_contact_form,request_btn,Consultar,Consult
+modal_contact_form,pay_btn,Pagar,Pay
+modal_contact_form,footer,Linea de ayuda: +54 11 2712-0023,Helpline: +54 911 2712-0023
+simple_modal_contact_form,header,Contáctenos,Contact us
+simple_modal_contact_form,email_label,Email,Email
+simple_modal_contact_form,email_placeholder,Ingrese su dirección de e-mail,Enter your email address
+simple_modal_contact_form,message_label,Mensaje,Message
+simple_modal_contact_form,message_placeholder,Ingrese un comentario adicional,Enter an additional message
+simple_modal_contact_form,contact_success_title,Mensaje enviado exitosamente,Message sent successfully
+simple_modal_contact_form,contact_success_desc,Gracias por enviar su mensaje. Le escribiremos en la brevedad con más información.,Thanks for sending your message. We will write to you shortly with more information.
+simple_modal_contact_form,contact_error_title,Error al enviar mensaje,Error when sending message
+simple_modal_contact_form,contact_error_desc,"Ocurrió un error al enviar el mensaje. Por favor, intente de nuevo o contáctese con nosotros a {{contactLink}}.",An error occurred when sending the message. Please try again or contact us at {{contactLink}}.
+simple_modal_contact_form,send,Enviar,Send
+case_study,request_quote,Pedir cotización,Request quote
+case_study__agri,crop_lots_legend_header,Tipos de cultivo,Crop types
+case_study__agri,crop_lots_legend_subheader,Febrero 2019,February 2019
+case_study__agri,crop_lots_type_S,Soja 1°,Soybean 1st
+case_study__agri,crop_lots_type_ST,Soja 2°,Soybean 2nd
+case_study__agri,crop_lots_type_S2,Soja tardía,Soybean (late)
+case_study__agri,crop_lots_type_M,Maíz temprano,Maize (early)
+case_study__agri,crop_lots_type_MT,Maíz tardío,Maize (late)
+case_study__agri,crop_lots_type_G1,Girasol 1°,Sunflower 1st
+me,sidebar.dashboard,Dashboard,Dashboard
+me,sidebar.layers,Capas,Layers
+me,sidebar.viewer,Visor,Viewer
+me,sidebar.files,Archivos,Files
+me,sidebar.requests,Pedidos,Requests
+me,sidebar.models,Modelos,Models
+me,sidebar.keys,API Keys,API Keys
+me,download,Descargar,Download
+me,view,Ver,View
+me,models.title,Tus Modelos,Your Models
+me,models.name,Nombre,Name
+me,models.estimator_type,Tipo,Type
+me,models.classes,Clases,Classes
+me,models.created_at,Fecha de creación,Creation date
+me,models.new_btn,Nuevo Modelo,New Model
+me,models.types.OD,Detección de Objetos,Object Detection
+me,models.uuid,Mostar UUID,Show UUID
+me,models.add_imgs,Agregar imágenes,Add images
+me,models.add_annot,Agregar anotaciones,Add annotations
+me,layers.title,Tus capas,Your layers
+me,layers.created_at,Fecha de creación,Creation date
+me,layers.name,Nombre,Name
+me,layers.description,Descripción,Description
+me,layers.type,Tipo,Type
+me,layers.date,Fecha de adquisición,Acquisition date
+me,layers.layer_type_R,Ráster,Raster
+me,layers.layer_type_V,Vector,Vector
+me,maps.title,Tus mapas,Your maps
+me,maps.name,Nombre,Name
+me,maps.description,Descripción,Description
+me,maps.created_at,Fecha de creación,Creation date
+me,files.title,Tus archivos,Your files
+me,files.name,Nombre del archivo,File name
+me,files.created_at,Fecha de subida,Upload date
+me,files.upload_image, Subir imagen,Upload image
+me,requests.title,Tus pedidos,Your requests
+me,requests.created_at,Fecha,Date
+me,requests.layers,Capas,Layers
+me,requests.area_km2,Área (km²),Area (km²)
+me,requests.state,Estado actual,Current state
+me,keys.title,Tus API Keys,Your API Keys
+me,keys.name,Nombre,Name
+me,keys.prefix,Prefijo,Prefix
+me,keys.state,Estado,State
+me,keys.active,Activa,Active
+me,keys.revoked,Revocada,Revoked
+me,keys.revoke,Revocar,Revoke
+me,keys.confirmTitle,Revocar API Key,Revoke API Key
+me,keys.confirmContent,Esta acción no se puede deshacer ¿Esta seguro que desea revocar esta API Key?,This action cannot be undone. Are you sure you want to revoke this API Key?
+me,keys_new.button,Nueva,New
+me,keys_new.title,Nueva API Key,New API Key
+me,keys_new.content,Ingrese un nombre para la nueva API Key.,Enter a name for the new API Key.
+me,keys_new.label,Nombre,Name
+me,keys_new.content_result,"Copie y guarde su clave, si la pierde debera crear una nuvea. No la comparta con nadie.","Copy and save your password, if you lose it you must create a new one. Do not share it with anyone."
+me,keys_new.cancel,Cancelar,Cancel
+me,keys_new.close,Cerrar,Close
+me,keys_new.create,Crear,Create
+me,keys_new.copy,Copiar,Copy
+me,home.models_title,Modelos,Models
+me,home.models_descrip,Puedes generar tu modelo para detectar objectos de tus imagenes desde este,You can generate your model to detect objects from your images from this
+me,home.delete_models,Eliminar,Remove
+me,home.title_delete,Eliminar Modelo,Remove Model
+me,home.text_delete_warning,Esta acción es IRREVERSIBLE,This action is IRREVERSIBLE
+me,home.text_delete,¿Está seguro que desea eliminar este modelo y sus anotaciones?,Are you sure you want to delete this model and its annotations?
+me,home.api_title,Dymaxion Labs API,Dymaxion Labs API
+me,home.api_descrip1,Genera tu API Key desde este,Generate your API Key from this
+me,home.api_descrip2,y podras integrar nuestra api a tu código python. Para mas información puedes acceder a la Documentación,and you can integrate our api to your python code. For more information you can access the Documentation
+me,home.project_title,Proyectos,Project
+me,home.project_descrip,El identificador del proyecto te será de utilidad para utilizar nuestra API ,The project identifier will be useful to use our API
+image_upload_dialog,upload_progress.title,Subiendo...,Uploading...
+image_upload_dialog,upload_btn,Subir imágenes,Upload images
+image_upload_dialog,cancel_btn,Cancelar,Cancel
+image_upload_dialog,dialog.title,Subir imágenes,Upload images
+image_upload_dialog,dialog.submit,Enviar,Submit
+image_upload_dialog,dialog.cancel,Cancelar,Cancel
+image_upload_dialog,dialog.dropzone,"Arrastrá y soltá tus imágenes acá, o hacé clic.","Drag and drop your images here, or click"
+dropzone,selected_files,{{count}} archivos seleccionados para subir.,{{count}} files selected for upload.
+dropzone,max_allowed_exceeded,Número máximo permitido de archivos superados. Sólo se permite {{count}}.,Maximum allowed number of files exceeded. Only {{count}} allowed.
+dropzone,removed_file,Archivo {{name}} removido.,File {{name}} removed.
+dropzone,rejected_file,Archivo {{name}} fue rechazado.,File {{name}} was rejected.
+dropzone,unsupported_file,Tipo de archivo no soportado.,File type not supported.
+dropzone,file_too_big,Archivo es demasiado grande. El límite de tamaño es {{sizeLimit}}.,File is too big. Size limit is {{sizeLimit}}.
+select_project,title,Proyectos,Projects
+select_project,header,Seleccionar proyecto,Select project
+select_project,subheader,Puede crear un nuevo proyecto o abrir uno existente.,You can create a new project or open an existing one.
+select_project,new.header,Nuevo proyecto,New project
+select_project,new.submit_btn,Crear,Create
+select_project,new.name_placeholder,Nombre,Name
+select_project,open.header,Abrir proyecto,Open project
+select_project,open.no_projects,No hay proyectos aún.,There are no projects yet.
+common,request.state.pending,Pendiente,Pending
+common,request.state.evaluating,Evaluando,Evaluating
+common,request.state.awaiting_payment,Esperando confirmación de pago,Awaiting payment
+common,request.state.processing,Procesando,Processing
+common,request.state.finished,Terminado,Finished
+common,request.state.canceled,Cancelado,Canceled
+models,new.header,Nuevo Modelo,New Model
+models,new.explanation,Elija el tipo de modelo que quiere crear.,Choose the type of model you want to create.
+models,new.od.header,Detección de Objetos,Object Detection
+models,new.od.steps.initial,Inicial,Initial
+models,new.od.steps.create,Crear,Create
+models,new.od.steps.upload,Subir,Upload
+models,new.od.steps.annotate,Anotar,Annotate
+models,new.od.steps.train,Entrenar,Train
+models,new.od.steps.select,Seleccionar,Select
+models,new.od.steps.predict,Predecir,Predict
+models,new.start_building,Comenzar,Start Building
+models,create_step.title,Crear nuevo modelo,Create new model
+models,create_step.explanation,Elige un nombre y las clases que van a intervenir en tu modelo.,Choose a name and labels to setup your model.
+models,create_step.name_label,Nombre,Name
+models,create_step.name_helper,Ingrese un nombre para su modelo.,Enter a name for your model.
+models,create_step.classes_label,Clases de objetos,Object classes
+models,create_step.classes_helper_1,Ingrese el nombre de una clase y presione la tecla,Enter the name of a class and press the
+models,create_step.classes_helper_2,. Puede ingresar varias clases de esta manera., key. You can enter several classes in this way.
+models,create_step.submit_btn,Crear,Create
+models,upload_step.title,Subir imágenes,Upload images
+models,upload_step.explanation,Selecciona una o más imágenes y luego cliquea subir.,Select one or more images and then click upload.
+models,upload_step.dropzone,"Arrastrá y soltá tus imágenes acá, o hacé clic.","Drag and drop your images here, or click."
+models,upload_step.submit_btn,Subir,Upload
+models,annotate_step.title,Anotar imágenes,Annotate images
+models,annotate_step.explanation,Indicale a tu modelo algunos objetos de ejemplo para que pueda aprender a encontralos. ¡Cuantos más marques mejor!,Label some objects to let your model train to find them. More labeled objects give you better accuracy.
+models,annotate_step.save_btn,Guardar,Save
+models,annotate_step.continue_btn,Guardar y continuar,Save and continue
+models,annotate_step.annotations_per_class,Anotaciones por clase,Annotations per class
+models,train_step.title,Entrenar modelo,Train model
+models,train_step.explanation,En este momento se está entrenando tu modelo. Este proceso puede tardar unas horas. Te avisaremos por correo cuando esté listo para ser utilizado.,Your model is currently being trained. This process may take a few hours. We will notify you by mail when it is ready to be used.
+models,train_step.continue,Continuar,Continue
+models,train_step.back,Ir atrás,Go back
+models,train_step.undefined_explanation,El tiempo restante es indefinido,The remaining time is undefined
+models,train_step.finished_explanation,El proceso de entrenamiento terminó. Haga clic en continuar para realizar una predicción,The training process is over. Click continue to make a prediction
+models,select_step.title,Seleccionar imágenes,Select images
+models,select_step.explanation,Selecciona las imágenes preexistentes o carga nuevas y luego cliquea Predecir,Select pre-existing images or upload new ones and then click Predict
+models,select_step.dropzone,"Arrastrá y soltá tus imágenes acá, o hacé clic.","Drag and drop your images here, or click."
+models,select_step.submit_btn,Predecir,Predict
+models,predict_step.title,Predecir modelo,Predict model
+models,predict_step.explanation,En este momento se estan analizando sus imagenes. Este proceso puede tardar unas horas. Te avisaremos por correo cuando esté listo para ver los resultados.,At this time their images are being analyzed. This process may take a few hours. We will notify you by mail when it is ready to see the results.
+models,predict_step.back,Ir atrás,Go back
+models,predict_step.view,Ver resultados,View results
+models,predict_step.undefined_explanation,El tiempo restante es indefinido,The remaining time is undefined
+models,object_btn,Detección de Objetos,Object Detection
+models,object_desc,"Detección de animales, techos, árboles, silobolsas, etc.","Detect animals, roofs, trees, grain silos, etc."
+models,classification_btn,Clasificación,Classification
+models,classification_desc,Mapeo de usos del suelo.,Land use maps.
+models,change_detection_btn,Detección de Cambios,Change Detection
+models,change_detection_desc,Comparación entre imágenes de diferentes fechas para resaltar y clasificar cambios.,Comparison between images of different dates to highlight and classify changes.
+models,new.consult.title,Aún no disponible,Still not available
+models,new.consult.explanation,"Este tipo de modelo está aún en desarrollo y evaluación. Si tiene un caso de uso, por favor escribinos y nos pondremos en contacto.","This type of model is still under development and evaluation. If you have a use case, please write us and we will get in touch."
+models,new.consult.message_label,Mensaje,Message
+models,new.consult.send_btn,Enviar,Send
+models,new.consult.cancel_btn,Cancelar,Cancel
+models,new.consult.error_msg,"Ocurrió un error al enviar el mensaje. Por favor, intente de nuevo o contáctese con nosotros a {{contactLink}}.",An error occurred when sending the message. Please try again or contact us at {{contactLink}}.
+models,new.consult.success_msg,Gracias por enviar su mensaje. Le escribiremos en la brevedad con más información.,Thanks for sending your message. We will write to you shortly with more information.
+models,new_btn,Nuevo,New
+models,new_title,Nuevo Modelo,New Model
+models,create_step.error_msg_duplicate,"Ya existe un modelo con ese nombre, ingrese otro.","Model already exists, please enter another name."
+models,create_step.error_msg_classes,Debe ingresar al menos una clase de objeto.,Please add at least one object class.
+models,create_step.error_msg_internal,Ha ocurrido un error. Por favor reintente.,An error has ocurred. Please retry.
+models,annotate_step.remaining,Restantes,Remaining
+models,annotate_step.loading,Procesando imágenes subidas. Por favor aguarde unos minutos...,Processing uploaded images. Please wait a few minutes...
+models,annotate_step.cancel,Cancelar,Cancel
+models,annotate_step.delete,Borrar,Delete
