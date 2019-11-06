@@ -1,7 +1,8 @@
-# Dymaxion Labs platform frontend
+# GeoLomas frontend
 
-This is our main platform of image provisioning and analytics for users.
-It uses the Terra API for fetching user data and raster/vector layers.
+This is the repository for the GeoLomas platform frontend web app.
+It uses the REST API provided by the backend, for fetching user data,
+raster/vector layers, etc.
 
 ## Development
 
