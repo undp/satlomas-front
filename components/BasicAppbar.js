@@ -33,7 +33,7 @@ const BasicAppbar = withStyles(styles)(({ classes }) => (
           noWrap
           className={classes.title}
         >
-          Dymaxion Labs Platform
+          GeoLomas Platform
         </Typography>
       </Link>
     </Toolbar>

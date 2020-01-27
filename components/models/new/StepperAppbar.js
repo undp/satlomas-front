@@ -46,7 +46,7 @@ const StepperAppbar = withStyles(styles)(({ classes, ...props }) => (
           noWrap
           className={classes.title}
         >
-          Dymaxion Labs Platform
+          GeoLomas Platform
         </Typography>
       </Link>
       <div className={classes.stepperContent}>

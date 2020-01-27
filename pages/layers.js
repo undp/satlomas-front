@@ -123,7 +123,7 @@ class Layers extends React.Component {
     return (
       <div className="index">
         <Head>
-          <title>Dymaxion Labs Platform</title>
+          <title>GeoLomas Platform</title>
           <link
             rel="shortcut icon"
             type="image/x-icon"

@@ -326,7 +326,7 @@ class Home extends React.Component {
                 src="/static/logo.png"
                 height="24"
               />
-              Dymaxion Labs Platform
+              GeoLomas Platform
             </Typography>
             <SelectProjectButton token={token} />
             <QuoteButton />
