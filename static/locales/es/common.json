@@ -4,8 +4,7 @@
     "success_msg": "Su direcci\u00f3n de correo fue verificada con \u00e9xito."
   },
   "confirmation": {
-    "cancel": "Cancelar",
-    "copy": "Copiar"
+    "cancel": "Cancelar"
   },
   "crop_lots_desc": "Lotes categorizados por tipo de cultivo",
   "crop_lots_title": "Lotes de cultivo",
@@ -107,13 +106,11 @@
     "username_placeholder": "Nombre de usuario"
   },
   "signup_btn": "Registrarse",
-  "signup_href": "https://landings.dymaxionlabs.com/analytics-form-es",
   "soil_desc": "Suelo utilizado para siembra y cultivo.",
   "soil_desc_long": "El servicio de mapeo de \u00e1rea sembrada consiste en un archivo vectorial con la ubicaci\u00f3n de los pol\u00edgonos con \u00e1reas sembradas  y las imagenes utilizadas para el \u00e1rea solicitada.",
   "soil_title": "Area sembrada",
-  "title": "Dymaxion Labs Platform",
+  "title": "GeoLomas Platform",
   "true_color_desc": "Imagen satelital de color verdadero",
   "true_color_title": "Color verdadero",
-  "username": "Usuario",
-  "logout_title":"Cerrar sesión"
+  "username": "Usuario"
 }

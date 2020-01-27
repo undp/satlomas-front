@@ -4,8 +4,7 @@
     "success_msg": "Your email address has been verified successfully."
   },
   "confirmation": {
-    "cancel": "Cancel",
-    "copy": "Copy"
+    "cancel": "Cancel"
   },
   "crop_lots_desc": "Categorized lots by crop type",
   "crop_lots_title": "Crop lots",
@@ -107,13 +106,11 @@
     "username_placeholder": "Username"
   },
   "signup_btn": "Sign up",
-  "signup_href": "https://landings.dymaxionlabs.com/analytics-form-en",
   "soil_desc": "Soil land use for different crops.",
   "soil_desc_long": "The sown area map service consists of a vector file containing the polygon of each sowned area and the images used for calculations within the requested territory.",
   "soil_title": "Sown area",
-  "title": "Dymaxion Labs Platform",
+  "title": "GeoLomas Platform",
   "true_color_desc": "True color satellite image",
   "true_color_title": "True color",
-  "username": "Username",
-  "logout_title":"Logout"
+  "username": "Username"
 }

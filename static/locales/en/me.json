@@ -3,13 +3,12 @@
   "files": {
     "created_at": "Upload date",
     "name": "File name",
-    "title": "Your files",
-    "upload_image": "Upload image"
+    "title": "Your files"
   },
   "home": {
     "api_descrip1": "Generate your API Key from this",
     "api_descrip2": "and you can integrate our api to your python code. For more information you can access the Documentation",
-    "api_title": "Dymaxion Labs API",
+    "api_title": "GeoLomas Labs API",
     "models_descrip": "You can generate your model to detect objects from your images from this",
     "models_title": "Models",
     "project_descrip": "The project identifier will be useful to use our API",
@@ -59,14 +58,10 @@
     "classes": "Classes",
     "created_at": "Creation date",
     "estimator_type": "Type",
-    "uuid": "Show UUID",
+    "more_info": "More information",
     "name": "Name",
     "new_btn": "New Model",
     "title": "Your Models",
-    "delete_models": "Remove",
-    "title_delete": "Remove Model",
-    "text_delete_warning": "This action is IRREVERSIBLE",
-    "text_delete": "Are you sure you want to delete this model and its annotations?",
     "types": {
       "OD": "Object Detection"
     }

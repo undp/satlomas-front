@@ -1,5 +1,5 @@
 namespace,key,es,en
-common,title,Dymaxion Labs Platform,Dymaxion Labs Platform
+common,title,GeoLomas Platform,GeoLomas Platform
 common,loading,Cargando...,Loading...
 common,username,Usuario,Username
 common,password,Contraseña,Password
@@ -8,7 +8,6 @@ common,login_btn,Iniciar sesión,Login
 common,logout_btn,Cerrar sesión,Logout
 common,dashboard_btn,Dashboard,Dashboard
 common,signup_btn,Registrarse,Sign up
-common,signup_href,https://landings.dymaxionlabs.com/analytics-form-es,https://landings.dymaxionlabs.com/analytics-form-en
 common,login.title,Inicio de sesión,Login
 common,login.remember,Recordar,Remember me
 common,login.cant_remember,¿No recuerda su contraseña?,Can't remember your password?
@@ -62,7 +61,6 @@ common,invite.password2_placeholder,Confirmar contraseña,Confirm password
 common,quote_btn.value,Cotizar nueva capa,Quote new layer
 common,invite.submit,Registrar,Sign up
 common,confirmation.cancel,Cancelar,Cancel
-common,confirmation.copy,Copiar,Copy
 guide,initial,Escriba una ciudad o busque en el mapa un lugar.,Enter a city or search the map for a place.
 guide,search_done,Dibuje un polígono del área que desea analizar.,Draw a polygon of the area you want to analyze.
 guide,polygon_drawn,Seleccione una o más capas de análisis.,Select one or more layers.
@@ -96,7 +94,6 @@ common,roads_desc_long,El servicio de mapeo de rutas pavimentadas de alta precis
 common,soil_desc_long,El servicio de mapeo de área sembrada consiste en un archivo vectorial con la ubicación de los polígonos con áreas sembradas  y las imagenes utilizadas para el área solicitada.,The sown area map service consists of a vector file containing the polygon of each sowned area and the images used for calculations within the requested territory.
 common,floods_desc_long,El servicio de mapeo de áreas inundadas consiste en un archivo vectorial con la ubicación de los polígonos con áreas inundadas y las imagenes utilizadas para el área solicitada.,The flooded areas map service consists of a vector file containing the polygon of each flooded area and the images used for calculations within the requested territory.
 common,ndvi_desc_long,El servicio de mapeo de índice verde consiste en un archivo ráster con el índice NDVI y las imagenes utilizadas para el área solicitada,The green index map service consists of a raster file containing the NDVI index and the images used for calculations within the requested area.
-common,logout_title,Cerrar sesión,Logout
 confirmation_portal,surface_area,tamaño de superficie,surface area
 confirmation_portal,selected_layers,capas seleccionadas,selected layers
 confirmation_portal,price,costo del servicio,service cost
@@ -158,7 +155,7 @@ me,models.classes,Clases,Classes
 me,models.created_at,Fecha de creación,Creation date
 me,models.new_btn,Nuevo Modelo,New Model
 me,models.types.OD,Detección de Objetos,Object Detection
-me,models.uuid,Mostar UUID,Show UUID
+me,models.more_info,Más información,More information
 me,models.add_imgs,Agregar imágenes,Add images
 me,models.add_annot,Agregar anotaciones,Add annotations
 me,layers.title,Tus capas,Your layers
@@ -176,7 +173,6 @@ me,maps.created_at,Fecha de creación,Creation date
 me,files.title,Tus archivos,Your files
 me,files.name,Nombre del archivo,File name
 me,files.created_at,Fecha de subida,Upload date
-me,files.upload_image, Subir imagen,Upload image
 me,requests.title,Tus pedidos,Your requests
 me,requests.created_at,Fecha,Date
 me,requests.layers,Capas,Layers
@@ -202,11 +198,7 @@ me,keys_new.create,Crear,Create
 me,keys_new.copy,Copiar,Copy
 me,home.models_title,Modelos,Models
 me,home.models_descrip,Puedes generar tu modelo para detectar objectos de tus imagenes desde este,You can generate your model to detect objects from your images from this
-me,home.delete_models,Eliminar,Remove
-me,home.title_delete,Eliminar Modelo,Remove Model
-me,home.text_delete_warning,Esta acción es IRREVERSIBLE,This action is IRREVERSIBLE
-me,home.text_delete,¿Está seguro que desea eliminar este modelo y sus anotaciones?,Are you sure you want to delete this model and its annotations?
-me,home.api_title,Dymaxion Labs API,Dymaxion Labs API
+me,home.api_title,GeoLomas Labs API,GeoLomas Labs API
 me,home.api_descrip1,Genera tu API Key desde este,Generate your API Key from this
 me,home.api_descrip2,y podras integrar nuestra api a tu código python. Para mas información puedes acceder a la Documentación,and you can integrate our api to your python code. For more information you can access the Documentation
 me,home.project_title,Proyectos,Project

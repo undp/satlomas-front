@@ -3,14 +3,12 @@
   "files": {
     "created_at": "Fecha de subida",
     "name": "Nombre del archivo",
-    "title": "Tus archivos",
-    "upload_image": "Subir imagen"
-
+    "title": "Tus archivos"
   },
   "home": {
     "api_descrip1": "Genera tu API Key desde este",
     "api_descrip2": "y podras integrar nuestra api a tu c\u00f3digo python. Para mas informaci\u00f3n puedes acceder a la Documentaci\u00f3n",
-    "api_title": "Dymaxion Labs API",
+    "api_title": "GeoLomas Labs API",
     "models_descrip": "Puedes generar tu modelo para detectar objectos de tus imagenes desde este",
     "models_title": "Modelos",
     "project_descrip": "El identificador del proyecto te ser\u00e1 de utilidad para utilizar nuestra API",
@@ -53,7 +51,6 @@
     "description": "Descripci\u00f3n",
     "name": "Nombre",
     "title": "Tus mapas"
-
   },
   "models": {
     "add_annot": "Agregar anotaciones",
@@ -61,14 +58,10 @@
     "classes": "Clases",
     "created_at": "Fecha de creaci\u00f3n",
     "estimator_type": "Tipo",
-    "uuid": "Mostar UUID",
+    "more_info": "M\u00e1s informaci\u00f3n",
     "name": "Nombre",
     "new_btn": "Nuevo Modelo",
     "title": "Tus Modelos",
-    "delete_models": "Eliminar",
-    "title_delete": "Eliminar Modelo",
-    "text_delete_warning": "Esta acción es IRREVERSIBLE",
-    "text_delete": "¿Está seguro que desea eliminar este modelo y sus anotaciones?",
     "types": {
       "OD": "Detecci\u00f3n de Objetos"
     }
