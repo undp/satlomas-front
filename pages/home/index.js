@@ -1,5 +1,4 @@
 import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
@@ -11,11 +10,11 @@ import { withStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import CollectionsIcon from "@material-ui/icons/Collections";
+// import CollectionsIcon from "@material-ui/icons/Collections";
 import LayersIcon from "@material-ui/icons/Layers";
 import MapIcon from "@material-ui/icons/Map";
 import MenuIcon from "@material-ui/icons/Menu";
-import MemoryIcon from "@material-ui/icons/Memory";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import axios from "axios";
 import classNames from "classnames";
@@ -23,12 +22,8 @@ import cookie from "js-cookie";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import CliengoLoader from "../../components/CliengoLoader";
-import FilesContent from "../../components/home/FilesContent";
-// import LayersContent from "../../components/home/LayersContent";
+import LayersContent from "../../components/home/LayersContent";
 import MapsContent from "../../components/home/MapsContent";
-import ModelsContent from "../../components/home/ModelsContent";
-// import RequestsContent from "../../components/home/RequestsContent";
 import KeysContent from "../../components/home/KeysContent";
 import HomeContent from "../../components/home/HomeContent";
 import SelectProjectButton from "../../components/SelectProjectButton";
@@ -36,11 +31,11 @@ import { Link, withNamespaces, i18n } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withAuthSync, logout } from "../../utils/auth";
 import { routerReplace } from "../../utils/router";
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const drawerWidth = 200;
 
@@ -132,32 +127,26 @@ const styles = theme => ({
   }
 });
 
-const sortedSections = ["files", "models", "viewer", "keys"];
-const sortedSectionsBeta = ["files", "models", "viewer", "keys"];
+const sortedSections = ["stations", "maps", "layers", "keys"];
+const sortedSectionsBeta = ["stations", "maps", "layers", "keys"];
 
 const sections = {
-  // dashboard: {
-  //   path: "/",
-  //   icon: <DashboardIcon />,
-  //   content: null
-  // },
-  viewer: {
-    key: "viewer",
+  stations: {
+    path: "/stations",
+    icon: <DashboardIcon />,
+    content: null
+  },
+  layers: {
+    key: "layers",
+    path: "/layers",
+    icon: <LayersIcon />,
+    content: <LayersContent />
+  },
+  maps: {
+    key: "maps",
     path: "/maps",
     icon: <MapIcon />,
     content: <MapsContent />
-  },
-  models: {
-    key: "models",
-    path: "/models",
-    icon: <MemoryIcon />,
-    content: <ModelsContent />
-  },
-  files: {
-    key: "files",
-    path: "/files",
-    icon: <CollectionsIcon />,
-    content: <FilesContent />
   },
   keys: {
     key: "keys",
@@ -167,25 +156,13 @@ const sections = {
   }
 };
 
-let QuoteButton = ({ t, classes }) => (
-  <a href="/quote" className={classes.anchorButton}>
-    <Button className={classes.button}>{t("quote_btn.value")}</Button>
-  </a>
-);
-QuoteButton.propTypes = {
-  classes: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
-};
-QuoteButton = withStyles(styles)(QuoteButton);
-QuoteButton = withNamespaces()(QuoteButton);
-
 class Home extends React.Component {
   state = {
     open: true,
     section: null,
     beta: false,
     contextualMenuOpen: null,
-    userEmail: ''
+    userEmail: ""
   };
 
   static async getInitialProps({ query }) {
@@ -242,13 +219,13 @@ class Home extends React.Component {
     const { token } = this.props;
     try {
       const response = await axios.get(buildApiUrl("/auth/user/"), {
-        headers: { 
+        headers: {
           "Accept-Language": i18n.language,
-          Authorization: token 
+          Authorization: token
         }
       });
       const userData = response.data;
-      this.setState({ userEmail: userData.email});
+      this.setState({ userEmail: userData.email });
     } catch (error) {
       console.error(error);
     }
@@ -267,19 +244,18 @@ class Home extends React.Component {
   };
 
   handleContextualMenuClick = event => {
-    this.setState({contextualMenuOpen: event.currentTarget});
-  }
+    this.setState({ contextualMenuOpen: event.currentTarget });
+  };
 
   handleContextualMenuClose = () => {
-    this.setState({contextualMenuOpen: null});
-  }
+    this.setState({ contextualMenuOpen: null });
+  };
 
-  
   profileLogout = () => {
     logout();
-  }
+  };
 
-  render() {    
+  render() {
     const { t, classes, token } = this.props;
     const { section, open, beta, contextualMenuOpen, userEmail } = this.state;
 
@@ -296,7 +272,6 @@ class Home extends React.Component {
       <div className={classes.root}>
         <Head>
           <title>{t("common:title")}</title>
-          <CliengoLoader />
         </Head>
         <AppBar
           position="absolute"
@@ -321,29 +296,22 @@ class Home extends React.Component {
               noWrap
               className={classes.title}
             >
-              <img
-                className={classes.titleLogo}
-                src="/static/logo.png"
-                height="24"
-              />
               GeoLomas Platform
             </Typography>
             <SelectProjectButton token={token} />
-            <QuoteButton />
-            {/* <FileUploadDialog token={token} /> */}
             {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
             <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                onClick={this.handleContextualMenuClick}
-              >
-                <AccountCircle />
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+              onClick={this.handleContextualMenuClick}
+            >
+              <AccountCircle />
             </IconButton>
             <Menu
               anchorEl={contextualMenuOpen}
@@ -351,9 +319,9 @@ class Home extends React.Component {
               open={Boolean(contextualMenuOpen)}
               onClose={this.handleContextualMenuClose}
             >
-              <MenuItem >{userEmail}</MenuItem>
+              <MenuItem>{userEmail}</MenuItem>
               <MenuItem onClick={this.profileLogout}>
-                {t('common:logout_title')}
+                {t("common:logout_title")}
                 <ListItemSecondaryAction>
                   <ListItemIcon edge="end" aria-label="logout">
                     <PowerSettingsNewIcon />
@@ -416,12 +384,7 @@ class Home extends React.Component {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {
-            section == null ? 
-            (<HomeContent token={token}/>) 
-            : 
-            (content)
-          }
+          {section == null ? <HomeContent token={token} /> : content}
         </main>
       </div>
     );
