@@ -141,11 +141,11 @@ case_study__agri,crop_lots_type_MT,Maíz tardío,Maize (late)
 case_study__agri,crop_lots_type_G1,Girasol 1°,Sunflower 1st
 me,sidebar.dashboard,Dashboard,Dashboard
 me,sidebar.layers,Capas,Layers
-me,sidebar.viewer,Visor,Viewer
+me,sidebar.maps,Mapas,Maps
 me,sidebar.files,Archivos,Files
-me,sidebar.requests,Pedidos,Requests
-me,sidebar.models,Modelos,Models
+me,sidebar.stations,Estaciones,Stations
 me,sidebar.keys,API Keys,API Keys
+me,sidebar.stations_map,Mapa de Estaciones,Stations Map
 me,download,Descargar,Download
 me,view,Ver,View
 me,models.title,Tus Modelos,Your Models

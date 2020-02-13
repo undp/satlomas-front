@@ -78,9 +78,9 @@
     "files": "Files",
     "keys": "API Keys",
     "layers": "Layers",
-    "models": "Models",
-    "requests": "Requests",
-    "viewer": "Viewer"
+    "maps": "Maps",
+    "stations": "Stations",
+    "stations_map": "Stations Map"
   },
   "view": "View"
 }

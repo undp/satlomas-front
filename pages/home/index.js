@@ -10,7 +10,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-// import CollectionsIcon from "@material-ui/icons/Collections";
 import LayersIcon from "@material-ui/icons/Layers";
 import MapIcon from "@material-ui/icons/Map";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -346,6 +345,17 @@ class Home extends React.Component {
               <ChevronLeftIcon />
             </IconButton>
           </div>
+          <Divider />
+          <List>
+            <Link href="/stations_map">
+              <ListItem button>
+                <ListItemIcon>
+                  <MapIcon />
+                </ListItemIcon>
+                <ListItemText primary={t(`sidebar.stations_map`)} />
+              </ListItem>
+            </Link>
+          </List>
           <Divider />
           <List>
             {sectionList.map(key => (
