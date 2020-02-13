@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import CliengoLoader from "../components/CliengoLoader";
 import LayersFab from "../components/LayersFab";
 // import LayerLegend from "../components/LayerLegend";
 import LayersLegendExpansionPanel from "../components/LayersLegendExpansionPanel";
@@ -218,7 +217,6 @@ class Maps extends React.Component {
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
-          <CliengoLoader />
         </Head>
         <Map
           bounds={bounds}
