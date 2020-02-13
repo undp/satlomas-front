@@ -4,8 +4,18 @@ import {
   ZoomControl,
   GeoJSON
 } from "react-leaflet";
-
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+import StationMarkerList from "./StationMarkerList";
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png")
+});
 
 const mapContainerStyle = {
   width: "100vw",
@@ -45,7 +55,13 @@ const Basemap = ({ url, attribution }) => (
 
 class Map extends React.Component {
   render() {
-    const { children, roiData, mapboxStyle, ...extraProps } = this.props;
+    const {
+      children,
+      roiData,
+      mapboxStyle,
+      markers,
+      ...extraProps
+    } = this.props;
 
     return (
       <LeafletMap
@@ -56,6 +72,7 @@ class Map extends React.Component {
       >
         <MapboxBasemap style={mapboxStyle} />
         {children}
+        {markers && <StationMarkerList markers={markers} />}
         {roiData && <ROIPolygon data={roiData} />}
 
         <ZoomControl position="topright" />

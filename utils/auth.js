@@ -13,7 +13,6 @@ export const login = async ({ token, expires, redirectTo = "/home" }) => {
 
 export const logout = () => {
   cookie.remove("token");
-  cookie.remove("project");
   // to support logging out from all windows
   window.localStorage.setItem("logout", Date.now());
   routerPush("/login");
