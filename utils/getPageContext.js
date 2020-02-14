@@ -3,22 +3,22 @@ import {
   createMuiTheme,
   createGenerateClassName
 } from "@material-ui/core/styles";
-import deepOrange from "@material-ui/core/colors/deepOrange";
 import blue from "@material-ui/core/colors/blue";
+import amber from "@material-ui/core/colors/amber";
 
 // A theme with custom primary and secondary color.
 // It's optional.
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: deepOrange[300],
-      main: deepOrange[500],
-      dark: deepOrange[800]
-    },
-    secondary: {
       light: blue[300],
       main: blue[500],
       dark: blue[800]
+    },
+    secondary: {
+      light: amber[300],
+      main: amber[500],
+      dark: amber[800]
     }
   },
   typography: {

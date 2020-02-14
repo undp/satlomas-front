@@ -346,7 +346,7 @@ class Home extends React.Component {
           <Divider />
           <List>
             <Link href="/home">
-              <ListItem button>
+              <ListItem button selected={!sectionList.includes(section)}>
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
