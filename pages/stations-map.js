@@ -27,7 +27,8 @@ class StationsMap extends Component {
       center: [-12.046373, -76.542755],
       zoom: 10
     },
-    stations: []
+    stations: [],
+    selectedStation: null
   };
 
   static async getInitialProps({ query }) {
@@ -57,9 +58,13 @@ class StationsMap extends Component {
     this.setState({ viewport });
   };
 
+  handleStationSelect = station => {
+    this.setState({ selectedStation: station });
+  };
+
   render() {
-    const { viewport, bounds, stations } = this.state;
-    const mapboxStyle = "mapbox.light";
+    const { viewport, bounds, stations, selectedStation } = this.state;
+    const mapboxStyle = "mapbox.streets";
 
     return (
       <div className="index">
@@ -75,7 +80,12 @@ class StationsMap extends Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        <MapDrawer />
+        <MapDrawer
+          stations={stations}
+          selectedStation={selectedStation}
+          onStationSelect={this.handleStationSelect}
+          onMenuClick={this.handleMenuClick}
+        />
         <Map
           bounds={bounds}
           viewport={viewport}
