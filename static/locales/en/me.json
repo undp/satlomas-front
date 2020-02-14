@@ -76,6 +76,7 @@
   "sidebar": {
     "dashboard": "Dashboard",
     "files": "Files",
+    "home": "Home",
     "keys": "API Keys",
     "layers": "Layers",
     "maps": "Maps",

@@ -76,6 +76,7 @@
   "sidebar": {
     "dashboard": "Dashboard",
     "files": "Archivos",
+    "home": "Inicio",
     "keys": "API Keys",
     "layers": "Capas",
     "maps": "Mapas",

@@ -15,6 +15,7 @@ import MapIcon from "@material-ui/icons/Map";
 import MenuIcon from "@material-ui/icons/Menu";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
+import HomeIcon from "@material-ui/icons/Home";
 import axios from "axios";
 import classNames from "classnames";
 import cookie from "js-cookie";
@@ -120,9 +121,6 @@ const styles = theme => ({
   },
   button: {
     color: "white"
-  },
-  anchorButton: {
-    textDecoration: "none"
   }
 });
 
@@ -345,6 +343,17 @@ class Home extends React.Component {
               <ChevronLeftIcon />
             </IconButton>
           </div>
+          <Divider />
+          <List>
+            <Link href="/home">
+              <ListItem button>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary={t(`sidebar.home`)} />
+              </ListItem>
+            </Link>
+          </List>
           <Divider />
           <List>
             <Link href="/stations_map">
