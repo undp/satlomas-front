@@ -356,7 +356,7 @@ class Home extends React.Component {
           </List>
           <Divider />
           <List>
-            <Link href="/stations_map">
+            <Link href="/stations-map">
               <ListItem button>
                 <ListItemIcon>
                   <MapIcon />
