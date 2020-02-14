@@ -4,6 +4,7 @@ import Head from "next/head";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import LoadingProgress from "../components/LoadingProgress";
+import MapDrawer from "../components/MapDrawer";
 import { withNamespaces } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { withAuthSync } from "../utils/auth";
@@ -74,13 +75,14 @@ class StationsMap extends Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
+        <MapDrawer />
         <Map
           bounds={bounds}
           viewport={viewport}
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
           markers={stations}
-        ></Map>
+        />
       </div>
     );
   }
