@@ -2,7 +2,6 @@ import axios from "axios";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
-import LayerLegend from "../components/LayerLegend";
 import { withNamespaces } from "../i18n";
 import "../static/App.css"; // FIXME Convert to JSX styles
 import "../static/index.css"; // FIXME Convert to JSX styles
@@ -112,11 +111,6 @@ class Layers extends React.Component {
     // Get area polygon
     const areaData = layer && layer.area_geom;
 
-    // Build Legend (if legend key is present on extra_fields)
-    const legendOpts =
-      layer && layer.extra_fields && layer.extra_fields["legend"];
-    const legend = legendOpts && <LayerLegend {...legendOpts} />;
-
     return (
       <div className="index">
         <Head>
@@ -138,7 +132,6 @@ class Layers extends React.Component {
           roiData={areaData}
         >
           {tileLayer}
-          {legend}
         </Map>
       </div>
     );
