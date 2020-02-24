@@ -7,7 +7,7 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import StationSearchField from "./StationSearchField";
+import SearchField from "./SearchField";
 
 const drawerWidth = 360;
 
@@ -56,10 +56,10 @@ const MapDrawer = ({
     }}
     anchor="left"
   >
-    <StationSearchField stations={stations} onMenuClick={onMenuClick} />
+    <SearchField stations={stations} onMenuClick={onMenuClick} />
     <Divider />
     {!selectedStation && (
-      <StationsList stations={stations} onStationSelect={onStationSelect} />
+      <StationsList items={stations} onStationSelect={onStationSelect} />
     )}
   </Drawer>
 );

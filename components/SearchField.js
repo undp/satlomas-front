@@ -29,7 +29,7 @@ const styles = {
   }
 };
 
-const StationSearchField = ({ classes, onMenuClick }) => (
+const SearchField = ({ classes, placeholder, onMenuClick }) => (
   <Paper className={classes.root} elevation={1}>
     <IconButton
       className={classes.iconButton}
@@ -38,20 +38,24 @@ const StationSearchField = ({ classes, onMenuClick }) => (
     >
       <MenuIcon />
     </IconButton>
-    <InputBase className={classes.input} placeholder="Search for a Station" />
+    <InputBase className={classes.input} placeholder={placeholder} />
     <IconButton className={classes.iconButton} aria-label="Search">
       <SearchIcon />
     </IconButton>
   </Paper>
 );
 
-StationSearchField.propTypes = {
+SearchField.propTypes = {
   classes: PropTypes.object.isRequired,
+  items: PropTypes.array,
+  placeholder: PropTypes.string,
   onMenuClick: PropTypes.func
 };
 
-StationSearchField.defaultProps = {
+SearchField.defaultProps = {
+  items: [],
+  placeholder: "Search for...",
   onMenuClick: () => {}
 };
 
-export default withStyles(styles)(StationSearchField);
+export default withStyles(styles)(SearchField);
