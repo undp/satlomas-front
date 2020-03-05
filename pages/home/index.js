@@ -26,7 +26,6 @@ import LayersContent from "../../components/home/LayersContent";
 import MapsContent from "../../components/home/MapsContent";
 import KeysContent from "../../components/home/KeysContent";
 import HomeContent from "../../components/home/HomeContent";
-import SelectProjectButton from "../../components/SelectProjectButton";
 import { Link, withNamespaces, i18n } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withAuthSync, logout } from "../../utils/auth";
@@ -181,35 +180,7 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    // If there is not selected project, go there
-    const projectId = cookie.get("project");
-    if (!projectId) {
-      routerReplace("/select-project");
-    }
-
-    this._checkForBeta();
     this.getEmail();
-  }
-
-  async _checkForBeta() {
-    const { token } = this.props;
-
-    try {
-      const response = await axios.get(buildApiUrl(`/auth/user/`), {
-        headers: {
-          "Accept-Language": i18n.language,
-          Authorization: token
-        }
-      });
-      const { profile } = response.data;
-      const beta = profile.in_beta;
-      this.setState({ beta });
-      if (beta) {
-        console.log("Beta mode enabled");
-      }
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   async getEmail() {
@@ -295,7 +266,6 @@ class Home extends React.Component {
             >
               GeoLomas Platform
             </Typography>
-            <SelectProjectButton token={token} />
             {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
@@ -318,7 +288,7 @@ class Home extends React.Component {
             >
               <MenuItem>{userEmail}</MenuItem>
               <MenuItem onClick={this.profileLogout}>
-                {t("common:logout_title")}
+                {t("common:logout_btn")}
                 <ListItemSecondaryAction>
                   <ListItemIcon edge="end" aria-label="logout">
                     <PowerSettingsNewIcon />
