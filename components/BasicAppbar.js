@@ -24,9 +24,6 @@ const BasicAppbar = withStyles(styles)(({ classes }) => (
   <AppBar position="absolute" color="default" className={classes.appBar}>
     <Toolbar>
       <Link href="/">
-        <img src="/static/logo.png" className={classes.logo} />
-      </Link>
-      <Link href="/">
         <Typography
           variant="h6"
           color="inherit"
