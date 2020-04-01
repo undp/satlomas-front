@@ -13,6 +13,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import { withAuthSync } from "../utils/auth";
+import Dashboard from "../components/Dashboard";
+import axios from "axios";
+import { buildApiUrl } from "../utils/api";
 
 const drawerWidth = 450;
 
@@ -98,31 +101,58 @@ let ZoomControl = ({ classes }) => (
 
 ZoomControl = withStyles(styles)(ZoomControl);
 
-let DateField = ({ classes }) => (
-  <Paper className={classes.dateField}>
-    <TextField
-      id="date"
-      style={{ width: 300 }}
-      defaultValue="November 2019"
-      className={classes.textField}
-      InputLabelProps={{
-        shrink: true
-      }}
-    />
-    {/* <TextField
-      id="date"
-      defaultValue="April 2019"
-      className={classes.textField}
-      InputLabelProps={{
-        shrink: true
-      }}
-    /> */}
-  </Paper>
-);
+let DateField = ({ classes, dates, onChangeFrom, onChangeTo }) => {
+  const createSelect = () => {
+    let items = []
+    for (let i = 0; i < dates.availableDates.length + 1; i++) {
+      items.push(<MenuItem key={i} value={i}>{dates.availableDates[i]}</MenuItem>)
+    }
+    return items
+  }
+
+  return (<div>
+    <Paper className={classes.dateField}>
+      <TextField
+        id="date_from"
+        label="Date from"
+        type="date"
+        defaultValue={dates.dashboardDateFrom.toISOString().slice(0,10)}
+        className={classes.textField}
+        onChange={onChangeFrom}
+        InputProps={{ inputProps : { 
+          min : dates.initDate.toISOString().slice(0,10),
+          max : dates.dashboardDateTo.toISOString().slice(0,10)
+        }}}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+      <TextField
+        id="date_to"
+        label="Date to"
+        type="date"
+        defaultValue={dates.dashboardDateTo.toISOString().slice(0,10)}
+        className={classes.textField}
+        onChange={onChangeTo}
+        InputProps={{ inputProps: { 
+          min : dates.dashboardDateFrom.toISOString().slice(0,10),
+          max : dates.endDate.toISOString().slice(0,10)
+        } }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+    </Paper>
+    <Paper className={classes.dateField}>
+      <Select className={classes.selectsField} value={dates.availableDates[0]}>
+        {createSelect()}
+      </Select>
+    </Paper></div>
+  )} ;
 
 DateField = withStyles(styles)(DateField);
 
-let SearchControl = ({ classes }) => (
+let SearchControl = ({ classes, dates, onChangeFrom, onChangeTo }) => (
   <div className={classes.searchAndDateControl}>
     {/* <SearchField /> */}
     <Paper className={classes.selectsField}>
@@ -139,7 +169,9 @@ let SearchControl = ({ classes }) => (
         </Select>
       </FormControl>
     </Paper>
-    <DateField />
+    <DateField dates={dates}
+      onChangeFrom={onChangeFrom} onChangeTo={onChangeTo}
+    />
   </div>
 );
 
@@ -162,7 +194,7 @@ let LayersControl = ({ classes }) => (
 
 LayersControl = withStyles(styles)(LayersControl);
 
-let PlotsDrawer = ({ classes }) => (
+let PlotsDrawer = ({ classes, dateFrom, dateTo, scope, custom_scope }) => (
   <Drawer
     className={classes.drawer}
     variant="permanent"
@@ -170,14 +202,108 @@ let PlotsDrawer = ({ classes }) => (
       paper: classes.drawerPaper
     }}
     anchor="right"
-  ></Drawer>
+  >
+    <Dashboard dateFrom={dateFrom} dateTo={dateTo} scope={scope} custom_scope={custom_scope}/>
+  </Drawer>
 );
 
 PlotsDrawer = withStyles(styles)(PlotsDrawer);
 
 class MapMockup extends Component {
+  state = {
+    dates : {
+      dashboardDateFrom : null,
+      dashboardDateTo : null,
+      availableDates : [],
+      initDate : null,
+      endDate: null,
+    },
+    selectedScope: null,
+    customScope : null,
+    loadDrawer : false,
+    mapDate : null,
+    loadSearchDate: false,
+    
+  };
+
+  getDates = async () => {
+    let response = await axios.get(buildApiUrl("/available-dates/"), {});
+    let dates = {
+      firstDate : new Date(response.data.first_date),
+      lastDate : new Date(response.data.last_date)
+    }
+    return dates;
+  }
+
+  componentDidMount = async () => {
+    let dates = await this.getDates();
+
+    let today = new Date();
+    today.setDate(1);
+    let sixmonthago = new Date();
+    sixmonthago.setMonth(today.getMonth() - 6);
+    if (sixmonthago < dates.firstDate){
+      sixmonthago = dates.firstDate
+    }
+    let availableDates = []
+    while (sixmonthago < today) { 
+      availableDates.push(sixmonthago.toISOString().slice(0,10)); 
+      sixmonthago.setMonth(sixmonthago.getMonth()+1)
+    }
+    this.setState(
+      {
+        dates: {
+          dashboardDateFrom : sixmonthago, 
+          dashboardDateTo: today,
+          initDate: dates.firstDate,
+          endDate: dates.lastDate,
+          availableDates: availableDates,
+        }, 
+        mapDate: today,
+        selected_scope: 1,
+        custom_scope : null,
+        loadDrawer: true,
+        loadSearchDate: true,
+      });
+
+      
+  }
+
+  onChangeFrom = (event) => {
+    let date_from = new Date(event.target.value + " 00:00:00");
+    let availableDates = []
+    while (date_from < this.dates.endDate) { 
+      availableDates.push(date_from.toISOString().slice(0,10)); 
+      date_from.setMonth(date_from.getMonth()+1)
+    }
+    this.setState({
+        dates: {
+          ...this.state.dates,
+          dashboardDateFrom : date_from, 
+          availableDates: availableDates
+    }});
+  }
+
+  onChangeTo = (event) => {
+    let date_to = new Date(event.target.value + " 00:00:00");
+    let availableDates = []
+    let { initDate } = this.dates
+    while (initDate < date_to) { 
+      availableDates.push(initDate.toISOString().slice(0,10)); 
+      initDate.setMonth(initDate.getMonth()+1)
+    }
+    this.setState({
+      dates: {
+        ...this.state.dates,
+        dashboardDateTo : date_to, 
+        availableDates: availableDates
+    }});
+  }
+
   render() {
     const { classes } = this.props;
+    const { dates, loadDrawer, selectedScope, customScope,
+      loadSearchDate } = this.state;
 
     return (
       <div className="index">
@@ -193,12 +319,14 @@ class MapMockup extends Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        <SearchControl />
+        {loadSearchDate && 
+        <SearchControl dates={dates} onChangeFrom={this.onChangeFrom} onChangeTo={this.onChangeTo}/>}
         <div className={classes.bottomLeftControlGroup}>
           <ZoomControl />
           <LayersControl />
         </div>
-        <PlotsDrawer />
+        {loadDrawer && <PlotsDrawer dateFrom={dates.dashboardDateFrom} dateTo={dates.dashboardDateTo} 
+                                    scope={selectedScope} custom_scope={customScope}/>}
         <img id="map" src="/static/mockup/verde2.png" />
         <style jsx>
           {`
