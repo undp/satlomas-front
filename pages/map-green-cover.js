@@ -104,8 +104,8 @@ ZoomControl = withStyles(styles)(ZoomControl);
 let DateField = ({ classes, dates, onChangeFrom, onChangeTo }) => {
   const createSelect = () => {
     let items = []
-    for (let i = 0; i < dates.availableDates.length + 1; i++) {
-      items.push(<MenuItem key={i} value={i}>{dates.availableDates[i]}</MenuItem>)
+    for (let i = 0; i <= dates.availableDates.length - 1; i++) {
+      items.push(<MenuItem key={i} value={dates.availableDates[i]}>{dates.availableDates[i]}</MenuItem>)
     }
     return items
   }
@@ -143,29 +143,49 @@ let DateField = ({ classes, dates, onChangeFrom, onChangeTo }) => {
         }}
       />
     </Paper>
-    <Paper className={classes.dateField}>
-      <Select className={classes.selectsField} value={dates.availableDates[0]}>
-        {createSelect()}
-      </Select>
+    <Paper className={classes.selectsField}>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <Select value={dates.availableDates[0]}>
+          {createSelect()}
+        </Select>
+      </FormControl>
     </Paper></div>
-  )} ;
+  )};
 
 DateField = withStyles(styles)(DateField);
 
-let SearchControl = ({ classes, dates, onChangeFrom, onChangeTo }) => (
+let SearchControl = ({ classes, scopes, dates, onChangeFrom, onChangeTo }) => {
+
+  const createSelectTypes = () => {
+    let items = []
+    for (let i = 0; i <=scopes.length - 1; i++) {
+      items.push(<MenuItem key={i} value={i}>{scopes[i]['name']}</MenuItem>)
+    }
+    return items
+  }
+
+  const createSelectScopes = (pos) => {
+    let items = [];
+    for (let i = 0; i <= scopes[pos]['scopes'].length - 1; i++) {
+      items.push(<MenuItem key={i} value={scopes[pos]['scopes'][i]['pk']}>{scopes[pos]['scopes'][i]['name']}</MenuItem>)
+    }
+    return items
+  }
+
+  return(
   <div className={classes.searchAndDateControl}>
     {/* <SearchField /> */}
     <Paper className={classes.selectsField}>
       <FormControl variant="outlined" className={classes.formControl}>
-        <Select value="eco">
-          <MenuItem value="eco">Corredores Ecológicos</MenuItem>
+        <Select value={0}>
+          {createSelectTypes()}
         </Select>
       </FormControl>
     </Paper>
     <Paper className={classes.selectsField}>
       <FormControl variant="outlined" className={classes.formControl}>
-        <Select value="sur">
-          <MenuItem value="sur">Lomas del Sur</MenuItem>
+        <Select value={scopes[0]['scopes'][0]['pk']}>
+          {createSelectScopes(0)}
         </Select>
       </FormControl>
     </Paper>
@@ -173,7 +193,7 @@ let SearchControl = ({ classes, dates, onChangeFrom, onChangeTo }) => (
       onChangeFrom={onChangeFrom} onChangeTo={onChangeTo}
     />
   </div>
-);
+)}
 
 SearchControl = withStyles(styles)(SearchControl);
 
@@ -220,6 +240,8 @@ class MapMockup extends Component {
       initDate : null,
       endDate: null,
     },
+    scopes : [],
+    scopesLoaded : false,
     selectedScope: null,
     customScope : null,
     loadDrawer : false,
@@ -238,7 +260,15 @@ class MapMockup extends Component {
     return dates;
   }
 
+  getScopes = async () => {
+    let response = await axios.get(buildApiUrl("/scopes-types/"), {});
+    this.setState({scopes:response.data, scopesLoaded: true});
+  }
+
   componentDidMount = async () => {
+
+    this.getScopes();
+
     let dates = await this.getDates();
 
     //Se obtiene el primer dia del mes actual o de la fecha mas reciente
@@ -317,7 +347,7 @@ class MapMockup extends Component {
   render() {
     const { classes } = this.props;
     const { dates, loadDrawer, selectedScope, customScope,
-      loadSearchDate } = this.state;
+      loadSearchDate, scopesLoaded, scopes } = this.state;
 
     return (
       <div className="index">
@@ -333,8 +363,8 @@ class MapMockup extends Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        {loadSearchDate && 
-        <SearchControl dates={dates} onChangeFrom={this.onChangeFrom} onChangeTo={this.onChangeTo}/>}
+        {(loadSearchDate && scopesLoaded) && 
+        <SearchControl scopes={scopes} dates={dates} onChangeFrom={this.onChangeFrom} onChangeTo={this.onChangeTo}/>}
         <div className={classes.bottomLeftControlGroup}>
           <ZoomControl />
           <LayersControl />
