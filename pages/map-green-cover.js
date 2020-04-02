@@ -194,7 +194,7 @@ let LayersControl = ({ classes }) => (
 
 LayersControl = withStyles(styles)(LayersControl);
 
-let PlotsDrawer = ({ classes, dateFrom, dateTo, scope, custom_scope }) => (
+let PlotsDrawer = ({ classes, dates, scope, custom_scope }) => (
   <Drawer
     className={classes.drawer}
     variant="permanent"
@@ -203,7 +203,8 @@ let PlotsDrawer = ({ classes, dateFrom, dateTo, scope, custom_scope }) => (
     }}
     anchor="right"
   >
-    <Dashboard dateFrom={dateFrom} dateTo={dateTo} scope={scope} custom_scope={custom_scope}/>
+    <Dashboard dateFrom={dates.dashboardDateFrom} dateTo={dates.dashboardDateTo} 
+                scope={scope} custom_scope={custom_scope}/>
   </Drawer>
 );
 
@@ -215,6 +216,7 @@ class MapMockup extends Component {
       dashboardDateFrom : null,
       dashboardDateTo : null,
       availableDates : [],
+      allAvaibleDates : [],
       initDate : null,
       endDate: null,
     },
@@ -230,7 +232,8 @@ class MapMockup extends Component {
     let response = await axios.get(buildApiUrl("/available-dates/"), {});
     let dates = {
       firstDate : new Date(response.data.first_date),
-      lastDate : new Date(response.data.last_date)
+      lastDate : new Date(response.data.last_date),
+      availables : response.data.availables,
     }
     return dates;
   }
@@ -238,17 +241,27 @@ class MapMockup extends Component {
   componentDidMount = async () => {
     let dates = await this.getDates();
 
+    //Se obtiene el primer dia del mes actual o de la fecha mas reciente
     let today = new Date();
     today.setDate(1);
+    if (today > dates.lastDate){
+      today = new Date(dates.lastDate);
+    }
+
+    //Se calculan seis meses para atras, o la primer fecha posible, para generar el rango para el dashboard
     let sixmonthago = new Date();
     sixmonthago.setMonth(today.getMonth() - 6);
     if (sixmonthago < dates.firstDate){
-      sixmonthago = dates.firstDate
+      sixmonthago = new Date(dates.firstDate);
     }
+
+    //Se crea el arreglo con las fechas seleccionables
     let availableDates = []
-    while (sixmonthago < today) { 
-      availableDates.push(sixmonthago.toISOString().slice(0,10)); 
-      sixmonthago.setMonth(sixmonthago.getMonth()+1)
+    let reference_date = new Date(sixmonthago);
+    while (reference_date < today) {
+      if (dates.availables.includes(reference_date.toISOString().slice(0,7))){
+        availableDates.push(reference_date.toISOString().slice(0,7)); }
+      reference_date.setMonth(reference_date.getMonth()+1);
     }
     this.setState(
       {
@@ -258,6 +271,7 @@ class MapMockup extends Component {
           initDate: dates.firstDate,
           endDate: dates.lastDate,
           availableDates: availableDates,
+          allAvaibleDates : dates.availables,
         }, 
         mapDate: today,
         selected_scope: 1,
@@ -265,15 +279,14 @@ class MapMockup extends Component {
         loadDrawer: true,
         loadSearchDate: true,
       });
-
-      
   }
 
   onChangeFrom = (event) => {
     let date_from = new Date(event.target.value + " 00:00:00");
     let availableDates = []
-    while (date_from < this.dates.endDate) { 
-      availableDates.push(date_from.toISOString().slice(0,10)); 
+    while (date_from < this.state.dates.endDate) { 
+      if (this.state.dates.allAvaibleDates.includes(date_from.toISOString().slice(0,7))){
+        availableDates.push(date_from.toISOString().slice(0,7)); }
       date_from.setMonth(date_from.getMonth()+1)
     }
     this.setState({
@@ -287,9 +300,10 @@ class MapMockup extends Component {
   onChangeTo = (event) => {
     let date_to = new Date(event.target.value + " 00:00:00");
     let availableDates = []
-    let { initDate } = this.dates
+    let { initDate } = this.state.dates;
     while (initDate < date_to) { 
-      availableDates.push(initDate.toISOString().slice(0,10)); 
+      if (this.state.dates.allAvaibleDates.includes(initDate.toISOString().slice(0,7))){
+        availableDates.push(initDate.toISOString().slice(0,7)); }
       initDate.setMonth(initDate.getMonth()+1)
     }
     this.setState({
@@ -325,8 +339,7 @@ class MapMockup extends Component {
           <ZoomControl />
           <LayersControl />
         </div>
-        {loadDrawer && <PlotsDrawer dateFrom={dates.dashboardDateFrom} dateTo={dates.dashboardDateTo} 
-                                    scope={selectedScope} custom_scope={customScope}/>}
+        {loadDrawer && <PlotsDrawer dates={dates} scope={selectedScope} custom_scope={customScope}/>}
         <img id="map" src="/static/mockup/verde2.png" />
         <style jsx>
           {`
