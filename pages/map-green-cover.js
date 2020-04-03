@@ -154,46 +154,56 @@ let DateField = ({ classes, dates, onChangeFrom, onChangeTo }) => {
 
 DateField = withStyles(styles)(DateField);
 
-let SearchControl = ({ classes, scopes, dates, onChangeFrom, onChangeTo }) => {
-
-  const createSelectTypes = () => {
+class SearchControl extends Component {
+  createSelectTypes = () => {
     let items = []
-    for (let i = 0; i <=scopes.length - 1; i++) {
-      items.push(<MenuItem key={i} value={i}>{scopes[i]['name']}</MenuItem>)
+    for (let i = 0; i <=this.props.scopes.types.length - 1; i++) {
+      items.push(<MenuItem key={i} value={i}>{this.props.scopes.types[i]['name']}</MenuItem>)
     }
     return items
   }
 
-  const createSelectScopes = (pos) => {
+  createSelectScopes = (pos) => {
     let items = [];
-    for (let i = 0; i <= scopes[pos]['scopes'].length - 1; i++) {
-      items.push(<MenuItem key={i} value={scopes[pos]['scopes'][i]['pk']}>{scopes[pos]['scopes'][i]['name']}</MenuItem>)
+    for (let i = 0; i <= this.props.scopes.types[pos]['scopes'].length - 1; i++) {
+      items.push(<MenuItem key={i} value={pos}>{this.props.scopes.types[pos]['scopes'][i]['name']}</MenuItem>)
     }
     return items
   }
 
-  return(
-  <div className={classes.searchAndDateControl}>
-    {/* <SearchField /> */}
-    <Paper className={classes.selectsField}>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <Select value={0}>
-          {createSelectTypes()}
-        </Select>
-      </FormControl>
-    </Paper>
-    <Paper className={classes.selectsField}>
-      <FormControl variant="outlined" className={classes.formControl}>
-        <Select value={scopes[0]['scopes'][0]['pk']}>
-          {createSelectScopes(0)}
-        </Select>
-      </FormControl>
-    </Paper>
-    <DateField dates={dates}
-      onChangeFrom={onChangeFrom} onChangeTo={onChangeTo}
-    />
-  </div>
-)}
+  render(){
+    const { classes, scopes, dates, onChangeFrom, 
+            onChangeTo, selectTypeChange, selectScopeChange } = this.props;
+    console.log("Search control props");
+    console.log(this.props);
+    return (
+      <div className={classes.searchAndDateControl}>
+        {/* <SearchField /> */}
+        <Paper className={classes.selectsField}>
+          <FormControl variant="outlined" className={classes.formControl}>
+            <Select value={scopes.selectedType} onChange={selectTypeChange}>
+              {this.createSelectTypes()}
+            </Select>
+          </FormControl>
+        </Paper>
+        <Paper className={classes.selectsField}>
+          <FormControl variant="outlined" className={classes.formControl}>
+            { scopes.types[scopes.selectedType]['scopes'].length > 0 ? 
+            <Select onChange={selectScopeChange}
+              value={scopes.selectedScope}>
+              {this.createSelectScopes(scopes.selectedScope)}
+            </Select> :
+            <Select value="-1"></Select>
+            }
+          </FormControl>
+        </Paper>
+        <DateField dates={dates}
+          onChangeFrom={onChangeFrom} onChangeTo={onChangeTo}
+        />
+      </div>
+    )
+  }
+}
 
 SearchControl = withStyles(styles)(SearchControl);
 
@@ -214,19 +224,24 @@ let LayersControl = ({ classes }) => (
 
 LayersControl = withStyles(styles)(LayersControl);
 
-let PlotsDrawer = ({ classes, dates, scope, custom_scope }) => (
-  <Drawer
-    className={classes.drawer}
-    variant="permanent"
-    classes={{
-      paper: classes.drawerPaper
-    }}
-    anchor="right"
-  >
-    <Dashboard dateFrom={dates.dashboardDateFrom} dateTo={dates.dashboardDateTo} 
-                scope={scope} custom_scope={custom_scope}/>
-  </Drawer>
-);
+class PlotsDrawer extends Component {
+  render() {
+    const { classes, dates, scope, custom_scope } = this.props;
+    return (
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper
+        }}
+        anchor="right"
+      >
+        <Dashboard dateFrom={dates.dashboardDateFrom} dateTo={dates.dashboardDateTo} 
+                    scope={scope} custom_scope={custom_scope}/>
+      </Drawer>
+    );
+  }
+}
 
 PlotsDrawer = withStyles(styles)(PlotsDrawer);
 
@@ -240,9 +255,13 @@ class MapMockup extends Component {
       initDate : null,
       endDate: null,
     },
-    scopes : [],
+    scopes : {
+      types:[], 
+      selectedType:null, 
+      selectedScope:null,
+      scope: null,
+    },
     scopesLoaded : false,
-    selectedScope: null,
     customScope : null,
     loadDrawer : false,
     mapDate : null,
@@ -262,7 +281,17 @@ class MapMockup extends Component {
 
   getScopes = async () => {
     let response = await axios.get(buildApiUrl("/scopes-types/"), {});
-    this.setState({scopes:response.data, scopesLoaded: true});
+    let s = response.data[0]['scopes'][0]['pk'];
+    this.setState({
+      scopes: {
+        ...this.state.scopes, 
+        types: response.data,
+        selectedType:0, 
+        selectedScope:0,
+        scope:s
+      }, 
+      scopesLoaded: true
+    });
   }
 
   componentDidMount = async () => {
@@ -322,7 +351,7 @@ class MapMockup extends Component {
     this.setState({
         dates: {
           ...this.state.dates,
-          dashboardDateFrom : date_from, 
+          dashboardDateFrom : new Date(event.target.value + " 00:00:00"), 
           availableDates: availableDates
     }});
   }
@@ -344,12 +373,21 @@ class MapMockup extends Component {
     }});
   }
 
+  selectTypeChange = (event) => {
+    this.setState({scopes : { ...this.state.scopes, selectedType: event.target.value}});
+  }
+
+  selectScopeChange = (event) => {
+    let s = this.state.scopes.types[this.state.scopes.selectedType]['scopes'][event.target.value]['pk'];
+    this.setState({scopes : { ...this.state.scopes, selectedScope: event.target.value, scope: s}});
+  }
+
   render() {
     const { classes } = this.props;
-    const { dates, loadDrawer, selectedScope, customScope,
+    const { dates, loadDrawer, customScope,
       loadSearchDate, scopesLoaded, scopes } = this.state;
 
-    return (
+      return (
       <div className="index">
         <Head>
           <title>Map</title>
@@ -364,12 +402,14 @@ class MapMockup extends Component {
           />
         </Head>
         {(loadSearchDate && scopesLoaded) && 
-        <SearchControl scopes={scopes} dates={dates} onChangeFrom={this.onChangeFrom} onChangeTo={this.onChangeTo}/>}
+        <SearchControl scopes={scopes} dates={dates} onChangeFrom={this.onChangeFrom} 
+                        onChangeTo={this.onChangeTo} selectTypeChange={this.selectTypeChange}
+                        selectScopeChange={this.selectScopeChange}/>}
         <div className={classes.bottomLeftControlGroup}>
           <ZoomControl />
           <LayersControl />
         </div>
-        {loadDrawer && <PlotsDrawer dates={dates} scope={selectedScope} custom_scope={customScope}/>}
+        {loadDrawer && <PlotsDrawer dates={dates} scope={scopes.scope} custom_scope={customScope}/>}
         <img id="map" src="/static/mockup/verde2.png" />
         <style jsx>
           {`

@@ -4,17 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
-import { withNamespaces } from "../i18n";
 
 const styles = theme => ({
 });
 
 class Dashboard extends React.Component {
     state = {
-        dateFrom : this.props.dateFrom,
-        dateTo: this.props.dateTo,
-        scope: this.props.scope,
-        custom_scope: this.props.custom_scope,
         data : [],
         dataAvaible : false,
     };
@@ -24,19 +19,27 @@ class Dashboard extends React.Component {
     }
 
     getTimeSeries = async () => {
-        const { dateFrom, dateTo } = this.state;
-        const dataSend = {
-            scope_id: 1,
-            from_date: dateFrom.getFullYear() + "-" + dateFrom.getMonth() + "-1",
-            end_date: dateTo.getFullYear() + "-" + dateTo.getMonth() + "-1",
-        };
-        const response = await axios.post(buildApiUrl("/coverage/"), dataSend);
-        this.setState({data:response.data.intersection_area, dataAvaible:true});
+        const { dateFrom, dateTo, scope, custom_scope } = this.props;
+        if (scope > 0){
+            const dataSend = {
+                scope_id: 1,
+                from_date: dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-1",
+                end_date: dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-1",
+            };
+            const response = await axios.post(buildApiUrl("/coverage/"), dataSend);
+            this.setState({data:response.data.intersection_area, dataAvaible:true});
+        }
+        
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props !== prevProps) {
+            this.getTimeSeries();
+        }
     }
 
 
     render() {
-        const { t, classes } = this.props;
         const { data, dataAvaible } = this.state;
         return (
         <div>
