@@ -166,7 +166,7 @@ class SearchControl extends Component {
   createSelectScopes = (pos) => {
     let items = [];
     for (let i = 0; i <= this.props.scopes.types[pos]['scopes'].length - 1; i++) {
-      items.push(<MenuItem key={i} value={pos}>{this.props.scopes.types[pos]['scopes'][i]['name']}</MenuItem>)
+      items.push(<MenuItem key={i} value={i}>{this.props.scopes.types[pos]['scopes'][i]['name']}</MenuItem>)
     }
     return items
   }
@@ -174,8 +174,6 @@ class SearchControl extends Component {
   render(){
     const { classes, scopes, dates, onChangeFrom, 
             onChangeTo, selectTypeChange, selectScopeChange } = this.props;
-    console.log("Search control props");
-    console.log(this.props);
     return (
       <div className={classes.searchAndDateControl}>
         {/* <SearchField /> */}
@@ -190,8 +188,8 @@ class SearchControl extends Component {
           <FormControl variant="outlined" className={classes.formControl}>
             { scopes.types[scopes.selectedType]['scopes'].length > 0 ? 
             <Select onChange={selectScopeChange}
-              value={scopes.selectedScope}>
-              {this.createSelectScopes(scopes.selectedScope)}
+              value={scopes.selectedScope != null ? scopes.selectedScope : 0}>
+              {this.createSelectScopes(scopes.selectedType)}
             </Select> :
             <Select value="-1"></Select>
             }
@@ -374,7 +372,9 @@ class MapMockup extends Component {
   }
 
   selectTypeChange = (event) => {
-    this.setState({scopes : { ...this.state.scopes, selectedType: event.target.value}});
+    let s = this.state.scopes.types[event.target.value]['scopes'][0]['pk'];
+    this.setState({scopes : { ...this.state.scopes, selectedScope: 0, 
+                              selectedType: event.target.value, scope: s}});
   }
 
   selectScopeChange = (event) => {

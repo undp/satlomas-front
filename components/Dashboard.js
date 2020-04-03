@@ -22,7 +22,7 @@ class Dashboard extends React.Component {
         const { dateFrom, dateTo, scope, custom_scope } = this.props;
         if (scope > 0){
             const dataSend = {
-                scope_id: 1,
+                scope_id: scope,
                 from_date: dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-1",
                 end_date: dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-1",
             };
