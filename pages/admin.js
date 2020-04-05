@@ -21,13 +21,13 @@ import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import LayersContent from "../../components/home/LayersContent";
-import MapsContent from "../../components/home/MapsContent";
-import KeysContent from "../../components/home/KeysContent";
-import HomeContent from "../../components/home/HomeContent";
-import { Link, withNamespaces, i18n } from "../../i18n";
-import { buildApiUrl } from "../../utils/api";
-import { withAuthSync, logout } from "../../utils/auth";
+import LayersContent from "../components/admin/LayersContent";
+import MapsContent from "../components/admin/MapsContent";
+import KeysContent from "../components/admin/KeysContent";
+import HomeContent from "../components/admin/HomeContent";
+import { Link, withNamespaces, i18n } from "../i18n";
+import { buildApiUrl } from "../utils/api";
+import { withAuthSync, logout } from "../utils/auth";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -36,49 +36,49 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const drawerWidth = 200;
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   toolbar: {
-    paddingRight: 24 // keep right padding when drawer closed
+    paddingRight: 24, // keep right padding when drawer closed
   },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   menuButton: {
     marginLeft: 12,
-    marginRight: 36
+    marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none"
+    display: "none",
   },
   title: {
     display: "flex",
     flexGrow: 1,
-    alignItems: "center"
+    alignItems: "center",
   },
   titleLogo: {
-    marginRight: 5
+    marginRight: 5,
   },
   drawerPaper: {
     position: "relative",
@@ -86,39 +86,39 @@ const styles = theme => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   drawerPaperClose: {
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing.unit * 7,
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9
-    }
+      width: theme.spacing.unit * 9,
+    },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   chartContainer: {
-    marginLeft: -22
+    marginLeft: -22,
   },
   tableContainer: {
-    height: 320
+    height: 320,
   },
   h5: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
   },
   button: {
-    color: "white"
-  }
+    color: "white",
+  },
 });
 
 const sortedSections = ["stations", "maps", "layers", "keys"];
@@ -128,41 +128,41 @@ const sections = {
   stations: {
     path: "/stations",
     icon: <DashboardIcon />,
-    content: null
+    content: null,
   },
   layers: {
     key: "layers",
     path: "/layers",
     icon: <LayersIcon />,
-    content: <LayersContent />
+    content: <LayersContent />,
   },
   maps: {
     key: "maps",
     path: "/maps",
     icon: <MapIcon />,
-    content: <MapsContent />
+    content: <MapsContent />,
   },
   keys: {
     key: "keys",
     path: "/keys",
     icon: <VpnKeyIcon />,
-    content: <KeysContent />
-  }
+    content: <KeysContent />,
+  },
 };
 
-class Home extends React.Component {
+class Admin extends React.Component {
   state = {
     open: true,
     section: null,
     beta: false,
     contextualMenuOpen: null,
-    userEmail: ""
+    userEmail: "",
   };
 
   static async getInitialProps({ query }) {
     return {
       namespacesRequired: ["me", "common"],
-      query: query
+      query: query,
     };
   }
 
@@ -187,8 +187,8 @@ class Home extends React.Component {
       const response = await axios.get(buildApiUrl("/auth/user/"), {
         headers: {
           "Accept-Language": i18n.language,
-          Authorization: token
-        }
+          Authorization: token,
+        },
       });
       const userData = response.data;
       this.setState({ userEmail: userData.email });
@@ -205,11 +205,11 @@ class Home extends React.Component {
     this.setState({ open: false });
   };
 
-  handleSectionChange = section => {
+  handleSectionChange = (section) => {
     this.setState({ section });
   };
 
-  handleContextualMenuClick = event => {
+  handleContextualMenuClick = (event) => {
     this.setState({ contextualMenuOpen: event.currentTarget });
   };
 
@@ -231,7 +231,7 @@ class Home extends React.Component {
     const content =
       originalContent &&
       React.cloneElement(originalContent, {
-        token: token
+        token: token,
       });
 
     return (
@@ -302,7 +302,7 @@ class Home extends React.Component {
             paper: classNames(
               classes.drawerPaper,
               !open && classes.drawerPaperClose
-            )
+            ),
           }}
           open={open}
         >
@@ -313,7 +313,7 @@ class Home extends React.Component {
           </div>
           <Divider />
           <List>
-            <Link href="/home">
+            <Link href="/admin">
               <ListItem button selected={!sectionList.includes(section)}>
                 <ListItemIcon>
                   <HomeIcon />
@@ -335,11 +335,11 @@ class Home extends React.Component {
           </List>
           <Divider />
           <List>
-            {sectionList.map(key => (
+            {sectionList.map((key) => (
               <Link
                 key={key}
-                href={`/home?section=${key}`}
-                as={`/home${sections[key].path}`}
+                href={`/admin?section=${key}`}
+                as={`/admin${sections[key].path}`}
               >
                 <ListItem
                   button
@@ -355,8 +355,8 @@ class Home extends React.Component {
           <Divider />
           {/* <List>
             <Link
-              href={`/home?section=requests`}
-              as={`/home${sections["requests"].path}`}
+              href={`/admin?section=requests`}
+              as={`/admin${sections["requests"].path}`}
             >
               <ListItem
                 button
@@ -378,12 +378,12 @@ class Home extends React.Component {
   }
 }
 
-Home.propTypes = {
-  classes: PropTypes.object.isRequired
+Admin.propTypes = {
+  classes: PropTypes.object.isRequired,
 };
 
-Home = withStyles(styles)(Home);
-Home = withNamespaces(["me", "common"])(Home);
-Home = withAuthSync(Home);
+Admin = withStyles(styles)(Admin);
+Admin = withNamespaces(["me", "common"])(Admin);
+Admin = withAuthSync(Admin);
 
-export default Home;
+export default Admin;

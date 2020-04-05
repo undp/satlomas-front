@@ -13,21 +13,21 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { withNamespaces } from "../../i18n";
 import cookie from "js-cookie";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     width: "100%",
     overflowX: "auto",
-    padding: "20px"
+    padding: "20px",
   },
   table: {
-    minWidth: 700
+    minWidth: 700,
   },
   title: {
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
   paragraph: {
-    marginBottom: "20px"
-  }
+    marginBottom: "20px",
+  },
 });
 
 class HomeContent extends React.Component {
@@ -42,7 +42,7 @@ class HomeContent extends React.Component {
             {t(`home.api_title`)}
           </Typography>
           <Typography component="p" className={classes.paragraph}>
-            {t(`home.api_descrip1`)} <a href="/home/keys">link</a>{" "}
+            {t(`home.api_descrip1`)} <a href="/admin/keys">link</a>{" "}
             {t(`home.api_descrip2`)}
           </Typography>
         </Paper>
@@ -52,7 +52,7 @@ class HomeContent extends React.Component {
 }
 
 HomeContent.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 HomeContent = withStyles(styles)(HomeContent);
