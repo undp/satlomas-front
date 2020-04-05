@@ -11,33 +11,34 @@ import SearchField from "./SearchField";
 
 const drawerWidth = 360;
 
-const styles = theme => ({
+const styles = (theme) => ({
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
+    flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth
+    width: drawerWidth,
   },
-  toolbar: theme.mixins.toolbar
+  toolbar: theme.mixins.toolbar,
 });
 
 const SensorIcon = () => <img src="/static/sensor_icon.png" height={24} />;
 
 const StationsList = ({ stations, onStationSelect }) => (
   <List>
-    {stations.map(station => (
-      <ListItem
-        key={station.id}
-        button
-        onClick={() => onStationSelect(station)}
-      >
-        <ListItemIcon>
-          <SensorIcon />
-        </ListItemIcon>
-        <ListItemText primary={station.name} secondary={station.place_name} />
-      </ListItem>
-    ))}
+    {stations &&
+      stations.map((station) => (
+        <ListItem
+          key={station.id}
+          button
+          onClick={() => onStationSelect(station)}
+        >
+          <ListItemIcon>
+            <SensorIcon />
+          </ListItemIcon>
+          <ListItemText primary={station.name} secondary={station.place_name} />
+        </ListItem>
+      ))}
   </List>
 );
 
@@ -46,13 +47,13 @@ const MapDrawer = ({
   selectedStation,
   stations,
   onStationSelect,
-  onMenuClick
+  onMenuClick,
 }) => (
   <Drawer
     className={classes.drawer}
     variant="permanent"
     classes={{
-      paper: classes.drawerPaper
+      paper: classes.drawerPaper,
     }}
     anchor="left"
   >
@@ -69,14 +70,14 @@ MapDrawer.propTypes = {
   stations: PropTypes.array,
   selectedStation: PropTypes.object,
   onStationSelect: PropTypes.func,
-  onMenuClick: PropTypes.func
+  onMenuClick: PropTypes.func,
 };
 
 MapDrawer.defaultProps = {
   stations: [],
   selectedStation: null,
   onStationSelect: () => {},
-  onMenuClick: () => {}
+  onMenuClick: () => {},
 };
 
 export default withStyles(styles)(MapDrawer);

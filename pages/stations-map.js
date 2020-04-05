@@ -16,7 +16,7 @@ import { withAuthSync } from "../utils/auth";
 // Dynamically load TrialMap component as it only works on browser
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
-  loading: LoadingProgress
+  loading: LoadingProgress,
 });
 
 class StationsMap extends Component {
@@ -25,16 +25,16 @@ class StationsMap extends Component {
     bounds: null,
     viewport: {
       center: [-12.046373, -76.542755],
-      zoom: 10
+      zoom: 10,
     },
     stations: [],
-    selectedStation: null
+    selectedStation: null,
   };
 
   static async getInitialProps({ query }) {
     return {
       query,
-      namespacesRequired: ["common"]
+      namespacesRequired: ["common"],
     };
   }
 
@@ -43,9 +43,9 @@ class StationsMap extends Component {
     const headers = token ? { Authorization: token } : {};
 
     const response = await axios.get(buildApiUrl(`/stations/`), {
-      headers: headers
+      headers: headers,
     });
-    const stations = response.data;
+    const stations = response.data || [];
 
     this.setState({ stations });
   }
@@ -54,11 +54,11 @@ class StationsMap extends Component {
     await this.fetchStations();
   }
 
-  handleMapViewportChanged = viewport => {
+  handleMapViewportChanged = (viewport) => {
     this.setState({ viewport });
   };
 
-  handleStationSelect = station => {
+  handleStationSelect = (station) => {
     this.setState({ selectedStation: station });
   };
 
@@ -99,7 +99,7 @@ class StationsMap extends Component {
 }
 
 StationsMap.propTypes = {
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
 };
 
 StationsMap = withNamespaces()(StationsMap);
