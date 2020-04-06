@@ -12,6 +12,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
 import StationsFilterButton from "../components/StationsFilterButton";
 import TimeRangeFilterButton from "../components/TimeRangeFilterButton";
+import Head from "next/head";
 
 const styles = (theme) => ({
   appBar: {
@@ -160,6 +161,13 @@ class StationsDashboard extends React.Component {
     },
   };
 
+  componentDidMount() {
+    // TODO: Get all stations
+    // TODO: Set station filter based on query param
+    // TODO: Set time range filter based on query param
+    // TODO: Query all and set data state
+  }
+
   handleStationsClick = (event) => {
     this.setState({
       stationsAnchorEl: event.currentTarget,
@@ -191,13 +199,25 @@ class StationsDashboard extends React.Component {
     const stationsOpen = Boolean(stationsAnchorEl);
     const timeRangeOpen = Boolean(timeRangeAnchorEl);
 
+    // Load current station from query parameter
+    const station = null;
+
     return (
       <React.Fragment>
+        <Head>
+          <title>
+            {station
+              ? `GeoLomas - Dashboard: ${station.name}`
+              : `GeoLomas - Dashboard de Estaciones`}
+          </title>
+        </Head>
         <CssBaseline />
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              GeoLomas - Dashboard de Estaciones Meteorológicas
+              {station
+                ? `Dashboard: ${station.name}`
+                : `Dashboard de Estaciones Meteorológicas`}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
