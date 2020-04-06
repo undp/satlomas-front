@@ -103,7 +103,7 @@ const Index = ({ classes }) => (
       <Toolbar>
         {/* <CameraIcon className={classes.icon} /> */}
         <Typography variant="h6" color="inherit" noWrap>
-          Plataforma GeoLomas
+          GeoLomas
         </Typography>
       </Toolbar>
     </AppBar>
@@ -198,6 +198,10 @@ const Index = ({ classes }) => (
     {/* End footer */}
   </React.Fragment>
 );
+
+Index.getInitialProps = async () => ({
+  namespacesRequired: ["common"],
+});
 
 Index.propTypes = {
   classes: PropTypes.object.isRequired,
