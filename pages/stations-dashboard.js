@@ -10,6 +10,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
+import StationsFilterButton from "../components/StationsFilterButton";
+import TimeRangeFilterButton from "../components/TimeRangeFilterButton";
 
 const styles = (theme) => ({
   appBar: {
@@ -23,6 +25,18 @@ const styles = (theme) => ({
       width: 1500,
       marginLeft: "auto",
       marginRight: "auto",
+    },
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  rightButtons: {
+    position: "relative",
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing.unit,
+      width: "auto",
     },
   },
   cardGrid: {
@@ -85,8 +99,57 @@ const plots = [
 
 class StationsDashboard extends React.Component {
   state = {
+    stationsAnchorEl: null,
     data: {
       temperature: [
+        { ts: "2020-04-01", uv: 400, pv: 2400 },
+        { ts: "2020-04-02", uv: 200, pv: 1400 },
+        { ts: "2020-04-03", uv: 100, pv: 1200 },
+        { ts: "2020-04-04", uv: 600, pv: 1700 },
+        { ts: "2020-04-05", uv: 800, pv: 3400 },
+        { ts: "2020-04-06", uv: 480, pv: 4400 },
+      ],
+      humidity: [
+        { ts: "2020-04-01", uv: 400, pv: 2400 },
+        { ts: "2020-04-02", uv: 200, pv: 1400 },
+        { ts: "2020-04-03", uv: 100, pv: 1200 },
+        { ts: "2020-04-04", uv: 600, pv: 1700 },
+        { ts: "2020-04-05", uv: 800, pv: 3400 },
+        { ts: "2020-04-06", uv: 480, pv: 4400 },
+      ],
+      wind_speed: [
+        { ts: "2020-04-01", uv: 400, pv: 2400 },
+        { ts: "2020-04-02", uv: 200, pv: 1400 },
+        { ts: "2020-04-03", uv: 100, pv: 1200 },
+        { ts: "2020-04-04", uv: 600, pv: 1700 },
+        { ts: "2020-04-05", uv: 800, pv: 3400 },
+        { ts: "2020-04-06", uv: 480, pv: 4400 },
+      ],
+      wind_direction: [
+        { ts: "2020-04-01", uv: 400, pv: 2400 },
+        { ts: "2020-04-02", uv: 200, pv: 1400 },
+        { ts: "2020-04-03", uv: 100, pv: 1200 },
+        { ts: "2020-04-04", uv: 600, pv: 1700 },
+        { ts: "2020-04-05", uv: 800, pv: 3400 },
+        { ts: "2020-04-06", uv: 480, pv: 4400 },
+      ],
+      pressure: [
+        { ts: "2020-04-01", uv: 400, pv: 2400 },
+        { ts: "2020-04-02", uv: 200, pv: 1400 },
+        { ts: "2020-04-03", uv: 100, pv: 1200 },
+        { ts: "2020-04-04", uv: 600, pv: 1700 },
+        { ts: "2020-04-05", uv: 800, pv: 3400 },
+        { ts: "2020-04-06", uv: 480, pv: 4400 },
+      ],
+      precipitation: [
+        { ts: "2020-04-01", uv: 400, pv: 2400 },
+        { ts: "2020-04-02", uv: 200, pv: 1400 },
+        { ts: "2020-04-03", uv: 100, pv: 1200 },
+        { ts: "2020-04-04", uv: 600, pv: 1700 },
+        { ts: "2020-04-05", uv: 800, pv: 3400 },
+        { ts: "2020-04-06", uv: 480, pv: 4400 },
+      ],
+      pm25: [
         { ts: "2020-04-01", uv: 400, pv: 2400 },
         { ts: "2020-04-02", uv: 200, pv: 1400 },
         { ts: "2020-04-03", uv: 100, pv: 1200 },
@@ -97,9 +160,36 @@ class StationsDashboard extends React.Component {
     },
   };
 
+  handleStationsClick = (event) => {
+    this.setState({
+      stationsAnchorEl: event.currentTarget,
+    });
+  };
+
+  handleStationsClose = () => {
+    this.setState({
+      stationsAnchorEl: null,
+    });
+  };
+
+  handleTimeRangeClick = (event) => {
+    this.setState({
+      timeRangeAnchorEl: event.currentTarget,
+    });
+  };
+
+  handleTimeRangeClose = () => {
+    this.setState({
+      timeRangeAnchorEl: null,
+    });
+  };
+
   render() {
     const { classes } = this.props;
-    const { data } = this.state;
+    const { data, stationsAnchorEl, timeRangeAnchorEl } = this.state;
+
+    const stationsOpen = Boolean(stationsAnchorEl);
+    const timeRangeOpen = Boolean(timeRangeAnchorEl);
 
     return (
       <React.Fragment>
@@ -107,8 +197,23 @@ class StationsDashboard extends React.Component {
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              GeoLomas
+              GeoLomas - Dashboard de Estaciones Meteorológicas
             </Typography>
+            <div className={classes.grow} />
+            <div className={classes.rightButtons}>
+              <StationsFilterButton
+                onClick={this.handleStationsClick}
+                popoverOpen={stationsOpen}
+                anchorEl={stationsAnchorEl}
+                onPopoverClose={this.handleStationsClose}
+              />
+              <TimeRangeFilterButton
+                onClick={this.handleTimeRangeClick}
+                popoverOpen={timeRangeOpen}
+                anchorEl={timeRangeAnchorEl}
+                onPopoverClose={this.handleTimeRangeClose}
+              />
+            </div>
           </Toolbar>
         </AppBar>
         <main>
