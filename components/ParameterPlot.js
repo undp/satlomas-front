@@ -75,15 +75,15 @@ class ParameterPlot extends React.Component {
   render() {
     const { data, loading } = this.state;
 
-    return loading ? (
-      <LinearProgress />
-    ) : (
-      <LineChart width={400} height={250} data={data}>
-        <XAxis dataKey="t" style={axisStyle} />
-        <YAxis style={axisStyle} />
-        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-        <Line type="monotone" dataKey="v" stroke="#8884d8" />
-      </LineChart>
+    return (
+      !loading && (
+        <LineChart width={400} height={250} data={data}>
+          <XAxis dataKey="t" style={axisStyle} />
+          <YAxis style={axisStyle} />
+          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+          <Line type="monotone" dataKey="v" stroke="#8884d8" />
+        </LineChart>
+      )
     );
   }
 }

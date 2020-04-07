@@ -30,7 +30,7 @@ const styles = (theme) => ({
 let StationsSelectorButton = ({
   classes,
   stations,
-  selectedStation,
+  value,
   popoverOpen,
   onClick,
   anchorEl,
@@ -71,7 +71,7 @@ let StationsSelectorButton = ({
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="station">Estación</InputLabel>
             <Select
-              value={selectedStation && selectedStation.id}
+              value={value}
               onChange={onSelectChange}
               inputProps={{
                 name: "station",
@@ -79,7 +79,9 @@ let StationsSelectorButton = ({
               }}
             >
               {(stations || []).map((station) => (
-                <MenuItem value={station.id}>{station.name}</MenuItem>
+                <MenuItem key={station.id} value={station.id}>
+                  {station.name}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

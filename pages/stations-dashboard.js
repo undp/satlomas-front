@@ -99,7 +99,11 @@ class StationsDashboard extends React.Component {
   state = {
     loading: true,
     station: null,
-    timeRange: null,
+    timeRange: {
+      lastTime: "6-hour",
+      aggregationFunc: "avg",
+      groupingInterval: "hour",
+    },
     stationsAnchorEl: null,
     data: {},
   };
@@ -169,6 +173,27 @@ class StationsDashboard extends React.Component {
     });
   };
 
+  handleTimeRangeLastTimeSelectChange = (e) => {
+    const lastTime = e.target.value;
+    this.setState((prevState) => ({
+      timeRange: { ...prevState.timeRange, lastTime },
+    }));
+  };
+
+  handleAggregationFunctionSelectChange = (e) => {
+    const aggregationFunc = e.target.value;
+    this.setState((prevState) => ({
+      timeRange: { ...prevState.timeRange, aggregationFunc },
+    }));
+  };
+
+  handleGroupingIntervalSelectChange = (e) => {
+    const groupingInterval = e.target.value;
+    this.setState((prevState) => ({
+      timeRange: { ...prevState.timeRange, groupingInterval },
+    }));
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -177,13 +202,14 @@ class StationsDashboard extends React.Component {
       station,
       stationsAnchorEl,
       timeRangeAnchorEl,
+      timeRange,
     } = this.state;
+
+    const { groupingInterval, aggregationFunc } = timeRange;
 
     // FIXME Move to state
     const start = "2011-01-01T00:00";
     const end = "2012-01-01T00:00";
-    const groupingInterval = "month";
-    const aggregationFunc = "avg";
 
     return (
       <React.Fragment>
@@ -205,19 +231,29 @@ class StationsDashboard extends React.Component {
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
               <StationsFilterButton
+                value={station && station.id}
                 stations={stations}
-                selectedStation={station}
-                onSelectChange={this.handleStationsSelectChange}
-                onClick={this.handleStationsClick}
                 popoverOpen={Boolean(stationsAnchorEl)}
                 anchorEl={stationsAnchorEl}
+                onClick={this.handleStationsClick}
                 onPopoverClose={this.handleStationsClose}
+                onSelectChange={this.handleStationsSelectChange}
               />
               <TimeRangeFilterButton
-                onClick={this.handleTimeRangeClick}
+                value={timeRange}
                 popoverOpen={Boolean(timeRangeAnchorEl)}
                 anchorEl={timeRangeAnchorEl}
                 onPopoverClose={this.handleTimeRangeClose}
+                onClick={this.handleTimeRangeClick}
+                onLastTimeSelectChange={
+                  this.handleTimeRangeLastTimeSelectChange
+                }
+                onAggregationFunctionSelectChange={
+                  this.handleAggregationFunctionSelectChange
+                }
+                onGroupingIntervalSelectChange={
+                  this.handleGroupingIntervalSelectChange
+                }
               />
             </div>
           </Toolbar>
