@@ -5,7 +5,10 @@ import DevicesOtherIcon from "@material-ui/icons/DevicesOther";
 import Button from "@material-ui/core/Button";
 import Popover from "@material-ui/core/Popover";
 import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 const styles = (theme) => ({
   buttonIcon: {
@@ -14,13 +17,24 @@ const styles = (theme) => ({
   popover: {
     margin: theme.spacing.unit * 2,
   },
+  form: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+  },
 });
 
 let StationsSelectorButton = ({
   classes,
+  stations,
+  selectedStation,
   popoverOpen,
   onClick,
   anchorEl,
+  onSelectChange,
   onPopoverClose,
 }) => (
   <>
@@ -53,7 +67,23 @@ let StationsSelectorButton = ({
       }}
     >
       <div className={classes.popover}>
-        <Typography>Station select popover</Typography>
+        <form className={classes.form} autoComplete="off">
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="station">Estación</InputLabel>
+            <Select
+              value={selectedStation && selectedStation.id}
+              onChange={onSelectChange}
+              inputProps={{
+                name: "station",
+                id: "station",
+              }}
+            >
+              {(stations || []).map((station) => (
+                <MenuItem value={station.id}>{station.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </form>
       </div>
     </Popover>
   </>

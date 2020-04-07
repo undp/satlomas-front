@@ -150,6 +150,13 @@ class StationsDashboard extends React.Component {
     });
   };
 
+  handleStationsSelectChange = (e) => {
+    const { stations } = this.state;
+    const newId = e.target.value;
+    const station = stations.find((st) => st.id === newId);
+    this.setState({ station });
+  };
+
   handleTimeRangeClick = (event) => {
     this.setState({
       timeRangeAnchorEl: event.currentTarget,
@@ -166,6 +173,7 @@ class StationsDashboard extends React.Component {
     const { classes } = this.props;
     const {
       loading,
+      stations,
       station,
       stationsAnchorEl,
       timeRangeAnchorEl,
@@ -197,6 +205,9 @@ class StationsDashboard extends React.Component {
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
               <StationsFilterButton
+                stations={stations}
+                selectedStation={station}
+                onSelectChange={this.handleStationsSelectChange}
                 onClick={this.handleStationsClick}
                 popoverOpen={Boolean(stationsAnchorEl)}
                 anchorEl={stationsAnchorEl}
