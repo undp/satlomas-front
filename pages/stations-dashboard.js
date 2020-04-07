@@ -116,7 +116,9 @@ class StationsDashboard extends React.Component {
     // Set station filter based on query param
     const { stations } = this.state;
     // console.log("Stations:", stations);
-    const station = stations.find((station) => station.id === Number(query.id));
+    const station = query.id
+      ? stations.find((station) => station.id === Number(query.id))
+      : stations[0];
     // console.log("Current station:", station);
 
     // Set time range filter based on query param
