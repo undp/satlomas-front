@@ -67,7 +67,7 @@ const styles = (theme) => ({
 const cards = [
   {
     key: "green-map",
-    title: "Cobertura verde",
+    title: "Cobertura verde en Lomas",
     description:
       "Mapa de cobertura verde de Lomas, basado en el producto VI de MODIS, actualizado mensualmente.",
     image: "",
@@ -76,21 +76,24 @@ const cards = [
   {
     key: "changes-map",
     title: "Cobertura de Lomas",
-    description: "",
+    description:
+      "Mapa de cambios de cobertura de loma perdida y remanente, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
     image: "",
     href: "/map-changes",
   },
   {
     key: "stations-map",
     title: "Mapa de Estaciones",
-    description: "",
+    description:
+      "Mapa con las estaciones meteorológicas instaladas actualmente",
     image: "",
     href: "/stations-map",
   },
   {
     key: "station-dashboard",
     title: "Dashboard de Estaciones",
-    description: "",
+    description:
+      "Dashboard de las estaciones meteorológicas, con información actualizada en tiempo real.",
     image: "",
     href: "/stations-dashboard",
   },
