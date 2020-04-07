@@ -1,5 +1,8 @@
 import React from "react";
+import axios from "axios";
 import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
+import { buildApiUrl } from "../utils/api";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const axisStyle = {
   fontSize: 12,
@@ -9,6 +12,7 @@ const axisStyle = {
 
 class ParameterPlot extends React.Component {
   state = {
+    loading: true,
     data: null,
   };
 
@@ -62,16 +66,18 @@ class ParameterPlot extends React.Component {
         params,
       });
       // console.log(`Fetch data for '${parameter}':`, response.data);
-      this.setState({ data: response.data });
+      this.setState({ data: response.data, loading: false });
     } catch (err) {
       console.error(err);
     }
   }
 
   render() {
-    const { data } = this.state;
+    const { data, loading } = this.state;
 
-    return (
+    return loading ? (
+      <LinearProgress />
+    ) : (
       <LineChart width={400} height={250} data={data}>
         <XAxis dataKey="t" style={axisStyle} />
         <YAxis style={axisStyle} />
