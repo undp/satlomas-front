@@ -9,10 +9,13 @@ import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
 import StationsFilterButton from "../components/StationsFilterButton";
 import TimeRangeFilterButton from "../components/TimeRangeFilterButton";
 import Head from "next/head";
+import axios from "axios";
+import { buildApiUrl } from "../utils/api";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import ParameterPlot from "../components/ParameterPlot";
 
 const styles = (theme) => ({
   appBar: {
@@ -61,12 +64,6 @@ const styles = (theme) => ({
   },
 });
 
-const axisStyle = {
-  fontSize: 12,
-  fontWeight: 500,
-  fontFamily: "Roboto, sans-serif",
-};
-
 const plots = [
   {
     key: "temperature",
@@ -100,72 +97,43 @@ const plots = [
 
 class StationsDashboard extends React.Component {
   state = {
+    loading: true,
+    station: null,
+    timeRange: null,
     stationsAnchorEl: null,
-    data: {
-      temperature: [
-        { ts: "2020-04-01", uv: 400, pv: 2400 },
-        { ts: "2020-04-02", uv: 200, pv: 1400 },
-        { ts: "2020-04-03", uv: 100, pv: 1200 },
-        { ts: "2020-04-04", uv: 600, pv: 1700 },
-        { ts: "2020-04-05", uv: 800, pv: 3400 },
-        { ts: "2020-04-06", uv: 480, pv: 4400 },
-      ],
-      humidity: [
-        { ts: "2020-04-01", uv: 400, pv: 2400 },
-        { ts: "2020-04-02", uv: 200, pv: 1400 },
-        { ts: "2020-04-03", uv: 100, pv: 1200 },
-        { ts: "2020-04-04", uv: 600, pv: 1700 },
-        { ts: "2020-04-05", uv: 800, pv: 3400 },
-        { ts: "2020-04-06", uv: 480, pv: 4400 },
-      ],
-      wind_speed: [
-        { ts: "2020-04-01", uv: 400, pv: 2400 },
-        { ts: "2020-04-02", uv: 200, pv: 1400 },
-        { ts: "2020-04-03", uv: 100, pv: 1200 },
-        { ts: "2020-04-04", uv: 600, pv: 1700 },
-        { ts: "2020-04-05", uv: 800, pv: 3400 },
-        { ts: "2020-04-06", uv: 480, pv: 4400 },
-      ],
-      wind_direction: [
-        { ts: "2020-04-01", uv: 400, pv: 2400 },
-        { ts: "2020-04-02", uv: 200, pv: 1400 },
-        { ts: "2020-04-03", uv: 100, pv: 1200 },
-        { ts: "2020-04-04", uv: 600, pv: 1700 },
-        { ts: "2020-04-05", uv: 800, pv: 3400 },
-        { ts: "2020-04-06", uv: 480, pv: 4400 },
-      ],
-      pressure: [
-        { ts: "2020-04-01", uv: 400, pv: 2400 },
-        { ts: "2020-04-02", uv: 200, pv: 1400 },
-        { ts: "2020-04-03", uv: 100, pv: 1200 },
-        { ts: "2020-04-04", uv: 600, pv: 1700 },
-        { ts: "2020-04-05", uv: 800, pv: 3400 },
-        { ts: "2020-04-06", uv: 480, pv: 4400 },
-      ],
-      precipitation: [
-        { ts: "2020-04-01", uv: 400, pv: 2400 },
-        { ts: "2020-04-02", uv: 200, pv: 1400 },
-        { ts: "2020-04-03", uv: 100, pv: 1200 },
-        { ts: "2020-04-04", uv: 600, pv: 1700 },
-        { ts: "2020-04-05", uv: 800, pv: 3400 },
-        { ts: "2020-04-06", uv: 480, pv: 4400 },
-      ],
-      pm25: [
-        { ts: "2020-04-01", uv: 400, pv: 2400 },
-        { ts: "2020-04-02", uv: 200, pv: 1400 },
-        { ts: "2020-04-03", uv: 100, pv: 1200 },
-        { ts: "2020-04-04", uv: 600, pv: 1700 },
-        { ts: "2020-04-05", uv: 800, pv: 3400 },
-        { ts: "2020-04-06", uv: 480, pv: 4400 },
-      ],
-    },
+    data: {},
   };
 
-  componentDidMount() {
-    // TODO: Get all stations
-    // TODO: Set station filter based on query param
-    // TODO: Set time range filter based on query param
-    // TODO: Query all and set data state
+  static async getInitialProps({ query }) {
+    return { namespacesRequired: ["common"], query };
+  }
+
+  async componentDidMount() {
+    await this.fetchStations();
+
+    const { query } = this.props;
+
+    // Set station filter based on query param
+    const { stations } = this.state;
+    // console.log("Stations:", stations);
+    const station = stations.find((station) => station.id === Number(query.id));
+    // console.log("Current station:", station);
+
+    // Set time range filter based on query param
+    // TODO...
+
+    this.setState({ station });
+
+    this.setState({ loading: false });
+  }
+
+  async fetchStations() {
+    try {
+      const response = await axios.get(buildApiUrl("/stations/"));
+      this.setState({ stations: response.data });
+    } catch (error) {
+      // TODO Raise an error modal
+    }
   }
 
   handleStationsClick = (event) => {
@@ -194,13 +162,18 @@ class StationsDashboard extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, stationsAnchorEl, timeRangeAnchorEl } = this.state;
+    const {
+      loading,
+      station,
+      stationsAnchorEl,
+      timeRangeAnchorEl,
+    } = this.state;
 
-    const stationsOpen = Boolean(stationsAnchorEl);
-    const timeRangeOpen = Boolean(timeRangeAnchorEl);
-
-    // Load current station from query parameter
-    const station = null;
+    // FIXME Move to state
+    const start = "2011-01-01T00:00";
+    const end = "2012-01-01T00:00";
+    const groupingInterval = "month";
+    const aggregationFunc = "avg";
 
     return (
       <React.Fragment>
@@ -223,13 +196,13 @@ class StationsDashboard extends React.Component {
             <div className={classes.rightButtons}>
               <StationsFilterButton
                 onClick={this.handleStationsClick}
-                popoverOpen={stationsOpen}
+                popoverOpen={Boolean(stationsAnchorEl)}
                 anchorEl={stationsAnchorEl}
                 onPopoverClose={this.handleStationsClose}
               />
               <TimeRangeFilterButton
                 onClick={this.handleTimeRangeClick}
-                popoverOpen={timeRangeOpen}
+                popoverOpen={Boolean(timeRangeAnchorEl)}
                 anchorEl={timeRangeAnchorEl}
                 onPopoverClose={this.handleTimeRangeClose}
               />
@@ -237,37 +210,38 @@ class StationsDashboard extends React.Component {
           </Toolbar>
         </AppBar>
         <main>
-          <div className={classNames(classes.layout, classes.cardGrid)}>
-            <Grid container spacing={16}>
-              {plots.map((plot) => (
-                <Grid item key={plot.key} sm={6} md={4} lg={4}>
-                  <Card className={classes.card}>
-                    <CardContent className={classes.cardContent}>
-                      <Typography gutterBottom variant="h6" component="h6">
-                        {plot.title}
-                      </Typography>
-                      <LineChart width={400} height={300} data={data[plot.key]}>
-                        <XAxis dataKey="ts" style={axisStyle} />
-                        <YAxis style={axisStyle} />
-                        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                        <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                      </LineChart>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </div>
+          {!loading && station ? (
+            <div className={classNames(classes.layout, classes.cardGrid)}>
+              <Grid container spacing={16}>
+                {plots.map((plot) => (
+                  <Grid item key={plot.key} sm={6} md={4} lg={4}>
+                    <Card className={classes.card}>
+                      <CardContent className={classes.cardContent}>
+                        <Typography gutterBottom variant="h6" component="h6">
+                          {plot.title}
+                        </Typography>
+                        <ParameterPlot
+                          station={station}
+                          parameter={plot.key}
+                          start={start}
+                          end={end}
+                          groupingInterval={groupingInterval}
+                          aggregationFunc={aggregationFunc}
+                        />
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </div>
+          ) : (
+            <LinearProgress />
+          )}
         </main>
       </React.Fragment>
     );
   }
 }
-
-StationsDashboard.getInitialProps = async () => ({
-  namespacesRequired: ["common"],
-});
 
 StationsDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
