@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
 import { buildApiUrl } from "../utils/api";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import _ from "lodash";
 
 const axisStyle = {
   fontSize: 12,
@@ -21,24 +21,42 @@ class ParameterPlot extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      parameter,
-      station,
-      start,
-      end,
-      groupingInterval,
-      aggregationFunc,
-    } = this.props;
-
-    if (
-      parameter !== prevProps.parameter ||
-      station !== prevProps.station ||
-      start !== prevProps.start ||
-      end !== prevProps.end ||
-      groupingInterval !== prevProps.groupingInterval ||
-      aggregationFunc !== prevProps.aggregationFunc
-    ) {
+    if (!_.isEqual(prevProps, this.props)) {
       this.fetchData();
+    }
+  }
+
+  getSecondsFromTimeAndUnit(time, unit) {
+    switch (unit) {
+      case "hour":
+        return time * 1000 * 60 * 60;
+      case "day":
+        return time * 1000 * 60 * 60 * 24;
+      case "week":
+        return time * 1000 * 60 * 60 * 24 * 7;
+      case "month":
+        return time * 1000 * 60 * 60 * 24 * 30;
+      case "year":
+        return time * 1000 * 60 * 60 * 24 * 365;
+      default:
+        throw `Invalid time unit: ${unit}`;
+    }
+  }
+
+  calculateTimeRange(mode, params) {
+    switch (mode) {
+      case "realtime": {
+        const { now, lastTime } = params;
+        const [time, unit] = lastTime.split("-");
+        const seconds = this.getSecondsFromTimeAndUnit(time, unit);
+        return [new Date(now - seconds), now];
+      }
+      case "historic": {
+        const { start, end } = params;
+        return [start, end];
+      }
+      default:
+        throw "invalid time range mode";
     }
   }
 
@@ -46,11 +64,13 @@ class ParameterPlot extends React.Component {
     const {
       parameter,
       station,
-      start,
-      end,
+      mode,
+      timeRangeParams,
       groupingInterval,
       aggregationFunc,
     } = this.props;
+
+    const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
 
     const params = {
       station: station.id,
@@ -60,6 +80,7 @@ class ParameterPlot extends React.Component {
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };
+    console.log("Summary request parameters:", params);
 
     try {
       const response = await axios.get(buildApiUrl("/measures/summary"), {

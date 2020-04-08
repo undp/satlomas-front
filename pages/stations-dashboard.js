@@ -17,6 +17,10 @@ import { buildApiUrl } from "../utils/api";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import ParameterPlot from "../components/ParameterPlot";
 
+const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
+const DEFAULT_START = "2011-01-01T00:00";
+const DEFAULT_END = "2012-01-01T00:00";
+
 const styles = (theme) => ({
   appBar: {
     position: "relative",
@@ -99,11 +103,11 @@ class StationsDashboard extends React.Component {
   state = {
     loading: true,
     station: null,
-    timeRange: {
-      lastTime: "6-hour",
-      aggregationFunc: "avg",
-      groupingInterval: "hour",
-    },
+    mode: "historic",
+    realtimeParams: { now: null, lastTime: "1-year" },
+    historicParams: { start: DEFAULT_START, end: DEFAULT_END },
+    aggregationFunc: "avg",
+    groupingInterval: "month",
     stationsAnchorEl: null,
     data: {},
   };
@@ -119,18 +123,37 @@ class StationsDashboard extends React.Component {
 
     // Set station filter based on query param
     const { stations } = this.state;
-    // console.log("Stations:", stations);
     const station = query.id
       ? stations.find((station) => station.id === Number(query.id))
       : stations[0];
-    // console.log("Current station:", station);
 
-    // Set time range filter based on query param
-    // TODO...
+    // TODO Set time range filter based on query param
+    // ...
 
-    this.setState({ station });
+    this.setState({ station, loading: false }, () => {
+      this.setHistoricMode();
+      // this.setRealtimeMode();
+    });
+  }
 
-    this.setState({ loading: false });
+  setRealtimeMode() {
+    this.updateNow();
+    this.rtInterval = setInterval(() => this.updateNow(), REFRESH_INTERVAL_MS);
+  }
+
+  setHistoricMode() {
+    this.setState({ mode: "historic" });
+    this.rtInterval = null;
+  }
+
+  updateNow() {
+    const now = new Date();
+
+    console.log("Update now:", now);
+    this.setState((prevState) => ({
+      mode: "realtime",
+      realtimeParams: { ...prevState.realtimeParams, now },
+    }));
   }
 
   async fetchStations() {
@@ -139,19 +162,16 @@ class StationsDashboard extends React.Component {
       this.setState({ stations: response.data });
     } catch (error) {
       // TODO Raise an error modal
+      // ...
     }
   }
 
   handleStationsClick = (event) => {
-    this.setState({
-      stationsAnchorEl: event.currentTarget,
-    });
+    this.setState({ stationsAnchorEl: event.currentTarget });
   };
 
   handleStationsClose = () => {
-    this.setState({
-      stationsAnchorEl: null,
-    });
+    this.setState({ stationsAnchorEl: null });
   };
 
   handleStationsSelectChange = (e) => {
@@ -162,36 +182,28 @@ class StationsDashboard extends React.Component {
   };
 
   handleTimeRangeClick = (event) => {
-    this.setState({
-      timeRangeAnchorEl: event.currentTarget,
-    });
+    this.setState({ timeRangeAnchorEl: event.currentTarget });
   };
 
   handleTimeRangeClose = () => {
-    this.setState({
-      timeRangeAnchorEl: null,
-    });
+    this.setState({ timeRangeAnchorEl: null });
   };
 
   handleTimeRangeLastTimeSelectChange = (e) => {
-    const lastTime = e.target.value;
     this.setState((prevState) => ({
-      timeRange: { ...prevState.timeRange, lastTime },
+      realtimeParams: {
+        ...prevState.realtimeParams,
+        lastTime: e.target.value,
+      },
     }));
   };
 
   handleAggregationFunctionSelectChange = (e) => {
-    const aggregationFunc = e.target.value;
-    this.setState((prevState) => ({
-      timeRange: { ...prevState.timeRange, aggregationFunc },
-    }));
+    this.setState({ aggregationFunc: e.target.value });
   };
 
   handleGroupingIntervalSelectChange = (e) => {
-    const groupingInterval = e.target.value;
-    this.setState((prevState) => ({
-      timeRange: { ...prevState.timeRange, groupingInterval },
-    }));
+    this.setState({ groupingInterval: e.target.value });
   };
 
   render() {
@@ -202,14 +214,15 @@ class StationsDashboard extends React.Component {
       station,
       stationsAnchorEl,
       timeRangeAnchorEl,
-      timeRange,
+      mode,
+      realtimeParams,
+      historicParams,
+      groupingInterval,
+      aggregationFunc,
     } = this.state;
 
-    const { groupingInterval, aggregationFunc } = timeRange;
-
-    // FIXME Move to state
-    const start = "2011-01-01T00:00";
-    const end = "2012-01-01T00:00";
+    const timeRangeParams =
+      mode === "realtime" ? realtimeParams : historicParams;
 
     return (
       <React.Fragment>
@@ -240,7 +253,11 @@ class StationsDashboard extends React.Component {
                 onSelectChange={this.handleStationsSelectChange}
               />
               <TimeRangeFilterButton
-                value={timeRange}
+                mode={mode}
+                realtimeParams={realtimeParams}
+                historicParams={historicParams}
+                aggregationFunc={aggregationFunc}
+                groupingInterval={groupingInterval}
                 popoverOpen={Boolean(timeRangeAnchorEl)}
                 anchorEl={timeRangeAnchorEl}
                 onPopoverClose={this.handleTimeRangeClose}
@@ -272,8 +289,8 @@ class StationsDashboard extends React.Component {
                         <ParameterPlot
                           station={station}
                           parameter={plot.key}
-                          start={start}
-                          end={end}
+                          mode={mode}
+                          timeRangeParams={timeRangeParams}
                           groupingInterval={groupingInterval}
                           aggregationFunc={aggregationFunc}
                         />

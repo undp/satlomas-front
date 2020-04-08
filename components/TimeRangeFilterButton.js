@@ -21,6 +21,8 @@ const lastTimeItems = {
   "1-week": "1 semana",
   "2-week": "2 semanas",
   "1-month": "1 mes",
+  "2-month": "2 meses",
+  "1-year": "1 año",
 };
 
 const aggregationFuncItems = {
@@ -55,16 +57,11 @@ const styles = (theme) => ({
     margin: theme.spacing.unit,
     minWidth: 290,
   },
-  inputLabel: {
-    height: 40,
-  },
 });
 
 let SelectControl = ({ classes, id, label, items, value, onChange }) => (
   <FormControl component="fieldset" className={classes.formControl}>
-    <InputLabel className={classes.inputLabel} htmlFor={id}>
-      {label}
-    </InputLabel>
+    <InputLabel htmlFor={id}>{label}</InputLabel>
     <Select
       value={value}
       onChange={onChange}
@@ -87,7 +84,7 @@ SelectControl = withStyles(styles)(SelectControl);
 const LastTimeControl = ({ value, onChange }) => (
   <SelectControl
     id="last-time"
-    label="Últimos"
+    label="Desde hace"
     items={lastTimeItems}
     value={value}
     onChange={onChange}
@@ -117,7 +114,11 @@ const GroupingIntervalControl = ({ value, onChange }) => (
 class TimeRangeSelectorButton extends React.Component {
   render() {
     const {
-      value,
+      mode,
+      realtimeParams,
+      historicParams,
+      aggregationFunc,
+      groupingInterval,
       classes,
       popoverOpen,
       anchorEl,
@@ -128,7 +129,8 @@ class TimeRangeSelectorButton extends React.Component {
       onGroupingIntervalSelectChange,
     } = this.props;
 
-    const { lastTime, aggregationFunc, groupingInterval } = value || {};
+    const { lastTime } = realtimeParams;
+    const { start, end } = historicParams;
 
     return (
       <>
@@ -144,7 +146,9 @@ class TimeRangeSelectorButton extends React.Component {
             color="inherit"
           >
             <AccessTimeIcon className={classes.buttonIcon} />
-            {`Tiempo real - ${lastTimeItems[lastTime]}`}
+            {mode === "realtime"
+              ? `Tiempo real: ${lastTimeItems[lastTime]}`
+              : `Histórico: ${start} - ${end}`}
           </Button>
         </Tooltip>
         <Popover

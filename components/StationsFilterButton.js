@@ -20,10 +20,11 @@ const styles = (theme) => ({
   form: {
     display: "flex",
     flexWrap: "wrap",
+    width: 300,
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 120,
+    minWidth: 290,
   },
 });
 
@@ -68,7 +69,7 @@ let StationsSelectorButton = ({
     >
       <div className={classes.popover}>
         <form className={classes.form} autoComplete="off">
-          <FormControl className={classes.formControl}>
+          <FormControl component="fieldset" className={classes.formControl}>
             <InputLabel htmlFor="station">Estación</InputLabel>
             <Select
               value={value}
