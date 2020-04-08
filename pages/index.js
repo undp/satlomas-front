@@ -13,7 +13,8 @@ import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import { Link } from "../i18n";
+import Link from "next/link";
+import Router from "next/router";
 
 const styles = (theme) => ({
   appBar: {
@@ -169,11 +170,13 @@ const Index = ({ classes }) => (
                   <Typography>{card.description}</Typography>
                 </CardContent>
                 <CardActions>
-                  <Link href={card.href}>
-                    <Button size="small" color="primary">
-                      Ver
-                    </Button>
-                  </Link>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => Router.push(card.href)}
+                  >
+                    Ver
+                  </Button>
                   {/* <Button size="small" color="primary">
                       Edit
                     </Button> */}
