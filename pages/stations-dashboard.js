@@ -15,7 +15,7 @@ import Head from "next/head";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import ParameterPlot from "../components/ParameterPlot";
+import ParameterCard from "../components/ParameterCard";
 
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
 const DEFAULT_START = "2011-01-01T00:00";
@@ -322,7 +322,7 @@ class StationsDashboard extends React.Component {
                         <Typography gutterBottom variant="h6" component="h6">
                           {plot.title}
                         </Typography>
-                        <ParameterPlot
+                        <ParameterCard
                           station={station}
                           parameter={plot.key}
                           mode={mode}

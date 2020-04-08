@@ -1,6 +1,12 @@
 import React from "react";
 import axios from "axios";
+import { withStyles } from "@material-ui/core/styles";
 import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import TableBody from "@material-ui/core/TableBody";
 import { buildApiUrl } from "../utils/api";
 import _ from "lodash";
 
@@ -10,7 +16,45 @@ const axisStyle = {
   fontFamily: "Roboto, sans-serif",
 };
 
-class ParameterPlot extends React.Component {
+const styles = (_theme) => ({
+  table: {
+    minWidth: 400,
+  },
+});
+
+const ParameterPlot = ({ data }) => (
+  <LineChart width={400} height={250} data={data}>
+    <XAxis dataKey="t" style={axisStyle} />
+    <YAxis style={axisStyle} />
+    <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+    <Line type="monotone" dataKey="v" stroke="#8884d8" />
+  </LineChart>
+);
+
+let ParameterTable = ({ classes, data }) => (
+  <Table className={classes.table}>
+    <TableHead>
+      <TableRow>
+        <TableCell>Fecha y hora</TableCell>
+        <TableCell align="right">Valor</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {data.map((row) => (
+        <TableRow key={row.t}>
+          <TableCell component="th" scope="row">
+            {row.t}
+          </TableCell>
+          <TableCell align="right">{row.v}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+);
+
+ParameterTable = withStyles(styles)(ParameterTable);
+
+class ParameterCard extends React.Component {
   state = {
     loading: true,
     data: null,
@@ -92,19 +136,18 @@ class ParameterPlot extends React.Component {
   }
 
   render() {
+    const { showTable } = this.props;
     const { data, loading } = this.state;
 
     return (
-      !loading && (
-        <LineChart width={400} height={250} data={data}>
-          <XAxis dataKey="t" style={axisStyle} />
-          <YAxis style={axisStyle} />
-          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-          <Line type="monotone" dataKey="v" stroke="#8884d8" />
-        </LineChart>
-      )
+      !loading &&
+      (showTable ? (
+        <ParameterTable data={data} />
+      ) : (
+        <ParameterPlot data={data} />
+      ))
     );
   }
 }
 
-export default ParameterPlot;
+export default ParameterCard;
