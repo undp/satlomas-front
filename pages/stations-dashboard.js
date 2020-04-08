@@ -104,7 +104,7 @@ class StationsDashboard extends React.Component {
     loading: true,
     station: null,
     mode: "historic",
-    realtimeParams: { now: null, lastTime: "1-year" },
+    realtimeParams: { now: new Date(), lastTime: "1-year" },
     historicParams: { start: DEFAULT_START, end: DEFAULT_END },
     aggregationFunc: "avg",
     groupingInterval: "month",
@@ -130,10 +130,19 @@ class StationsDashboard extends React.Component {
     // TODO Set time range filter based on query param
     // ...
 
-    this.setState({ station, loading: false }, () => {
-      this.setHistoricMode();
-      // this.setRealtimeMode();
-    });
+    this.setState({ station, loading: false });
+  }
+
+  componentDidUpdate(_prevProps, prevState) {
+    const { mode } = this.state;
+
+    if (mode !== prevState.mode) {
+      if (mode === "realtime") {
+        this.setRealtimeMode();
+      } else if (mode === "historic") {
+        this.setHistoricMode();
+      }
+    }
   }
 
   setRealtimeMode() {
@@ -185,6 +194,10 @@ class StationsDashboard extends React.Component {
     this.setState({ timeRangeAnchorEl: event.currentTarget });
   };
 
+  handleTimeRangeMode = (mode) => {
+    this.setState({ mode });
+  };
+
   handleTimeRangeClose = () => {
     this.setState({ timeRangeAnchorEl: null });
   };
@@ -196,6 +209,24 @@ class StationsDashboard extends React.Component {
         lastTime: e.target.value,
       },
     }));
+  };
+
+  handleTimeRangeStartTimeChange = (e) => {
+    const { value } = e.target;
+    if (value) {
+      this.setState((prevState) => ({
+        historicParams: { ...prevState.historicParams, start: value },
+      }));
+    }
+  };
+
+  handleTimeRangeEndTimeChange = (e) => {
+    const { value } = e.target;
+    if (value) {
+      this.setState((prevState) => ({
+        historicParams: { ...prevState.historicParams, end: value },
+      }));
+    }
   };
 
   handleAggregationFunctionSelectChange = (e) => {
@@ -262,9 +293,12 @@ class StationsDashboard extends React.Component {
                 anchorEl={timeRangeAnchorEl}
                 onPopoverClose={this.handleTimeRangeClose}
                 onClick={this.handleTimeRangeClick}
+                onModeChange={this.handleTimeRangeMode}
                 onLastTimeSelectChange={
                   this.handleTimeRangeLastTimeSelectChange
                 }
+                onStartTimeChange={this.handleTimeRangeStartTimeChange}
+                onEndTimeChange={this.handleTimeRangeEndTimeChange}
                 onAggregationFunctionSelectChange={
                   this.handleAggregationFunctionSelectChange
                 }

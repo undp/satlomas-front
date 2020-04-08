@@ -9,6 +9,9 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 const lastTimeItems = {
   "1-hour": "1 hora",
@@ -91,6 +94,23 @@ const LastTimeControl = ({ value, onChange }) => (
   />
 );
 
+let DateTimeControl = ({ classes, id, label, value, onChange }) => (
+  <FormControl component="fieldset" className={classes.formControl}>
+    <TextField
+      id={id}
+      label={label}
+      type="datetime-local"
+      value={value}
+      onChange={onChange}
+      InputLabelProps={{
+        shrink: true,
+      }}
+    />
+  </FormControl>
+);
+
+DateTimeControl = withStyles(styles)(DateTimeControl);
+
 const AggregationFunctionControl = ({ value, onChange }) => (
   <SelectControl
     id="aggr-func"
@@ -112,6 +132,16 @@ const GroupingIntervalControl = ({ value, onChange }) => (
 );
 
 class TimeRangeSelectorButton extends React.Component {
+  modes = [
+    { key: "realtime", label: "Tiempo Real" },
+    { key: "historic", label: "Histórico" },
+  ];
+
+  handleTabChange = (_event, value) => {
+    const { onModeChange } = this.props;
+    if (onModeChange) onModeChange(this.modes[value].key);
+  };
+
   render() {
     const {
       mode,
@@ -127,17 +157,24 @@ class TimeRangeSelectorButton extends React.Component {
       onLastTimeSelectChange,
       onAggregationFunctionSelectChange,
       onGroupingIntervalSelectChange,
+      onStartTimeChange,
+      onEndTimeChange,
     } = this.props;
 
     const { lastTime } = realtimeParams;
     const { start, end } = historicParams;
+
+    const title =
+      mode === "realtime"
+        ? `Tiempo real: ${lastTimeItems[lastTime]}`
+        : `Histórico: ${start} - ${end}`;
+    const tabIndex = this.modes.findIndex((m) => m.key === mode);
 
     return (
       <>
         <Tooltip
           title="Configurar filtro de tiempo"
           aria-label="Configurar filtro de tiempo"
-          enterDelay={500}
         >
           <Button
             aria-owns={popoverOpen ? "simple-popper" : undefined}
@@ -146,9 +183,7 @@ class TimeRangeSelectorButton extends React.Component {
             color="inherit"
           >
             <AccessTimeIcon className={classes.buttonIcon} />
-            {mode === "realtime"
-              ? `Tiempo real: ${lastTimeItems[lastTime]}`
-              : `Histórico: ${start} - ${end}`}
+            {title}
           </Button>
         </Tooltip>
         <Popover
@@ -165,20 +200,51 @@ class TimeRangeSelectorButton extends React.Component {
           }}
         >
           <div className={classes.popover}>
-            <form className={classes.form} autoComplete="off">
-              <LastTimeControl
-                value={lastTime}
-                onChange={onLastTimeSelectChange}
-              />
-              <AggregationFunctionControl
-                value={aggregationFunc}
-                onChange={onAggregationFunctionSelectChange}
-              />
-              <GroupingIntervalControl
-                value={groupingInterval}
-                onChange={onGroupingIntervalSelectChange}
-              />
-            </form>
+            <Tabs value={tabIndex} onChange={this.handleTabChange}>
+              {this.modes.map((mode) => (
+                <Tab key={mode.key} label={mode.label} />
+              ))}
+            </Tabs>
+            {mode === "realtime" && (
+              <form className={classes.form} autoComplete="off">
+                <LastTimeControl
+                  value={lastTime}
+                  onChange={onLastTimeSelectChange}
+                />
+                <AggregationFunctionControl
+                  value={aggregationFunc}
+                  onChange={onAggregationFunctionSelectChange}
+                />
+                <GroupingIntervalControl
+                  value={groupingInterval}
+                  onChange={onGroupingIntervalSelectChange}
+                />
+              </form>
+            )}
+            {mode === "historic" && (
+              <form className={classes.form} autoComplete="off">
+                <DateTimeControl
+                  id="start"
+                  label="Desde"
+                  value={start}
+                  onChange={onStartTimeChange}
+                />
+                <DateTimeControl
+                  id="end"
+                  label="Hasta"
+                  value={end}
+                  onChange={onEndTimeChange}
+                />
+                <AggregationFunctionControl
+                  value={aggregationFunc}
+                  onChange={onAggregationFunctionSelectChange}
+                />
+                <GroupingIntervalControl
+                  value={groupingInterval}
+                  onChange={onGroupingIntervalSelectChange}
+                />
+              </form>
+            )}
           </div>
         </Popover>
       </>

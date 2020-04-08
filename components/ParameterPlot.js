@@ -80,7 +80,7 @@ class ParameterPlot extends React.Component {
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };
-    console.log("Summary request parameters:", params);
+    // console.log("Summary request parameters:", params);
 
     try {
       const response = await axios.get(buildApiUrl("/measures/summary"), {
