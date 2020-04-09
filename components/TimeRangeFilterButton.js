@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { AccessTimeIcon } from "@material-ui/icons";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import {
   Button,
   Popover,

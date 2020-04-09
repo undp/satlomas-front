@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Popover, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { DevicesOtherIcon } from "@material-ui/icons";
+import DevicesOtherIcon from "@material-ui/icons/DevicesOther";
 import SelectControl from "./SelectControl";
 
 const styles = (theme) => ({
@@ -22,7 +22,7 @@ const styles = (theme) => ({
   },
 });
 
-let StationsSelectorButton = ({
+let StationsFilterButton = ({
   classes,
   stations,
   value,
@@ -76,6 +76,6 @@ let StationsSelectorButton = ({
   </>
 );
 
-StationsSelectorButton = withStyles(styles)(StationsSelectorButton);
+StationsFilterButton = withStyles(styles)(StationsFilterButton);
 
-export default StationsSelectorButton;
+export default StationsFilterButton;
