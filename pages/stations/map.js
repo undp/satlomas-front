@@ -3,19 +3,35 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import classnames from "classnames";
 import LoadingProgress from "../../components/LoadingProgress";
 import MapDrawer, { drawerWidth } from "../../components/MapDrawer";
+import { Fab } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 import { withStyles } from "@material-ui/core/styles";
 import { withNamespaces } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withAuthSync } from "../../utils/auth";
 
-const styles = (_theme) => ({
-  map: {
-    width: `calc(100vw - ${drawerWidth}px)`,
-    height: "100vh",
-    marginLeft: drawerWidth,
-    flex: 1,
+const styles = (theme) => ({
+  // map: {
+  //   width: "100vw",
+  //   height: "100vh",
+  //   flex: 1,
+  // },
+  controlGroup: {
+    position: "fixed",
+    zIndex: 1000,
+  },
+  topLeft: {
+    top: theme.spacing.unit,
+    left: theme.spacing.unit,
+  },
+  fabContainer: {
+    display: "block",
+  },
+  fab: {
+    margin: theme.spacing.unit,
   },
 });
 
@@ -31,6 +47,22 @@ const Map = dynamic(() => import("../../components/Map"), {
   loadingProgress: <LoadingProgress />,
 });
 
+let SearchFab = ({ classes, ...props }) => (
+  <div className={classes.fabContainer}>
+    <Fab
+      color="primary"
+      size="small"
+      aria-label="Search"
+      className={classes.fab}
+      {...props}
+    >
+      <SearchIcon />
+    </Fab>
+  </div>
+);
+
+SearchFab = withStyles(styles)(SearchFab);
+
 class StationsMap extends Component {
   state = {
     map: null,
@@ -41,6 +73,7 @@ class StationsMap extends Component {
     },
     stations: [],
     selectedStation: null,
+    drawerOpen: false,
   };
 
   static async getInitialProps({ query }) {
@@ -62,8 +95,20 @@ class StationsMap extends Component {
     this.setState({ stations });
   }
 
-  async componentDidMount() {
-    await this.fetchStations();
+  componentDidMount() {
+    this.fetchStations();
+  }
+
+  componentDidUpdate(_prevProps, prevState) {
+    const st = this.state.selectedStation;
+    if (st !== prevState.selectedStation) {
+      this.setState({
+        viewport: {
+          ...this.state.viewport,
+          center: [st.lat, st.lon],
+        },
+      });
+    }
   }
 
   handleMapViewportChanged = (viewport) => {
@@ -71,30 +116,51 @@ class StationsMap extends Component {
   };
 
   handleStationSelect = (station) => {
-    this.setState({ selectedStation: station });
+    this.setState({
+      selectedStation: station,
+      drawerOpen: false,
+    });
+  };
+
+  handleMenuClick = (e) => {
+    console.log("Menu click");
+  };
+
+  handleSearchFabClick = (e) => {
+    this.setState((prevState) => ({ drawerOpen: !prevState.drawerOpen }));
+  };
+
+  handleMapDrawerClose = (e) => {
+    this.setState({ drawerOpen: false });
   };
 
   render() {
     const { classes } = this.props;
-    const { viewport, bounds, stations, selectedStation } = this.state;
+    const {
+      viewport,
+      bounds,
+      stations,
+      selectedStation,
+      drawerOpen,
+    } = this.state;
 
     const stationPoints = stations.map((s) => [s.lat, s.lon]);
 
     return (
       <div className="index">
         <Head>
-          <title>Stations Map - GeoLomas Platform</title>
-          <link
-            rel="shortcut icon"
-            type="image/x-icon"
-            href="/static/favicon.ico"
-          />
+          <title>GeoLomas Platform - Mapa de Estaciones Meteorológicas</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
+        <div className={classnames(classes.controlGroup, classes.topLeft)}>
+          <SearchFab size="medium" onClick={this.handleSearchFabClick} />
+        </div>
         <MapDrawer
+          open={drawerOpen}
+          onClose={this.handleMapDrawerClose}
           stations={stations}
           selectedStation={selectedStation}
           onStationSelect={this.handleStationSelect}
@@ -108,6 +174,7 @@ class StationsMap extends Component {
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
           markers={stations}
+          selectedMarker={selectedStation}
         />
       </div>
     );

@@ -14,10 +14,10 @@ import SearchField from "./SearchField";
 export const drawerWidth = 360;
 
 const styles = (theme) => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
+  // drawer: {
+  //   width: drawerWidth,
+  //   flexShrink: 0,
+  // },
   drawerPaper: {
     width: drawerWidth,
   },
@@ -26,19 +26,15 @@ const styles = (theme) => ({
 
 const SensorIcon = () => <img src="/static/sensor_icon.png" height={24} />;
 
-const StationsList = ({ stations, onStationSelect }) => (
+const StationsList = ({ items, onSelect }) => (
   <List>
-    {stations &&
-      stations.map((station) => (
-        <ListItem
-          key={station.id}
-          button
-          onClick={() => onStationSelect(station)}
-        >
+    {items &&
+      items.map((item) => (
+        <ListItem key={item.id} button onClick={() => onSelect(item)}>
           <ListItemIcon>
             <SensorIcon />
           </ListItemIcon>
-          <ListItemText primary={station.name} secondary={station.place_name} />
+          <ListItemText primary={item.name} secondary={item.place_name} />
         </ListItem>
       ))}
   </List>
@@ -46,14 +42,16 @@ const StationsList = ({ stations, onStationSelect }) => (
 
 const MapDrawer = ({
   classes,
-  selectedStation,
+  open,
+  onClose,
   stations,
   onStationSelect,
   onMenuClick,
 }) => (
   <Drawer
+    open={open}
+    onClose={onClose}
     className={classes.drawer}
-    variant="permanent"
     classes={{
       paper: classes.drawerPaper,
     }}
@@ -61,14 +59,14 @@ const MapDrawer = ({
   >
     <SearchField stations={stations} onMenuClick={onMenuClick} />
     <Divider />
-    {!selectedStation && (
-      <StationsList items={stations} onStationSelect={onStationSelect} />
-    )}
+    <StationsList items={stations} onSelect={onStationSelect} />
   </Drawer>
 );
 
 MapDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
   stations: PropTypes.array,
   selectedStation: PropTypes.object,
   onStationSelect: PropTypes.func,
@@ -77,7 +75,9 @@ MapDrawer.propTypes = {
 
 MapDrawer.defaultProps = {
   stations: [],
+  open: true,
   selectedStation: null,
+  onClose: () => {},
   onStationSelect: () => {},
   onMenuClick: () => {},
 };

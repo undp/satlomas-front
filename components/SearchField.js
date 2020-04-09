@@ -13,20 +13,20 @@ const styles = {
     margin: "10px",
     display: "flex",
     alignItems: "center",
-    width: 340
+    width: 340,
   },
   input: {
     marginLeft: 8,
-    flex: 1
+    flex: 1,
   },
   iconButton: {
-    padding: 10
+    padding: 10,
   },
   divider: {
     width: 1,
     height: 28,
-    margin: 4
-  }
+    margin: 4,
+  },
 };
 
 const SearchField = ({ classes, placeholder, onMenuClick }) => (
@@ -49,13 +49,13 @@ SearchField.propTypes = {
   classes: PropTypes.object.isRequired,
   items: PropTypes.array,
   placeholder: PropTypes.string,
-  onMenuClick: PropTypes.func
+  onMenuClick: PropTypes.func,
 };
 
 SearchField.defaultProps = {
   items: [],
-  placeholder: "Search for...",
-  onMenuClick: () => {}
+  placeholder: "Buscar por...",
+  onMenuClick: () => {},
 };
 
 export default withStyles(styles)(SearchField);

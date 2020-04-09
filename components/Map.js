@@ -48,6 +48,7 @@ class Map extends React.Component {
       children,
       mapboxStyle,
       markers,
+      selectedMarker,
       boundPoints,
       bounds,
       ...extraProps
@@ -72,7 +73,12 @@ class Map extends React.Component {
       >
         <MapboxBasemap style={mapboxStyle} />
         {children}
-        {markers && <StationMarkerList markers={markers} />}
+        {markers && (
+          <StationMarkerList
+            selectedMarker={selectedMarker}
+            markers={markers}
+          />
+        )}
         <ZoomControl position="topright" />
       </LeafletMap>
     );
