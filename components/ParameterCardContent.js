@@ -54,7 +54,7 @@ let ParameterTable = ({ classes, data }) => (
 
 ParameterTable = withStyles(styles)(ParameterTable);
 
-class ParameterCard extends React.Component {
+class ParameterCardContent extends React.Component {
   state = {
     loading: true,
     data: null,
@@ -107,7 +107,7 @@ class ParameterCard extends React.Component {
   async fetchData() {
     const {
       parameter,
-      station,
+      stationId,
       mode,
       timeRangeParams,
       groupingInterval,
@@ -117,7 +117,7 @@ class ParameterCard extends React.Component {
     const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
 
     const params = {
-      station: station.id,
+      station: stationId,
       parameter,
       start,
       end,
@@ -150,4 +150,4 @@ class ParameterCard extends React.Component {
   }
 }
 
-export default ParameterCard;
+export default ParameterCardContent;

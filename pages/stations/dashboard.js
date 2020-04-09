@@ -14,7 +14,7 @@ import { withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import StationsFilterButton from "../../components/StationsFilterButton";
 import TimeRangeFilterButton from "../../components/TimeRangeFilterButton";
-import ParameterCard from "../../components/ParameterCard";
+import ParameterCardContent from "../../components/ParameterCardContent";
 import { buildApiUrl } from "../../utils/api";
 
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
@@ -322,8 +322,8 @@ class StationsDashboard extends React.Component {
                         <Typography gutterBottom variant="h6" component="h6">
                           {plot.title}
                         </Typography>
-                        <ParameterCard
-                          station={station}
+                        <ParameterCardContent
+                          stationId={station.id}
                           parameter={plot.key}
                           mode={mode}
                           timeRangeParams={timeRangeParams}
