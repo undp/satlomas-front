@@ -126,7 +126,7 @@ class ParameterCard extends React.Component {
     };
 
     try {
-      const response = await axios.get(buildApiUrl("/measures/summary"), {
+      const response = await axios.get(buildApiUrl("/measurements/summary"), {
         params,
       });
       this.setState({ data: response.data, loading: false });
