@@ -73,7 +73,6 @@ class Map extends React.Component {
         <MapboxBasemap style={mapboxStyle} />
         {children}
         {markers && <StationMarkerList markers={markers} />}
-
         <ZoomControl position="topright" />
       </LeafletMap>
     );

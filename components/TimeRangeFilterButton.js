@@ -1,17 +1,16 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import Button from "@material-ui/core/Button";
-import Popover from "@material-ui/core/Popover";
-import Tooltip from "@material-ui/core/Tooltip";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import {
+  Button,
+  Popover,
+  Tooltip,
+  FormControl,
+  TextField,
+  Tabs,
+  Tab,
+} from "@material-ui/core";
+import SelectControl from "./SelectControl";
 
 const lastTimeItems = {
   "1-hour": "1 hora",
@@ -62,33 +61,11 @@ const styles = (theme) => ({
   },
 });
 
-let SelectControl = ({ classes, id, label, items, value, onChange }) => (
-  <FormControl component="fieldset" className={classes.formControl}>
-    <InputLabel htmlFor={id}>{label}</InputLabel>
-    <Select
-      value={value}
-      onChange={onChange}
-      inputProps={{
-        name: id,
-        id,
-      }}
-    >
-      {Object.entries(items).map(([value, name]) => (
-        <MenuItem key={value} value={value}>
-          {name}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-);
-
-SelectControl = withStyles(styles)(SelectControl);
-
 const LastTimeControl = ({ value, onChange }) => (
   <SelectControl
     id="last-time"
     label="Desde hace"
-    items={lastTimeItems}
+    items={Object.entries(lastTimeItems).map(([id, name]) => ({ id, name }))}
     value={value}
     onChange={onChange}
   />
@@ -115,7 +92,10 @@ const AggregationFunctionControl = ({ value, onChange }) => (
   <SelectControl
     id="aggr-func"
     label="Función de agregación de tiempo"
-    items={aggregationFuncItems}
+    items={Object.entries(aggregationFuncItems).map(([id, name]) => ({
+      id,
+      name,
+    }))}
     value={value}
     onChange={onChange}
   />
@@ -125,7 +105,10 @@ const GroupingIntervalControl = ({ value, onChange }) => (
   <SelectControl
     id="group-interval"
     label="Intervalo de agrupación"
-    items={groupingIntervalItems}
+    items={Object.entries(groupingIntervalItems).map(([id, name]) => ({
+      id,
+      name,
+    }))}
     value={value}
     onChange={onChange}
   />

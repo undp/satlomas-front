@@ -3,20 +3,26 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Head from "next/head";
 import axios from "axios";
-import AppBar from "@material-ui/core/AppBar";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Grid from "@material-ui/core/Grid";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import {
+  AppBar,
+  Card,
+  CardContent,
+  CssBaseline,
+  Grid,
+  Toolbar,
+  Typography,
+  LinearProgress,
+} from "@material-ui/core";
 import StationsFilterButton from "../../components/StationsFilterButton";
 import TimeRangeFilterButton from "../../components/TimeRangeFilterButton";
 import ParameterCardContent from "../../components/ParameterCardContent";
+import { withStyles } from "@material-ui/core/styles";
 import { buildApiUrl } from "../../utils/api";
+import config from "../../config";
 
+const { stationParameters } = config;
+
+// FIXME Move to config.js
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
 const DEFAULT_START = "2011-01-01T00:00";
 const DEFAULT_END = "2012-01-01T00:00";
@@ -67,37 +73,6 @@ const styles = (theme) => ({
     fontSize: 10,
   },
 });
-
-const plots = [
-  {
-    key: "temperature",
-    title: "Temperatura de Ambiente",
-  },
-  {
-    key: "humidity",
-    title: "Humedad Relativa",
-  },
-  {
-    key: "wind_speed",
-    title: "Velocidad del Viento",
-  },
-  {
-    key: "wind_direction",
-    title: "Dirección del Viento",
-  },
-  {
-    key: "pressure",
-    title: "Presión Atmosférica",
-  },
-  {
-    key: "precipitation",
-    title: "Precipitaciones (niebla)",
-  },
-  {
-    key: "pm25",
-    title: "Material Particulado (PM2.5)",
-  },
-];
 
 class StationsDashboard extends React.Component {
   state = {
@@ -315,16 +290,16 @@ class StationsDashboard extends React.Component {
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
               <Grid container spacing={16}>
-                {plots.map((plot) => (
-                  <Grid item key={plot.key} sm={6} md={4} lg={4}>
+                {stationParameters.map((param) => (
+                  <Grid item key={param.id} sm={6} md={4} lg={4}>
                     <Card className={classes.card}>
                       <CardContent className={classes.cardContent}>
                         <Typography gutterBottom variant="h6" component="h6">
-                          {plot.title}
+                          {param.name}
                         </Typography>
                         <ParameterCardContent
                           stationId={station.id}
-                          parameter={plot.key}
+                          parameter={param.id}
                           mode={mode}
                           timeRangeParams={timeRangeParams}
                           groupingInterval={groupingInterval}

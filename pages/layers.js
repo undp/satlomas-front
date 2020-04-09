@@ -3,14 +3,15 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
 import { withNamespaces } from "../i18n";
-import "../static/App.css"; // FIXME Convert to JSX styles
-import "../static/index.css"; // FIXME Convert to JSX styles
 import { buildApiUrl } from "../utils/api";
 import { logout, withAuthSync } from "../utils/auth";
 
+import "../static/App.css"; // FIXME Convert to JSX styles
+import "../static/index.css"; // FIXME Convert to JSX styles
+
 const initialViewport = {
   center: [-36.179114636463652, -62.846142338298094],
-  zoom: 12
+  zoom: 12,
 };
 
 // const sentinelModifiedAttribution =
@@ -24,28 +25,28 @@ const Map = dynamic(() => import("../components/Map"), {
     <Dimmer active>
       <Loader size="big">{t("loading")}</Loader>
     </Dimmer>
-  ))
+  )),
 });
 
 const TileLayer = dynamic(() => import("../components/TileLayer"), {
-  ssr: false
+  ssr: false,
 });
 
 const VectorTileLayer = dynamic(() => import("../components/VectorTileLayer"), {
-  ssr: false
+  ssr: false,
 });
 
 class Layers extends React.Component {
   state = {
     layer: null,
     bounds: null,
-    viewport: initialViewport
+    viewport: initialViewport,
   };
 
   static async getInitialProps({ query }) {
     return {
       query,
-      namespacesRequired: ["common"]
+      namespacesRequired: ["common"],
     };
   }
 
@@ -54,16 +55,16 @@ class Layers extends React.Component {
 
     axios
       .get(buildApiUrl(`/layers/${uuid}/`), {
-        headers: { Authorization: this.props.token }
+        headers: { Authorization: this.props.token },
       })
-      .then(response => {
+      .then((response) => {
         const layer = response.data;
         const minBounds = [layer.extent[1], layer.extent[0]];
         const maxBounds = [layer.extent[3], layer.extent[2]];
         const bounds = [minBounds, maxBounds];
         this.setState({ layer: layer, bounds: bounds });
       })
-      .catch(err => {
+      .catch((err) => {
         const response = err.response;
         if (!response || response.status >= 400) {
           logout();
@@ -75,7 +76,7 @@ class Layers extends React.Component {
     this.props.analytics.event("Layers", action, value);
   }
 
-  _onMapViewportChanged = viewport => {
+  _onMapViewportChanged = (viewport) => {
     this.setState({ viewport });
   };
 
