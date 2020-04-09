@@ -1,8 +1,9 @@
 import React from "react";
 import { Marker, Popup } from "react-leaflet";
-import { Typography } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
+import { Link } from "../i18n";
 
-const StationMarker = ({ code, name, place_name, lat, lon }) => (
+const StationMarker = ({ stationId, code, name, place_name, lat, lon }) => (
   <Marker position={[lat, lon]}>
     <Popup>
       <Typography variant="h6">
@@ -11,6 +12,9 @@ const StationMarker = ({ code, name, place_name, lat, lon }) => (
       <Typography variant="body1">
         Code: <strong>{code}</strong>
       </Typography>
+      <Link href={`/stations/dashboard?id=${stationId}`}>
+        <Button variant="contained">Dashboard</Button>
+      </Link>
     </Popup>
   </Marker>
 );

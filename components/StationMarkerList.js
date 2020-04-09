@@ -3,7 +3,7 @@ import StationMarker from "./StationMarker";
 
 const StationMarkerList = ({ markers }) => {
   const items = markers.map(({ code, ...props }) => (
-    <StationMarker key={code} code={code} {...props} />
+    <StationMarker stationId={props.id} key={code} code={code} {...props} />
   ));
   return <Fragment>{items}</Fragment>;
 };
