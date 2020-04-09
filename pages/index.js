@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
 
@@ -87,7 +88,7 @@ const cards = [
     description:
       "Mapa con las estaciones meteorológicas instaladas actualmente",
     image: "",
-    href: "/stations-map",
+    href: "/stations/map",
   },
   {
     key: "station-dashboard",
@@ -95,12 +96,15 @@ const cards = [
     description:
       "Dashboard de las estaciones meteorológicas, con información actualizada en tiempo real.",
     image: "/static/thumbs/stations-dashboard.jpg",
-    href: "/stations-dashboard",
+    href: "/stations/dashboard",
   },
 ];
 
 const Index = ({ classes }) => (
   <React.Fragment>
+    <Head>
+      <title>GeoLomas</title>
+    </Head>
     <CssBaseline />
     <AppBar position="static" className={classes.appBar}>
       <Toolbar>

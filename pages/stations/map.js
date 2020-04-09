@@ -3,18 +3,18 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-import LoadingProgress from "../components/LoadingProgress";
-import MapDrawer from "../components/MapDrawer";
-import { withNamespaces } from "../i18n";
-import { buildApiUrl } from "../utils/api";
-import { withAuthSync } from "../utils/auth";
+import LoadingProgress from "../../components/LoadingProgress";
+import MapDrawer from "../../components/MapDrawer";
+import { withNamespaces } from "../../i18n";
+import { buildApiUrl } from "../../utils/api";
+import { withAuthSync } from "../../utils/auth";
 
 // const sentinelModifiedAttribution =
 //   'Contains modified <a href="http://www.esa.int/Our_Activities/Observing_the_Earth/Copernicus">Copernicus</a> Sentinel data 2019, processed by ESA.';
 // const dymaxionAttribution = "&copy; Dymaxion Labs 2019";
 
 // Dynamically load TrialMap component as it only works on browser
-const Map = dynamic(() => import("../components/Map"), {
+const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
   loading: LoadingProgress,
 });
@@ -46,6 +46,8 @@ class StationsMap extends Component {
       headers: headers,
     });
     const stations = response.data || [];
+
+    debugger;
 
     this.setState({ stations });
   }
