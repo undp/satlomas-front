@@ -1,14 +1,8 @@
 import React from "react";
+import { Button, Popover, Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-
-import DevicesOtherIcon from "@material-ui/icons/DevicesOther";
-import Button from "@material-ui/core/Button";
-import Popover from "@material-ui/core/Popover";
-import Tooltip from "@material-ui/core/Tooltip";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
+import { DevicesOtherIcon } from "@material-ui/icons";
+import SelectControl from "./SelectControl";
 
 const styles = (theme) => ({
   buttonIcon: {
@@ -69,23 +63,13 @@ let StationsSelectorButton = ({
     >
       <div className={classes.popover}>
         <form className={classes.form} autoComplete="off">
-          <FormControl component="fieldset" className={classes.formControl}>
-            <InputLabel htmlFor="station">Estación</InputLabel>
-            <Select
-              value={value}
-              onChange={onSelectChange}
-              inputProps={{
-                name: "station",
-                id: "station",
-              }}
-            >
-              {(stations || []).map((station) => (
-                <MenuItem key={station.id} value={station.id}>
-                  {station.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <SelectControl
+            id="station"
+            label="Estación"
+            items={stations}
+            value={value}
+            onChange={onSelectChange}
+          />
         </form>
       </div>
     </Popover>

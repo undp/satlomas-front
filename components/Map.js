@@ -1,10 +1,10 @@
-import { withStyles } from "@material-ui/core/styles";
 import classnames from "classnames";
 import { Map as LeafletMap, TileLayer, ZoomControl } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import StationMarkerList from "./StationMarkerList";
+import { withStyles } from "@material-ui/core/styles";
 import L from "leaflet";
 
-import StationMarkerList from "./StationMarkerList";
+import "leaflet/dist/leaflet.css";
 
 delete L.Icon.Default.prototype._getIconUrl;
 
