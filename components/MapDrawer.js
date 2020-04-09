@@ -9,7 +9,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import SearchField from "./SearchField";
 
-const drawerWidth = 360;
+export const drawerWidth = 360;
 
 const styles = (theme) => ({
   drawer: {

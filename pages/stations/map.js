@@ -4,10 +4,22 @@ import Head from "next/head";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import LoadingProgress from "../../components/LoadingProgress";
-import MapDrawer from "../../components/MapDrawer";
+import MapDrawer, { drawerWidth } from "../../components/MapDrawer";
+import { withStyles } from "@material-ui/core/styles";
 import { withNamespaces } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withAuthSync } from "../../utils/auth";
+
+const styles = (_theme) => ({
+  map: {
+    width: `calc(100vw - ${drawerWidth}px)`,
+    height: "100vh",
+    marginLeft: drawerWidth,
+    flex: 1,
+  },
+});
+
+const mapboxStyle = "mapbox.streets";
 
 // const sentinelModifiedAttribution =
 //   'Contains modified <a href="http://www.esa.int/Our_Activities/Observing_the_Earth/Copernicus">Copernicus</a> Sentinel data 2019, processed by ESA.';
@@ -16,7 +28,7 @@ import { withAuthSync } from "../../utils/auth";
 // Dynamically load TrialMap component as it only works on browser
 const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
-  loading: LoadingProgress,
+  loadingProgress: <LoadingProgress />,
 });
 
 class StationsMap extends Component {
@@ -47,8 +59,6 @@ class StationsMap extends Component {
     });
     const stations = response.data || [];
 
-    debugger;
-
     this.setState({ stations });
   }
 
@@ -65,8 +75,10 @@ class StationsMap extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     const { viewport, bounds, stations, selectedStation } = this.state;
-    const mapboxStyle = "mapbox.streets";
+
+    const stationPoints = stations.map((s) => [s.lat, s.lon]);
 
     return (
       <div className="index">
@@ -89,7 +101,9 @@ class StationsMap extends Component {
           onMenuClick={this.handleMenuClick}
         />
         <Map
+          className={classes.map}
           bounds={bounds}
+          boundPoints={stationPoints}
           viewport={viewport}
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
@@ -105,6 +119,7 @@ StationsMap.propTypes = {
 };
 
 StationsMap = withNamespaces()(StationsMap);
+StationsMap = withStyles(styles)(StationsMap);
 StationsMap = withAuthSync(StationsMap, { redirect: false });
 
 export default StationsMap;

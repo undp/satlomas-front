@@ -1,9 +1,6 @@
-import {
-  Map as LeafletMap,
-  TileLayer,
-  ZoomControl,
-  GeoJSON
-} from "react-leaflet";
+import { withStyles } from "@material-ui/core/styles";
+import classnames from "classnames";
+import { Map as LeafletMap, TileLayer, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -14,30 +11,20 @@ delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
   iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png")
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-const mapContainerStyle = {
-  width: "100vw",
-  height: "100vh",
-  flex: 1
-};
+const styles = (_theme) => ({
+  map: {
+    width: "100vw",
+    height: "100vh",
+    flex: 1,
+  },
+});
 
 // FIXME Move this to config/
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiZ2Vzc2ljYTExMTIiLCJhIjoiY2pvZnYwYmV0MDhrYjNxanRpc2E3enhydiJ9.fawTIAVKzqpOE41wkVw1Zw";
-
-const ROIPolygon = ({ data }) => (
-  <GeoJSON
-    data={data}
-    style={{
-      fillColor: "#000",
-      fillOpacity: 0.05,
-      color: "#fff",
-      weight: 2
-    }}
-  />
-);
 
 const MapboxBasemap = ({ style }) => {
   const styleId = style || "mapbox.satellite";
@@ -56,24 +43,36 @@ const Basemap = ({ url, attribution }) => (
 class Map extends React.Component {
   render() {
     const {
+      classes,
+      className,
       children,
-      roiData,
       mapboxStyle,
       markers,
+      boundPoints,
+      bounds,
       ...extraProps
     } = this.props;
 
+    let realBounds = bounds;
+    if (!realBounds && boundPoints) {
+      const group = new L.FeatureGroup(
+        boundPoints.map(([lat, lon]) => L.marker([lat, lon]))
+      );
+      realBounds = group.getBounds();
+    }
+    if (!realBounds.isValid()) realBounds = null;
+
     return (
       <LeafletMap
-        ref="map"
-        style={mapContainerStyle}
+        ref={(e) => (this.map = e)}
+        className={classnames(classes.map, className)}
         zoomControl={false}
+        bounds={realBounds}
         {...extraProps}
       >
         <MapboxBasemap style={mapboxStyle} />
         {children}
         {markers && <StationMarkerList markers={markers} />}
-        {roiData && <ROIPolygon data={roiData} />}
 
         <ZoomControl position="topright" />
       </LeafletMap>
@@ -81,4 +80,4 @@ class Map extends React.Component {
   }
 }
 
-export default Map;
+export default withStyles(styles)(Map);
