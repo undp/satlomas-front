@@ -5,20 +5,15 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import classnames from "classnames";
 import LoadingProgress from "../../components/LoadingProgress";
-import MapDrawer, { drawerWidth } from "../../components/MapDrawer";
+import MapDrawer from "../../components/MapDrawer";
 import { Fab } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { withStyles } from "@material-ui/core/styles";
 import { withNamespaces } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
-import { withAuthSync } from "../../utils/auth";
+import { withSnackbar } from "notistack";
 
 const styles = (theme) => ({
-  // map: {
-  //   width: "100vw",
-  //   height: "100vh",
-  //   flex: 1,
-  // },
   controlGroup: {
     position: "fixed",
     zIndex: 1000,
@@ -87,10 +82,17 @@ class StationsMap extends Component {
     const { token } = this.props;
     const headers = token ? { Authorization: token } : {};
 
-    const response = await axios.get(buildApiUrl(`/stations/`), {
-      headers: headers,
-    });
-    const stations = response.data || [];
+    let stations = [];
+    try {
+      const response = await axios.get(buildApiUrl(`/stations/`), {
+        headers: headers,
+      });
+      stations = response.data || [];
+    } catch (err) {
+      this.props.enqueueSnackbar("Failed to fetch stations", {
+        variant: "error",
+      });
+    }
 
     this.setState({ stations });
   }
@@ -183,10 +185,12 @@ class StationsMap extends Component {
 
 StationsMap.propTypes = {
   t: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
+StationsMap = withSnackbar(StationsMap);
 StationsMap = withNamespaces()(StationsMap);
 StationsMap = withStyles(styles)(StationsMap);
-StationsMap = withAuthSync(StationsMap, { redirect: false });
 
 export default StationsMap;

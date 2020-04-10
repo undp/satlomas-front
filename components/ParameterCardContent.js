@@ -9,6 +9,7 @@ import {
   TableRow,
   TableBody,
 } from "@material-ui/core/Table";
+import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../utils/api";
 import _ from "lodash";
 
@@ -133,7 +134,9 @@ class ParameterCardContent extends React.Component {
       });
       this.setState({ data: response.data, loading: false });
     } catch (err) {
-      console.error(err);
+      this.props.enqueueSnackbar(`Failed to get data for '${parameter}'`, {
+        variant: "error",
+      });
     }
   }
 
@@ -151,5 +154,7 @@ class ParameterCardContent extends React.Component {
     );
   }
 }
+
+ParameterCardContent = withSnackbar(ParameterCardContent);
 
 export default ParameterCardContent;

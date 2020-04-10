@@ -17,6 +17,7 @@ import StationsFilterButton from "../../components/StationsFilterButton";
 import TimeRangeFilterButton from "../../components/TimeRangeFilterButton";
 import ParameterCardContent from "../../components/ParameterCardContent";
 import { withStyles } from "@material-ui/core/styles";
+import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
 import config from "../../config";
 
@@ -147,8 +148,9 @@ class StationsDashboard extends React.Component {
       const response = await axios.get(buildApiUrl("/stations/"));
       this.setState({ stations: response.data });
     } catch (error) {
-      // TODO Raise an error modal
-      // ...
+      this.props.enqueueSnackbar("Failed to fetch stations", {
+        variant: "error",
+      });
     }
   }
 
@@ -322,6 +324,10 @@ class StationsDashboard extends React.Component {
 
 StationsDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(StationsDashboard);
+StationsDashboard = withSnackbar(StationsDashboard);
+StationsDashboard = withStyles(styles)(StationsDashboard);
+
+export default StationsDashboard;

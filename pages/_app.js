@@ -8,6 +8,7 @@ import withGA from "../utils/ga";
 import { appWithTranslation, Router } from "../i18n";
 import i18next from "i18next";
 import NProgress from "next-nprogress/component";
+import { SnackbarProvider } from "notistack";
 
 class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
@@ -27,7 +28,7 @@ class MyApp extends App {
 
   componentDidMount() {
     const {
-      query: { lang }
+      query: { lang },
     } = this.props.router;
 
     // Change language if query string contains "lang" parameter
@@ -67,11 +68,14 @@ class MyApp extends App {
 
             {/* Pass pageContext to the _document though the renderPage enhancer
                 to render collected styles on server-side. */}
-            <Component
-              pageContext={this.pageContext}
-              {...pageProps}
-              analytics={analytics}
-            />
+
+            <SnackbarProvider maxSnack={3}>
+              <Component
+                pageContext={this.pageContext}
+                {...pageProps}
+                analytics={analytics}
+              />
+            </SnackbarProvider>
           </MuiThemeProvider>
         </JssProvider>
       </Container>
