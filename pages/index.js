@@ -87,7 +87,7 @@ const cards = [
     title: "Mapa de Estaciones",
     description:
       "Mapa con las estaciones meteorológicas instaladas actualmente",
-    image: "",
+    image: "/static/thumbs/stations-map.jpg",
     href: "/stations/map",
   },
   {
