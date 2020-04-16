@@ -36,7 +36,6 @@ const mapboxStyle = "mapbox.streets";
 //   'Contains modified <a href="http://www.esa.int/Our_Activities/Observing_the_Earth/Copernicus">Copernicus</a> Sentinel data 2019, processed by ESA.';
 // const dymaxionAttribution = "&copy; Dymaxion Labs 2019";
 
-// Dynamically load TrialMap component as it only works on browser
 const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
   loadingProgress: <LoadingProgress />,
@@ -175,7 +174,7 @@ class StationsMap extends Component {
           viewport={viewport}
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
-          markers={stations}
+          stationMarkers={stations}
           selectedMarker={selectedStation}
         />
       </div>

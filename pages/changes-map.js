@@ -14,13 +14,20 @@ import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
 import RemoveIcon from "@material-ui/icons/Remove";
 import axios from "axios";
+import dynamic from "next/dynamic";
+import LoadingProgress from "../components/LoadingProgress";
 import { withAuthSync } from "../utils/auth";
 import { buildApiUrl } from "../utils/api";
 
-// import SearchField from "../components/SearchField";
 import Dashboard from "../components/Dashboard";
 
 const drawerWidth = 450;
+const mapboxStyle = "mapbox.streets";
+
+const Map = dynamic(() => import("../components/Map"), {
+  ssr: false,
+  loadingProgress: <LoadingProgress />,
+});
 
 const styles = (theme) => ({
   searchAndDateControl: {
@@ -287,8 +294,14 @@ class PlotsDrawer extends Component {
 
 PlotsDrawer = withStyles(styles)(PlotsDrawer);
 
-class ChangesMapPage extends Component {
+class ChangesMap extends Component {
   state = {
+    map: null,
+    bounds: null,
+    viewport: {
+      center: [-12.046373, -76.542755],
+      zoom: 10,
+    },
     dates: {
       dashboardDateFrom: null,
       dashboardDateTo: null,
@@ -455,9 +468,15 @@ class ChangesMapPage extends Component {
     });
   };
 
+  handleMapViewportChanged = (viewport) => {
+    this.setState({ viewport });
+  };
+
   render() {
     const { classes } = this.props;
     const {
+      viewport,
+      bounds,
       dates,
       loadDrawer,
       customScope,
@@ -501,7 +520,13 @@ class ChangesMapPage extends Component {
             custom_scope={customScope}
           />
         )}
-        <img id="map" src="/static/mockup/verde2.png" />
+        <Map
+          className={classes.map}
+          bounds={bounds}
+          viewport={viewport}
+          onViewportChanged={this.handleMapViewportChanged}
+          mapboxStyle={mapboxStyle}
+        />
         <style jsx>
           {`
             #map {
@@ -519,7 +544,7 @@ class ChangesMapPage extends Component {
   }
 }
 
-ChangesMapPage = withStyles(styles)(ChangesMapPage);
-ChangesMapPage = withAuthSync(ChangesMapPage, { redirect: false });
+ChangesMap = withStyles(styles)(ChangesMap);
+ChangesMap = withAuthSync(ChangesMap, { redirect: false });
 
-export default ChangesMapPage;
+export default ChangesMap;
