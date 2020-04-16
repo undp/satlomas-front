@@ -31,13 +31,6 @@ const styles = {
 
 const SearchField = ({ classes, placeholder, onMenuClick }) => (
   <Paper className={classes.root} elevation={1}>
-    <IconButton
-      className={classes.iconButton}
-      aria-label="Menu"
-      onClick={onMenuClick}
-    >
-      <MenuIcon />
-    </IconButton>
     <InputBase className={classes.input} placeholder={placeholder} />
     <IconButton className={classes.iconButton} aria-label="Search">
       <SearchIcon />
