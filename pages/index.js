@@ -72,7 +72,7 @@ const cards = [
     description:
       "Mapa de cobertura verde de Lomas, basado en el producto VI de MODIS, actualizado mensualmente.",
     image: "",
-    buttons: [{ name: "Ver", href: "/map-green-cover" }],
+    buttons: [{ name: "Ver", href: "/maps/vi-lomas-changes" }],
   },
   {
     key: "changes-map",
@@ -80,7 +80,7 @@ const cards = [
     description:
       "Mapa de cambios de cobertura de loma perdida y remanente, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
     image: "",
-    buttons: [{ name: "Ver", href: "/map-changes" }],
+    buttons: [{ name: "Ver", href: "/maps/lomas-changes" }],
   },
   {
     key: "stations-map",

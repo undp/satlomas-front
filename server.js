@@ -13,27 +13,9 @@ const handle = app.getRequestHandler();
 
   server.use(nextI18NextMiddleware(nextI18next));
 
-  server.get("/layers", (req, res) => {
-    return res.redirect("/admin/layers");
-  });
-
-  server.get("/layers/:uuid", (req, res) => {
-    const actualPage = "/layers";
-    const queryParams = {
-      uuid: req.params.uuid
-    };
-    app.render(req, res, actualPage, queryParams);
-  });
-
-  server.get("/maps", (req, res) => {
-    return res.redirect("/admin/maps");
-  });
-
-  server.get("/maps/:uuid", (req, res) => {
-    const actualPage = "/maps";
-    const queryParams = {
-      uuid: req.params.uuid
-    };
+  server.get("/maps/:type", (req, res) => {
+    const actualPage = "/changes-map";
+    const queryParams = { type: req.params.type };
     app.render(req, res, actualPage, queryParams);
   });
 
