@@ -1,21 +1,24 @@
-import Fab from "@material-ui/core/Fab";
+import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Drawer from "@material-ui/core/Drawer";
+import Head from "next/head";
+import {
+  Fab,
+  Paper,
+  Drawer,
+  Select,
+  MenuItem,
+  FormControl,
+  TextField,
+} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
 import RemoveIcon from "@material-ui/icons/Remove";
-import Head from "next/head";
-import React, { Component } from "react";
-import SearchField from "../components/SearchField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import { withAuthSync } from "../utils/auth";
-import Dashboard from "../components/Dashboard";
 import axios from "axios";
+import { withAuthSync } from "../utils/auth";
 import { buildApiUrl } from "../utils/api";
+
+// import SearchField from "../components/SearchField";
+import Dashboard from "../components/Dashboard";
 
 const drawerWidth = 450;
 
@@ -202,6 +205,10 @@ class SearchControl extends Component {
       selectTypeChange,
       selectScopeChange,
     } = this.props;
+
+    const scopeType = scopes.types[scopes.selectedType];
+    const scopeItems = scopeType ? scopeType["scopes"] : [];
+
     return (
       <div className={classes.searchAndDateControl}>
         {/* <SearchField /> */}
@@ -214,7 +221,7 @@ class SearchControl extends Component {
         </Paper>
         <Paper className={classes.selectsField}>
           <FormControl variant="outlined" className={classes.formControl}>
-            {scopes.types[scopes.selectedType]["scopes"].length > 0 ? (
+            {scopeItems.length > 0 ? (
               <Select
                 onChange={selectScopeChange}
                 value={scopes.selectedScope != null ? scopes.selectedScope : 0}
@@ -304,8 +311,11 @@ class ChangesMapPage extends Component {
   };
 
   getDates = async () => {
-    let response = await axios.get(buildApiUrl("/available-dates/"), {});
-    let dates = {
+    const response = await axios.get(
+      buildApiUrl("/scopes/available-dates/"),
+      {}
+    );
+    const dates = {
       firstDate: new Date(response.data.first_date),
       lastDate: new Date(response.data.last_date),
       availables: response.data.availables,
@@ -314,18 +324,20 @@ class ChangesMapPage extends Component {
   };
 
   getScopes = async () => {
-    let response = await axios.get(buildApiUrl("/scopes-types/"), {});
-    let s = response.data[0]["scopes"][0]["pk"];
-    this.setState({
+    const response = await axios.get(buildApiUrl("/scopes/types/"), {});
+    const types = response.data;
+    const scope = types[0] && types[0]["scopes"][0]["pk"];
+
+    this.setState((prevState) => ({
       scopes: {
-        ...this.state.scopes,
-        types: response.data,
+        ...prevState.scopes,
+        types,
+        scope,
         selectedType: 0,
         selectedScope: 0,
-        scope: s,
       },
       scopesLoaded: true,
-    });
+    }));
   };
 
   componentDidMount = async () => {
