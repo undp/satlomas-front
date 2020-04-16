@@ -306,6 +306,7 @@ class ChangesMap extends Component {
       center: [-12.046373, -76.542755],
       zoom: 10,
     },
+    drawerOpen: false,
     dates: {
       dashboardDateFrom: null,
       dashboardDateTo: null,
@@ -472,6 +473,14 @@ class ChangesMap extends Component {
     });
   };
 
+  handleSearchFabClick = (e) => {
+    this.setState((prevState) => ({ drawerOpen: !prevState.drawerOpen }));
+  };
+
+  handleMapDrawerClose = (e) => {
+    this.setState({ drawerOpen: false });
+  };
+
   handleMapViewportChanged = (viewport) => {
     this.setState({ viewport });
   };
@@ -482,6 +491,7 @@ class ChangesMap extends Component {
       viewport,
       bounds,
       dates,
+      drawerOpen,
       loadDrawer,
       customScope,
       loadSearchDate,
