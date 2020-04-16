@@ -6,8 +6,7 @@ import React, { Component } from "react";
 import classnames from "classnames";
 import LoadingProgress from "../../components/LoadingProgress";
 import MapDrawer from "../../components/MapDrawer";
-import { Fab } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchFab from "../../components/SearchFab";
 import { withStyles } from "@material-ui/core/styles";
 import { withNamespaces } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
@@ -22,12 +21,6 @@ const styles = (theme) => ({
     top: theme.spacing.unit,
     left: theme.spacing.unit,
   },
-  fabContainer: {
-    display: "block",
-  },
-  fab: {
-    margin: theme.spacing.unit,
-  },
 });
 
 const mapboxStyle = "mapbox.streets";
@@ -40,22 +33,6 @@ const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
   loadingProgress: <LoadingProgress />,
 });
-
-let SearchFab = ({ classes, ...props }) => (
-  <div className={classes.fabContainer}>
-    <Fab
-      color="primary"
-      size="small"
-      aria-label="Search"
-      className={classes.fab}
-      {...props}
-    >
-      <SearchIcon />
-    </Fab>
-  </div>
-);
-
-SearchFab = withStyles(styles)(SearchFab);
 
 class StationsMap extends Component {
   state = {

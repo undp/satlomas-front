@@ -13,12 +13,14 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
 import RemoveIcon from "@material-ui/icons/Remove";
+import classnames from "classnames";
 import axios from "axios";
 import dynamic from "next/dynamic";
-import LoadingProgress from "../components/LoadingProgress";
 import { withAuthSync } from "../utils/auth";
 import { buildApiUrl } from "../utils/api";
 
+import SearchFab from "../components/SearchFab";
+import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
 
 const drawerWidth = 450;
@@ -30,22 +32,15 @@ const Map = dynamic(() => import("../components/Map"), {
 });
 
 const styles = (theme) => ({
-  searchAndDateControl: {
+  controlGroup: {
     position: "fixed",
+    zIndex: 1000,
+  },
+  topLeft: {
     top: theme.spacing.unit,
     left: theme.spacing.unit,
   },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 300,
-  },
-  topRightControlGroup: {
-    position: "fixed",
-    top: theme.spacing.unit,
-    right: theme.spacing.unit,
-  },
-  bottomLeftControlGroup: {
-    position: "fixed",
+  bottomLeft: {
     bottom: theme.spacing.unit,
     left: theme.spacing.unit,
   },
@@ -54,6 +49,15 @@ const styles = (theme) => ({
   },
   fab: {
     margin: theme.spacing.unit,
+  },
+  searchAndDateControl: {
+    position: "fixed",
+    top: theme.spacing.unit,
+    left: theme.spacing.unit,
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 300,
   },
   extendedIcon: {
     marginRight: theme.spacing.unit,
@@ -488,18 +492,16 @@ class ChangesMap extends Component {
     return (
       <div className="index">
         <Head>
-          <title>Map</title>
-          <link
-            rel="shortcut icon"
-            type="image/x-icon"
-            href="/static/favicon.ico"
-          />
+          <title>GeoLomas Platform - Mapa de Cambios</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        {loadSearchDate && scopesLoaded && (
+        <div className={classnames(classes.controlGroup, classes.topLeft)}>
+          <SearchFab size="medium" onClick={this.handleSearchFabClick} />
+        </div>
+        {/* {loadSearchDate && scopesLoaded && (
           <SearchControl
             scopes={scopes}
             dates={dates}
@@ -508,8 +510,8 @@ class ChangesMap extends Component {
             selectTypeChange={this.selectTypeChange}
             selectScopeChange={this.selectScopeChange}
           />
-        )}
-        <div className={classes.bottomLeftControlGroup}>
+        )} */}
+        <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
           <ZoomControl />
           <LayersControl />
         </div>
