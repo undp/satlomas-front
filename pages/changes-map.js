@@ -19,6 +19,7 @@ import dynamic from "next/dynamic";
 import { withAuthSync } from "../utils/auth";
 import { buildApiUrl } from "../utils/api";
 
+import MapDrawer from "../components/MapDrawer";
 import SearchFab from "../components/SearchFab";
 import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
@@ -511,16 +512,18 @@ class ChangesMap extends Component {
         <div className={classnames(classes.controlGroup, classes.topLeft)}>
           <SearchFab size="medium" onClick={this.handleSearchFabClick} />
         </div>
-        {/* {loadSearchDate && scopesLoaded && (
-          <SearchControl
-            scopes={scopes}
-            dates={dates}
-            onChangeFrom={this.onChangeFrom}
-            onChangeTo={this.onChangeTo}
-            selectTypeChange={this.selectTypeChange}
-            selectScopeChange={this.selectScopeChange}
-          />
-        )} */}
+        <MapDrawer open={drawerOpen} onClose={this.handleMapDrawerClose}>
+          {loadSearchDate && scopesLoaded && (
+            <SearchControl
+              scopes={scopes}
+              dates={dates}
+              onChangeFrom={this.onChangeFrom}
+              onChangeTo={this.onChangeTo}
+              selectTypeChange={this.selectTypeChange}
+              selectScopeChange={this.selectScopeChange}
+            />
+          )}
+        </MapDrawer>
         <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
           <ZoomControl />
           <LayersControl />

@@ -4,13 +4,21 @@ import Head from "next/head";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import classnames from "classnames";
-import LoadingProgress from "../../components/LoadingProgress";
-import MapDrawer from "../../components/MapDrawer";
-import SearchFab from "../../components/SearchFab";
 import { withStyles } from "@material-ui/core/styles";
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
 import { withNamespaces } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withSnackbar } from "notistack";
+import LoadingProgress from "../../components/LoadingProgress";
+import MapDrawer from "../../components/MapDrawer";
+import SearchFab from "../../components/SearchFab";
+import SearchField from "../../components/SearchField";
 
 const styles = (theme) => ({
   controlGroup: {
@@ -33,6 +41,27 @@ const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
   loadingProgress: <LoadingProgress />,
 });
+
+const SensorIcon = () => <img src="/static/sensor_icon.png" height={24} />;
+
+const StationsList = ({ items, selected, onSelect }) => (
+  <List>
+    {items &&
+      items.map((item) => (
+        <ListItem
+          key={item.id}
+          button
+          selected={selected === item.id}
+          onClick={() => onSelect(item)}
+        >
+          <ListItemIcon>
+            <SensorIcon />
+          </ListItemIcon>
+          <ListItemText primary={item.name} secondary={item.place_name} />
+        </ListItem>
+      ))}
+  </List>
+);
 
 class StationsMap extends Component {
   state = {
@@ -136,14 +165,15 @@ class StationsMap extends Component {
         <div className={classnames(classes.controlGroup, classes.topLeft)}>
           <SearchFab size="medium" onClick={this.handleSearchFabClick} />
         </div>
-        <MapDrawer
-          open={drawerOpen}
-          onClose={this.handleMapDrawerClose}
-          stations={stations}
-          selectedStation={selectedStation}
-          onStationSelect={this.handleStationSelect}
-          onMenuClick={this.handleMenuClick}
-        />
+        <MapDrawer open={drawerOpen} onClose={this.handleMapDrawerClose}>
+          <SearchField stations={stations} onMenuClick={this.handleMenuClick} />
+          <Divider />
+          <StationsList
+            items={stations}
+            selected={selectedStation}
+            onSelect={this.handleStationSelect}
+          />
+        </MapDrawer>
         <Map
           className={classes.map}
           bounds={bounds}
