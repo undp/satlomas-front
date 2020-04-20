@@ -162,29 +162,17 @@ const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 export default class StationTable extends React.Component {
     state = {
       loading : true,
-      rows : [
-        {date:'2020-01-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-02-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-03-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-04-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-05-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-06-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-07-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-08-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-        {date:'2020-09-01', temp:159, humidity:6.0, windSpeed:24, windDireccion:4.0, presure:4.0, fog:4.0},
-      ],
-      columns : [
-        {width: 100,flexGrow: 1.0,label: 'Fecha',dataKey: 'date',},
-        {width: 70, flexGrow: 1.0,label: 'Temperatura ambiente',dataKey: 'temp',numeric: true,},
-        {width: 70, flexGrow: 1.0,label: 'Humedad relativa',dataKey: 'humidity',numeric: true,},
-        {width: 70, flexGrow: 1.0,label: 'Velocidad del viento',dataKey: 'windSpeed',numeric: true,},
-        {width: 70, flexGrow: 1.0,label: 'Direccion del viento',dataKey: 'windDireccion',numeric: true,},
-        {width: 70, flexGrow: 1.0,label: 'Presion atmosferica',dataKey: 'presure',numeric: true,},
-        {width: 70, flexGrow: 1.0,label: 'Precipitaciones (niebla)',dataKey: 'fog',numeric: true,},
-      ],
+      rows : [],
+      columns : [],
     }
   
     componentDidMount() {
+      const { parameters } = this.props;
+      let columns = [{width: 100,flexGrow: 1.0,label: 'Fecha',dataKey: 't',},]
+      parameters.forEach(e => columns.push(
+        {width: 80,flexGrow: 1.0,label: e.name,dataKey: e.id,}
+      ));
+      this.setState({columns});
       this.fetchData();
     }
 
@@ -192,11 +180,6 @@ export default class StationTable extends React.Component {
       if (!_.isEqual(prevProps, this.props)) {
         this.fetchData();
       }
-    }
-
-    getRows(data){
-      console.error("Not immplemented");
-      return [];
     }
 
     getSecondsFromTimeAndUnit(time, unit) {
@@ -244,8 +227,9 @@ export default class StationTable extends React.Component {
       } = this.props;
   
       const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
-      let parameter = [];
-      parameters.forEach(e => parameter.push(e.id));
+      let parameter = "";
+      parameters.forEach(e => parameter = parameter.concat(e.id).concat(","));
+      parameter = parameter.substring(0, parameter.length - 1);
       const params = {
         station: stationId,
         parameter: parameter, 
@@ -256,11 +240,11 @@ export default class StationTable extends React.Component {
       };
       console.log(params);
       try {
-        const response = await axios.get(buildApiUrl("/measurements/all_summary"), {
+        const response = await axios.get(buildApiUrl("/measurements/summary"), {
           params,
         });
         console.log(response);
-        this.setState({ rows: this.getRows(response.data), loading: false });
+        this.setState({ rows: response.data, loading: false });
       } catch (err) {
         console.error(err);
         /*this.props.enqueueSnackbar(`Failed to get table data`, {
@@ -271,15 +255,17 @@ export default class StationTable extends React.Component {
 
 
     render(){
-        const { rows, columns } = this.state;
+        const { rows, columns, loading } = this.state;
         return (
             <Paper style={{ height: 400, width: '100%' }}>
-              <WrappedVirtualizedTable
-                rowCount={rows.length}
-                rowGetter={({ index }) => rows[index]}
-                onRowClick={event => console.log(event)}
-                columns={columns}
-              />
+              {!loading && (
+                <WrappedVirtualizedTable
+                  rowCount={rows.length}
+                  rowGetter={({ index }) => rows[index]}
+                  onRowClick={event => console.log(event)}
+                  columns={columns}
+                />
+              )}
             </Paper>
         );
     }
