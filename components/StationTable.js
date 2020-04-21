@@ -7,6 +7,7 @@ import { Paper, TableCell, TableSortLabel } from '@material-ui/core';
 import { buildApiUrl } from "../utils/api";
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import _ from 'lodash';
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
   table: {
@@ -243,15 +244,26 @@ class StationTable extends React.Component {
         params,
       });
       console.log(response);
-      this.setState({ rows: response.data, loading: false });
+      const formattedRows = this.formatRows(response.data);
+      this.setState({ rows: formattedRows, loading: false });
     } catch (err) {
       console.error(err);
-      /*this.props.enqueueSnackbar(`Failed to get table data`, {
+      this.props.enqueueSnackbar(`Failed to get table data`, {
         variant: "error",
-      });*/
+      });
     }
   }
 
+  formatRows = (rows) => {
+    return rows.map(row => {
+      let formattedRow = {}
+      Object.entries(row).map(([k, v]) => {
+        console.log([k, v])
+        formattedRow[k] = +(+v).toFixed(2)
+      })
+      return { ...formattedRow, t: row.t }
+    })
+  }
 
   render() {
     const { rows, columns, loading } = this.state;
@@ -272,5 +284,7 @@ class StationTable extends React.Component {
     );
   }
 }
+
+StationTable = withSnackbar(StationTable);
 
 export default StationTable

@@ -298,7 +298,8 @@ class StationsDashboard extends React.Component {
       start,
       end,
       aggFunc,
-      groupInt } = query;
+      groupInt
+    } = query;
 
     if (!["realtime", "historic"].includes(mode)) {
       mode = DEFAULT_MODE;
