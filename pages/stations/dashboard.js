@@ -14,8 +14,13 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 import StationsFilterButton from "../../components/StationsFilterButton";
-import TimeRangeFilterButton from "../../components/TimeRangeFilterButton";
+import TimeRangeFilterButton, {
+  lastTimeItems,
+  aggregationFuncItems,
+  groupingIntervalItems
+} from "../../components/TimeRangeFilterButton";
 import ParameterCardContent from "../../components/ParameterCardContent";
+import { withRouter } from "next/router"
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
@@ -25,8 +30,15 @@ const { stationParameters } = config;
 
 // FIXME Move to config.js
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
-const DEFAULT_START = "2011-01-01T00:00";
-const DEFAULT_END = "2012-01-01T00:00";
+
+const DEFAULT_MODE = "historic";
+const DEFAULT_RT_LAST_TIME = "1-year";
+const DEFAULT_HISTORIC_START = "2011-01-01T00:00";
+const DEFAULT_HISTORIC_END = "2012-01-01T00:00";
+const DEFAULT_AGG_FUNC = "avg";
+const DEFAULT_GROUP_INT = "month";
+
+const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date))
 
 const styles = (theme) => ({
   appBar: {
@@ -79,11 +91,11 @@ class StationsDashboard extends React.Component {
   state = {
     loading: true,
     station: null,
-    mode: "historic",
-    realtimeParams: { now: new Date(), lastTime: "1-year" },
-    historicParams: { start: DEFAULT_START, end: DEFAULT_END },
-    aggregationFunc: "avg",
-    groupingInterval: "month",
+    mode: DEFAULT_MODE,
+    realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
+    historicParams: { start: DEFAULT_HISTORIC_START, end: DEFAULT_HISTORIC_END },
+    aggregationFunc: DEFAULT_AGG_FUNC,
+    groupingInterval: DEFAULT_GROUP_INT,
     stationsAnchorEl: null,
     data: {},
   };
@@ -105,21 +117,57 @@ class StationsDashboard extends React.Component {
         ? stations.find((station) => station.id === Number(query.id))
         : stations[0]);
 
-    // TODO Set time range filter based on query param
-    // ...
+    // Set time range filter based on query param
+    const {
+      mode,
+      lastTime,
+      start,
+      end,
+      aggregationFunc,
+      groupingInterval
+    } = this.getValidTimeRangeParameters();
 
-    this.setState({ station, loading: false });
+    this.setState((prevState) => ({
+      loading: false,
+      station,
+      mode,
+      realtimeParams: { ...prevState.realtimeParams, lastTime },
+      historicParams: { ...prevState.historicParams, start, end },
+      aggregationFunc,
+      groupingInterval,
+    }))
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    const { mode } = this.state;
+    const {
+      station,
+      mode,
+      realtimeParams: { lastTime },
+      historicParams: { start, end },
+      aggregationFunc,
+      groupingInterval
+    } = this.state;
 
+    // Set mode if it changed
     if (mode !== prevState.mode) {
       if (mode === "realtime") {
         this.setRealtimeMode();
       } else if (mode === "historic") {
         this.setHistoricMode();
       }
+    }
+
+    // Update query params based on state
+    if (
+      station != prevState.station ||
+      mode != prevState.mode ||
+      lastTime != prevState.realtimeParams.lastTime ||
+      start != prevState.historicParams.start ||
+      end != prevState.historicParams.end ||
+      aggregationFunc != prevState.aggregationFunc ||
+      groupingInterval != prevState.groupingInterval
+    ) {
+      this.pushNewRoute();
     }
   }
 
@@ -215,6 +263,71 @@ class StationsDashboard extends React.Component {
   handleGroupingIntervalSelectChange = (e) => {
     this.setState({ groupingInterval: e.target.value });
   };
+
+  pushNewRoute() {
+    const {
+      station,
+      mode,
+      realtimeParams: { lastTime },
+      historicParams: { start, end },
+      groupingInterval,
+      aggregationFunc
+    } = this.state;
+
+    const { router } = this.props;
+    const { pathname, query } = router;
+
+    router.push({
+      pathname,
+      query: {
+        ...query,
+        id: station.id,
+        mode,
+        lastTime,
+        start,
+        end,
+        groupInt: groupingInterval,
+        aggFunc: aggregationFunc
+      }
+    });
+  }
+
+  getValidTimeRangeParameters() {
+    const { query } = this.props
+    let {
+      mode,
+      lastTime,
+      start,
+      end,
+      aggFunc,
+      groupInt } = query;
+
+    if (!["realtime", "historic"].includes(mode)) {
+      mode = DEFAULT_MODE;
+    }
+    if (!Object.keys(lastTimeItems).includes(lastTime)) {
+      lastTime = DEFAULT_RT_LAST_TIME;
+    }
+    if (!Object.keys(aggregationFuncItems).includes(aggFunc)) {
+      aggFunc = DEFAULT_AGG_FUNC;
+    }
+    if (!Object.keys(groupingIntervalItems).includes(groupInt)) {
+      groupInt = DEFAULT_GROUP_INT;
+    }
+    if (!isDate(start) || !isDate(end)) {
+      start = DEFAULT_HISTORIC_START;
+      end = DEFAULT_HISTORIC_END;
+    }
+
+    return {
+      mode,
+      lastTime,
+      start,
+      end,
+      aggregationFunc: aggFunc,
+      groupingInterval: groupInt
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -314,8 +427,8 @@ class StationsDashboard extends React.Component {
               </Grid>
             </div>
           ) : (
-            <LinearProgress />
-          )}
+              <LinearProgress />
+            )}
         </main>
       </React.Fragment>
     );
@@ -327,6 +440,7 @@ StationsDashboard.propTypes = {
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
+StationsDashboard = withRouter(StationsDashboard);
 StationsDashboard = withSnackbar(StationsDashboard);
 StationsDashboard = withStyles(styles)(StationsDashboard);
 

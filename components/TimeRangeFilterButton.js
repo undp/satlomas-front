@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import SelectControl from "./SelectControl";
 
-const lastTimeItems = {
+export const lastTimeItems = {
   "1-hour": "1 hora",
   "2-hour": "2 horas",
   "3-hour": "3 horas",
@@ -27,7 +27,7 @@ const lastTimeItems = {
   "1-year": "1 año",
 };
 
-const aggregationFuncItems = {
+export const aggregationFuncItems = {
   avg: "Promedio",
   min: "Mínimo",
   max: "Máximo",
@@ -35,7 +35,7 @@ const aggregationFuncItems = {
   count: "Conteo",
 };
 
-const groupingIntervalItems = {
+export const groupingIntervalItems = {
   hour: "Hora",
   day: "Día",
   week: "Semana",
