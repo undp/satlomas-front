@@ -76,7 +76,7 @@ const styles = (theme) => ({
   },
 });
 
-class StationsDashboard extends React.Component {
+class StationsData extends React.Component {
   state = {
     loading: true,
     station: null,
@@ -302,20 +302,20 @@ class StationsDashboard extends React.Component {
               ></StationTable>
             </div>
           ) : (
-            <LinearProgress />
-          )}
+              <LinearProgress />
+            )}
         </main>
       </React.Fragment>
     );
   }
 }
 
-StationsDashboard.propTypes = {
+StationsData.propTypes = {
   classes: PropTypes.object.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-StationsDashboard = withSnackbar(StationsDashboard);
-StationsDashboard = withStyles(styles)(StationsDashboard);
+StationsData = withSnackbar(StationsData);
+StationsData = withStyles(styles)(StationsData);
 
-export default StationsDashboard;
+export default StationsData;
