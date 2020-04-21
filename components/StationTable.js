@@ -3,11 +3,10 @@ import axios from "axios";
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
+import { Paper, TableCell, TableSortLabel } from '@material-ui/core';
 import { buildApiUrl } from "../utils/api";
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
+import _ from 'lodash';
 
 const styles = theme => ({
   table: {
@@ -73,8 +72,8 @@ class MuiVirtualizedTable extends React.PureComponent {
           {label}
         </TableSortLabel>
       ) : (
-        label
-      );
+          label
+        );
 
     return (
       <TableCell
@@ -159,114 +158,119 @@ MuiVirtualizedTable.defaultProps = {
 
 const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
-export default class StationTable extends React.Component {
-    state = {
-      loading : true,
-      rows : [],
-      columns : [],
-    }
-  
-    componentDidMount() {
-      const { parameters } = this.props;
-      let columns = [{width: 100,flexGrow: 1.0,label: 'Fecha',dataKey: 't',},]
-      parameters.forEach(e => columns.push(
-        {width: 80,flexGrow: 1.0,label: e.name,dataKey: e.id,}
-      ));
-      this.setState({columns});
+class StationTable extends React.Component {
+  state = {
+    loading: true,
+    rows: [],
+    columns: [],
+  }
+
+  componentDidMount() {
+    const { parameters } = this.props;
+    let columns = [{ width: 100, flexGrow: 1.0, label: 'Fecha', dataKey: 't', },]
+    parameters.forEach(e => columns.push(
+      { width: 80, flexGrow: 1.0, label: e.name, dataKey: e.id, }
+    ));
+    this.setState({ columns });
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(prevProps, this.props)) {
       this.fetchData();
     }
+  }
 
-    componentDidUpdate(prevProps) {
-      if (!_.isEqual(prevProps, this.props)) {
-        this.fetchData();
+  getSecondsFromTimeAndUnit(time, unit) {
+    switch (unit) {
+      case "hour":
+        return time * 1000 * 60 * 60;
+      case "day":
+        return time * 1000 * 60 * 60 * 24;
+      case "week":
+        return time * 1000 * 60 * 60 * 24 * 7;
+      case "month":
+        return time * 1000 * 60 * 60 * 24 * 30;
+      case "year":
+        return time * 1000 * 60 * 60 * 24 * 365;
+      default:
+        throw `Invalid time unit: ${unit}`;
+    }
+  }
+
+  calculateTimeRange(mode, params) {
+    switch (mode) {
+      case "realtime": {
+        const { now, lastTime } = params;
+        const [time, unit] = lastTime.split("-");
+        const seconds = this.getSecondsFromTimeAndUnit(time, unit);
+        return [new Date(now - seconds), now];
       }
-    }
-
-    getSecondsFromTimeAndUnit(time, unit) {
-      switch (unit) {
-        case "hour":
-          return time * 1000 * 60 * 60;
-        case "day":
-          return time * 1000 * 60 * 60 * 24;
-        case "week":
-          return time * 1000 * 60 * 60 * 24 * 7;
-        case "month":
-          return time * 1000 * 60 * 60 * 24 * 30;
-        case "year":
-          return time * 1000 * 60 * 60 * 24 * 365;
-        default:
-          throw `Invalid time unit: ${unit}`;
+      case "historic": {
+        const { start, end } = params;
+        return [start, end];
       }
+      default:
+        throw "invalid time range mode";
     }
+  }
 
-    calculateTimeRange(mode, params) {
-      switch (mode) {
-        case "realtime": {
-          const { now, lastTime } = params;
-          const [time, unit] = lastTime.split("-");
-          const seconds = this.getSecondsFromTimeAndUnit(time, unit);
-          return [new Date(now - seconds), now];
-        }
-        case "historic": {
-          const { start, end } = params;
-          return [start, end];
-        }
-        default:
-          throw "invalid time range mode";
-      }
-    }
+  async fetchData() {
+    const {
+      stationId,
+      parameters,
+      mode,
+      timeRangeParams,
+      groupingInterval,
+      aggregationFunc,
+    } = this.props;
 
-    async fetchData() {
-      const {
-        stationId,
-        parameters,
-        mode,
-        timeRangeParams,
-        groupingInterval,
-        aggregationFunc,
-      } = this.props;
-  
-      const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
-      let parameter = "";
-      parameters.forEach(e => parameter = parameter.concat(e.id).concat(","));
-      parameter = parameter.substring(0, parameter.length - 1);
-      const params = {
-        station: stationId,
-        parameter: parameter, 
-        start,
-        end,
-        grouping_interval: groupingInterval,
-        aggregation_func: aggregationFunc,
-      };
-      console.log(params);
-      try {
-        const response = await axios.get(buildApiUrl("/measurements/summary"), {
-          params,
-        });
-        console.log(response);
-        this.setState({ rows: response.data, loading: false });
-      } catch (err) {
-        console.error(err);
-        /*this.props.enqueueSnackbar(`Failed to get table data`, {
-          variant: "error",
-        });*/
-      }
+    const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
+    let parameter = "";
+    parameters.forEach(e => parameter = parameter.concat(e.id).concat(","));
+    parameter = parameter.substring(0, parameter.length - 1);
+    const params = {
+      station: stationId,
+      parameter: parameter,
+      start,
+      end,
+      grouping_interval: groupingInterval,
+      aggregation_func: aggregationFunc,
+    };
+    console.log(params);
+    try {
+      const response = await axios.get(buildApiUrl("/measurements/summary"), {
+        params,
+      });
+      console.log(response);
+      this.setState({ rows: response.data, loading: false });
+    } catch (err) {
+      console.error(err);
+      /*this.props.enqueueSnackbar(`Failed to get table data`, {
+        variant: "error",
+      });*/
     }
+  }
 
 
-    render(){
-        const { rows, columns, loading } = this.state;
-        return (
-            <Paper style={{ height: 400, width: '100%' }}>
-              {!loading && (
-                <WrappedVirtualizedTable
-                  rowCount={rows.length}
-                  rowGetter={({ index }) => rows[index]}
-                  onRowClick={event => console.log(event)}
-                  columns={columns}
-                />
-              )}
-            </Paper>
-        );
-    }
+  render() {
+    const { rows, columns, loading } = this.state;
+
+    return (
+      <>
+        <Paper style={{ height: '80vh', width: '100%' }}>
+          {!loading && (
+            <WrappedVirtualizedTable
+              rowCount={rows.length}
+              rowGetter={({ index }) => rows[index]}
+              onRowClick={event => console.log(event)}
+              columns={columns}
+            />
+          )}
+        </Paper>
+      </>
+    );
+  }
 }
+
+export default StationTable

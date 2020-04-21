@@ -5,21 +5,19 @@ import Head from "next/head";
 import axios from "axios";
 import {
   AppBar,
-  Card,
-  CardContent,
   CssBaseline,
-  Grid,
   Toolbar,
   Typography,
   LinearProgress,
+  Button,
 } from "@material-ui/core";
 import StationsFilterButton from "../../components/StationsFilterButton";
 import TimeRangeFilterButton from "../../components/TimeRangeFilterButton";
-import ParameterCardContent from "../../components/ParameterCardContent";
 import StationTable from "../../components/StationTable";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
+import { Link } from "../../i18n"
 import config from "../../config";
 
 const { stationParameters } = config;
@@ -74,7 +72,21 @@ const styles = (theme) => ({
     fontFamily: "Roboto, sans-serif",
     fontSize: 10,
   },
+  button: {
+    margin: theme.spacing.unit,
+  }
 });
+
+let DataToolbar = ({ classes, onDownloadClick }) => (
+  <div>
+    <Link href="/stations/dashboard">
+      <Button className={classes.button}>Dashboard</Button>
+    </Link>
+    <Button onClick={onDownloadClick} className={classes.button}>Descargar</Button>
+  </div>
+)
+
+DataToolbar = withStyles(styles)(DataToolbar)
 
 class StationsData extends React.Component {
   state = {
@@ -217,6 +229,10 @@ class StationsData extends React.Component {
     this.setState({ groupingInterval: e.target.value });
   };
 
+  handleDownloadClick = () => {
+    alert("download")
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -290,6 +306,7 @@ class StationsData extends React.Component {
           </Toolbar>
         </AppBar>
         <main>
+          <DataToolbar onDownloadClick={this.handleDownloadClick} />
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
               <StationTable
