@@ -15,6 +15,12 @@ import {
 } from "@material-ui/core";
 import StationsFilterButton from "../../components/StationsFilterButton";
 import TimeRangeFilterButton, {
+  DEFAULT_MODE,
+  DEFAULT_HISTORIC_START,
+  DEFAULT_HISTORIC_END,
+  DEFAULT_AGG_FUNC,
+  DEFAULT_GROUP_INT,
+  DEFAULT_RT_LAST_TIME,
   lastTimeItems,
   aggregationFuncItems,
   groupingIntervalItems
@@ -24,21 +30,13 @@ import { withRouter } from "next/router"
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
+import { isDate } from "../../utils/date";
 import config from "../../config";
 
 const { stationParameters } = config;
 
 // FIXME Move to config.js
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
-
-const DEFAULT_MODE = "historic";
-const DEFAULT_RT_LAST_TIME = "1-year";
-const DEFAULT_HISTORIC_START = "2011-01-01T00:00";
-const DEFAULT_HISTORIC_END = "2012-01-01T00:00";
-const DEFAULT_AGG_FUNC = "avg";
-const DEFAULT_GROUP_INT = "month";
-
-const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date))
 
 const styles = (theme) => ({
   appBar: {
@@ -353,7 +351,7 @@ class StationsDashboard extends React.Component {
           <title>
             {station
               ? `GeoLomas - Dashboard: ${station.name}`
-              : `GeoLomas - Dashboard de Estaciones`}
+              : `GeoLomas - Estaciones Meteorológicas`}
           </title>
         </Head>
         <CssBaseline />
@@ -362,7 +360,7 @@ class StationsDashboard extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               {station
                 ? `Dashboard: ${station.name}`
-                : `Dashboard de Estaciones Meteorológicas`}
+                : `Cargando datos...`}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>

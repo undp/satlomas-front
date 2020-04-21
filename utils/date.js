@@ -1,0 +1,1 @@
+export const isDate = (date) => (new Date(date) !== "Invalid Date") && !isNaN(new Date(date))
