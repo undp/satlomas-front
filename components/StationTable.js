@@ -8,6 +8,7 @@ import { buildApiUrl } from "../utils/api";
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import _ from 'lodash';
 import { withSnackbar } from 'notistack';
+import strftime from '../utils/strftime';
 
 const styles = theme => ({
   table: {
@@ -243,7 +244,6 @@ class StationTable extends React.Component {
       const response = await axios.get(buildApiUrl("/measurements/summary"), {
         params,
       });
-      console.log(response);
       const formattedRows = this.formatRows(response.data);
       this.setState({ rows: formattedRows, loading: false });
     } catch (err) {
@@ -258,11 +258,32 @@ class StationTable extends React.Component {
     return rows.map(row => {
       let formattedRow = {}
       Object.entries(row).map(([k, v]) => {
-        console.log([k, v])
         formattedRow[k] = +(+v).toFixed(2)
       })
-      return { ...formattedRow, t: row.t }
+      formattedRow['t'] = this.formatDateTime(row.t);
+      return formattedRow;
     })
+  }
+
+  formatDateTime(t) {
+    const { groupingInterval } = this.props;
+    const ft = new Date(Date.parse(t));
+
+    switch (groupingInterval) {
+      case 'hour':
+        return strftime("%Y-%m-%d %H:00", ft);
+      case 'day':
+        return strftime("%Y-%m-%d", ft);
+      // TODO
+      // case 'week':
+      //   return strftime("%Y %W", ft);
+      case 'month':
+        return strftime("%Y-%m", ft);
+      case 'year':
+        return strftime("%Y", ft);
+      default:
+        return t;
+    }
   }
 
   render() {
@@ -275,7 +296,6 @@ class StationTable extends React.Component {
             <WrappedVirtualizedTable
               rowCount={rows.length}
               rowGetter={({ index }) => rows[index]}
-              onRowClick={event => console.log(event)}
               columns={columns}
             />
           )}
