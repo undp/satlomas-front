@@ -2,23 +2,23 @@ export default {
   stationParameters: [
     {
       id: "temperature",
-      name: "Temperatura de Ambiente",
+      name: "Temperatura de Ambiente (°C)"
     },
     {
       id: "humidity",
-      name: "Humedad Relativa",
+      name: "Humedad Relativa (%)",
     },
     {
       id: "wind_speed",
-      name: "Velocidad del Viento",
+      name: "Velocidad del Viento (m/s)",
     },
     {
       id: "wind_direction",
-      name: "Dirección del Viento",
+      name: "Dirección del Viento (grados)",
     },
     {
       id: "pressure",
-      name: "Presión Atmosférica",
+      name: "Presión Atmosférica (mbar)",
     },
     {
       id: "precipitation",

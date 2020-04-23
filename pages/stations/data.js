@@ -5,21 +5,31 @@ import Head from "next/head";
 import axios from "axios";
 import {
   AppBar,
-  Card,
-  CardContent,
   CssBaseline,
-  Grid,
   Toolbar,
   Typography,
   LinearProgress,
+  Button,
 } from "@material-ui/core";
 import StationsFilterButton from "../../components/StationsFilterButton";
-import TimeRangeFilterButton from "../../components/TimeRangeFilterButton";
-import ParameterCardContent from "../../components/ParameterCardContent";
+import TimeRangeFilterButton, {
+  DEFAULT_MODE,
+  DEFAULT_HISTORIC_START,
+  DEFAULT_HISTORIC_END,
+  DEFAULT_AGG_FUNC,
+  DEFAULT_GROUP_INT,
+  DEFAULT_RT_LAST_TIME,
+  lastTimeItems,
+  aggregationFuncItems,
+  groupingIntervalItems
+} from "../../components/TimeRangeFilterButton";
 import StationTable from "../../components/StationTable";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
+import { withRouter } from "next/router";
 import { buildApiUrl } from "../../utils/api";
+import { isDate } from "../../utils/date";
+import FileDownload from "../../utils/file-download"
 import config from "../../config";
 
 const { stationParameters } = config;
@@ -74,9 +84,21 @@ const styles = (theme) => ({
     fontFamily: "Roboto, sans-serif",
     fontSize: 10,
   },
+  button: {
+    margin: theme.spacing.unit,
+  }
 });
 
-class StationsDashboard extends React.Component {
+let DataToolbar = ({ classes, onDownloadClick, onDashboardClick }) => (
+  <div>
+    <Button onClick={onDashboardClick} className={classes.button}>Dashboard</Button>
+    <Button onClick={onDownloadClick} className={classes.button}>Descargar</Button>
+  </div>
+)
+
+DataToolbar = withStyles(styles)(DataToolbar)
+
+class StationsData extends React.Component {
   state = {
     loading: true,
     station: null,
@@ -106,21 +128,57 @@ class StationsDashboard extends React.Component {
         ? stations.find((station) => station.id === Number(query.id))
         : stations[0]);
 
-    // TODO Set time range filter based on query param
-    // ...
+    // Set time range filter based on query param
+    const {
+      mode,
+      lastTime,
+      start,
+      end,
+      aggregationFunc,
+      groupingInterval
+    } = this.getValidTimeRangeParameters();
 
-    this.setState({ station, loading: false });
+    this.setState((prevState) => ({
+      loading: false,
+      station,
+      mode,
+      realtimeParams: { ...prevState.realtimeParams, lastTime },
+      historicParams: { ...prevState.historicParams, start, end },
+      aggregationFunc,
+      groupingInterval,
+    }))
   }
 
   componentDidUpdate(_prevProps, prevState) {
-    const { mode } = this.state;
+    const {
+      station,
+      mode,
+      realtimeParams: { lastTime },
+      historicParams: { start, end },
+      aggregationFunc,
+      groupingInterval
+    } = this.state;
 
+    // Set mode if it changed
     if (mode !== prevState.mode) {
       if (mode === "realtime") {
         this.setRealtimeMode();
       } else if (mode === "historic") {
         this.setHistoricMode();
       }
+    }
+
+    // Update query params based on state
+    if (
+      station != prevState.station ||
+      mode != prevState.mode ||
+      lastTime != prevState.realtimeParams.lastTime ||
+      start != prevState.historicParams.start ||
+      end != prevState.historicParams.end ||
+      aggregationFunc != prevState.aggregationFunc ||
+      groupingInterval != prevState.groupingInterval
+    ) {
+      this.pushNewRoute();
     }
   }
 
@@ -146,12 +204,70 @@ class StationsDashboard extends React.Component {
 
   async fetchStations() {
     try {
-      const response = await axios.get(buildApiUrl("/stations/"));
+      const response = await axios.get(buildApiUrl("/stations/stations/"));
       this.setState({ stations: response.data });
     } catch (error) {
       this.props.enqueueSnackbar("Failed to fetch stations", {
         variant: "error",
       });
+    }
+  }
+
+  async downloadCSV() {
+    const {
+      station,
+      mode,
+      realtimeParams,
+      historicParams,
+      groupingInterval,
+      aggregationFunc,
+    } = this.state;
+
+    const parameter = stationParameters.map(param => param.id).join(",");
+    const timeRangeParams = mode === "realtime" ? realtimeParams : historicParams;
+    const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
+
+    const params = {
+      station: station.id,
+      parameter,
+      start,
+      end,
+      grouping_interval: groupingInterval,
+      aggregation_func: aggregationFunc,
+    };
+
+    const filename = "data.csv";
+
+    try {
+      const response = await axios.get(buildApiUrl(`/stations/measurements/summary`), {
+        params,
+        headers: { Authorization: this.props.token, Accept: 'text/csv' },
+        responseType: 'blob'
+      });
+      console.log(response);
+      FileDownload(response.data, filename);
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to download CSV file", {
+        variant: "error",
+      });
+    }
+  }
+
+  calculateTimeRange(mode, params) {
+    switch (mode) {
+      case "realtime": {
+        const { now, lastTime } = params;
+        const [time, unit] = lastTime.split("-");
+        const seconds = this.getSecondsFromTimeAndUnit(time, unit);
+        return [new Date(now - seconds), now];
+      }
+      case "historic": {
+        const { start, end } = params;
+        return [start, end];
+      }
+      default:
+        throw "invalid time range mode";
     }
   }
 
@@ -217,6 +333,85 @@ class StationsDashboard extends React.Component {
     this.setState({ groupingInterval: e.target.value });
   };
 
+  handleDownloadClick = () => {
+    this.downloadCSV();
+  }
+
+  handleDashboardClick = () => {
+    const { router } = this.props;
+    const { query } = router;
+
+    router.push({
+      pathname: "/stations/dashboard",
+      query,
+    });
+  }
+
+  getValidTimeRangeParameters() {
+    const { query } = this.props
+    let {
+      mode,
+      lastTime,
+      start,
+      end,
+      aggFunc,
+      groupInt } = query;
+
+    if (!["realtime", "historic"].includes(mode)) {
+      mode = DEFAULT_MODE;
+    }
+    if (!Object.keys(lastTimeItems).includes(lastTime)) {
+      lastTime = DEFAULT_RT_LAST_TIME;
+    }
+    if (!Object.keys(aggregationFuncItems).includes(aggFunc)) {
+      aggFunc = DEFAULT_AGG_FUNC;
+    }
+    if (!Object.keys(groupingIntervalItems).includes(groupInt)) {
+      groupInt = DEFAULT_GROUP_INT;
+    }
+    if (!isDate(start) || !isDate(end)) {
+      start = DEFAULT_HISTORIC_START;
+      end = DEFAULT_HISTORIC_END;
+    }
+
+    return {
+      mode,
+      lastTime,
+      start,
+      end,
+      aggregationFunc: aggFunc,
+      groupingInterval: groupInt
+    }
+  }
+
+  pushNewRoute() {
+    const {
+      station,
+      mode,
+      realtimeParams: { lastTime },
+      historicParams: { start, end },
+      groupingInterval,
+      aggregationFunc
+    } = this.state;
+
+    const { router } = this.props;
+    const { pathname, query } = router;
+
+    router.push({
+      pathname,
+      query: {
+        ...query,
+        id: station.id,
+        mode,
+        lastTime,
+        start,
+        end,
+        groupInt: groupingInterval,
+        aggFunc: aggregationFunc
+      }
+    });
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -241,7 +436,7 @@ class StationsDashboard extends React.Component {
           <title>
             {station
               ? `GeoLomas - Dashboard: ${station.name}`
-              : `GeoLomas - Dashboard de Estaciones`}
+              : `GeoLomas - Estaciones Meteorológicas`}
           </title>
         </Head>
         <CssBaseline />
@@ -249,8 +444,8 @@ class StationsDashboard extends React.Component {
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
               {station
-                ? `Dashboard: ${station.name}`
-                : `Dashboard de Estaciones Meteorológicas`}
+                ? `Datos: ${station.name}`
+                : `Cargando datos...`}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
@@ -290,6 +485,7 @@ class StationsDashboard extends React.Component {
           </Toolbar>
         </AppBar>
         <main>
+          <DataToolbar onDownloadClick={this.handleDownloadClick} onDashboardClick={this.handleDashboardClick} />
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
               <StationTable
@@ -302,20 +498,21 @@ class StationsDashboard extends React.Component {
               ></StationTable>
             </div>
           ) : (
-            <LinearProgress />
-          )}
+              <LinearProgress />
+            )}
         </main>
       </React.Fragment>
     );
   }
 }
 
-StationsDashboard.propTypes = {
+StationsData.propTypes = {
   classes: PropTypes.object.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-StationsDashboard = withSnackbar(StationsDashboard);
-StationsDashboard = withStyles(styles)(StationsDashboard);
+StationsData = withRouter(StationsData);
+StationsData = withSnackbar(StationsData);
+StationsData = withStyles(styles)(StationsData);
 
-export default StationsDashboard;
+export default StationsData;

@@ -84,7 +84,7 @@ class StationsMap extends Component {
 
     let stations = [];
     try {
-      const response = await axios.get(buildApiUrl(`/stations/`), {
+      const response = await axios.get(buildApiUrl(`/stations/stations/`), {
         headers: headers,
       });
       stations = response.data || [];
