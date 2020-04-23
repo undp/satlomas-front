@@ -159,7 +159,7 @@ const Index = ({ classes }) => (
           {cards.map((card) => (
             <Grid item key={card.key} sm={6} md={4} lg={3}>
               <Card className={classes.card}>
-                <Link href={card.href}>
+                <Link href={card.buttons[0].href}>
                   <CardMedia
                     className={classes.cardMedia}
                     image={card.image}
