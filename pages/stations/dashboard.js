@@ -191,7 +191,7 @@ class StationsDashboard extends React.Component {
 
   async fetchStations() {
     try {
-      const response = await axios.get(buildApiUrl("/stations/"));
+      const response = await axios.get(buildApiUrl("/stations/stations/"));
       this.setState({ stations: response.data });
     } catch (error) {
       this.props.enqueueSnackbar("Failed to fetch stations", {

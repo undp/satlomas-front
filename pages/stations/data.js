@@ -29,6 +29,7 @@ import { withSnackbar } from "notistack";
 import { withRouter } from "next/router";
 import { buildApiUrl } from "../../utils/api";
 import { isDate } from "../../utils/date";
+import FileDownload from "../../utils/file-download"
 import config from "../../config";
 
 const { stationParameters } = config;
@@ -203,12 +204,70 @@ class StationsData extends React.Component {
 
   async fetchStations() {
     try {
-      const response = await axios.get(buildApiUrl("/stations/"));
+      const response = await axios.get(buildApiUrl("/stations/stations/"));
       this.setState({ stations: response.data });
     } catch (error) {
       this.props.enqueueSnackbar("Failed to fetch stations", {
         variant: "error",
       });
+    }
+  }
+
+  async downloadCSV() {
+    const {
+      station,
+      mode,
+      realtimeParams,
+      historicParams,
+      groupingInterval,
+      aggregationFunc,
+    } = this.state;
+
+    const parameter = stationParameters.map(param => param.id).join(",");
+    const timeRangeParams = mode === "realtime" ? realtimeParams : historicParams;
+    const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
+
+    const params = {
+      station: station.id,
+      parameter,
+      start,
+      end,
+      grouping_interval: groupingInterval,
+      aggregation_func: aggregationFunc,
+    };
+
+    const filename = "data.csv";
+
+    try {
+      const response = await axios.get(buildApiUrl(`/stations/measurements/summary`), {
+        params,
+        headers: { Authorization: this.props.token, Accept: 'text/csv' },
+        responseType: 'blob'
+      });
+      console.log(response);
+      FileDownload(response.data, filename);
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to download CSV file", {
+        variant: "error",
+      });
+    }
+  }
+
+  calculateTimeRange(mode, params) {
+    switch (mode) {
+      case "realtime": {
+        const { now, lastTime } = params;
+        const [time, unit] = lastTime.split("-");
+        const seconds = this.getSecondsFromTimeAndUnit(time, unit);
+        return [new Date(now - seconds), now];
+      }
+      case "historic": {
+        const { start, end } = params;
+        return [start, end];
+      }
+      default:
+        throw "invalid time range mode";
     }
   }
 
@@ -275,7 +334,7 @@ class StationsData extends React.Component {
   };
 
   handleDownloadClick = () => {
-    alert("download")
+    this.downloadCSV();
   }
 
   handleDashboardClick = () => {

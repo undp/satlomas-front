@@ -239,9 +239,9 @@ class StationTable extends React.Component {
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };
-    console.log(params);
+
     try {
-      const response = await axios.get(buildApiUrl("/measurements/summary"), {
+      const response = await axios.get(buildApiUrl("/stations/measurements/summary"), {
         params,
       });
       const formattedRows = this.formatRows(response.data);

@@ -129,7 +129,7 @@ class ParameterCardContent extends React.Component {
     };
 
     try {
-      const response = await axios.get(buildApiUrl("/measurements/summary"), {
+      const response = await axios.get(buildApiUrl("/stations/measurements/summary"), {
         params,
       });
       this.setState({ data: response.data, loading: false });
@@ -149,8 +149,8 @@ class ParameterCardContent extends React.Component {
       (showTable ? (
         <ParameterTable data={data} />
       ) : (
-        <ParameterPlot data={data} />
-      ))
+          <ParameterPlot data={data} />
+        ))
     );
   }
 }
