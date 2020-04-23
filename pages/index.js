@@ -174,6 +174,7 @@ const Index = ({ classes }) => (
                 </CardContent>
                 <CardActions>
                   {card.buttons.map(button => (<Button
+                    key={button.name}
                     size="small"
                     color="primary"
                     onClick={() => Router.push(button.href)}
