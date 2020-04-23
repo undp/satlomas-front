@@ -72,7 +72,7 @@ const cards = [
     description:
       "Mapa de cobertura verde de Lomas, basado en el producto VI de MODIS, actualizado mensualmente.",
     image: "",
-    href: "/map-green-cover",
+    buttons: [{ name: "Ver", href: "/map-green-cover" }],
   },
   {
     key: "changes-map",
@@ -80,7 +80,7 @@ const cards = [
     description:
       "Mapa de cambios de cobertura de loma perdida y remanente, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
     image: "",
-    href: "/map-changes",
+    buttons: [{ name: "Ver", href: "/map-changes" }],
   },
   {
     key: "stations-map",
@@ -88,7 +88,7 @@ const cards = [
     description:
       "Mapa con las estaciones meteorológicas instaladas actualmente",
     image: "/static/thumbs/stations-map.jpg",
-    href: "/stations/map",
+    buttons: [{ name: "Ver", href: "/stations/map" }],
   },
   {
     key: "station-dashboard",
@@ -96,7 +96,7 @@ const cards = [
     description:
       "Dashboard de las estaciones meteorológicas, con información actualizada en tiempo real.",
     image: "/static/thumbs/stations-dashboard.jpg",
-    href: "/stations/dashboard",
+    buttons: [{ name: "Dashboard", href: "/stations/dashboard" }, { name: "Tabla", href: "/stations/data" }],
   },
 ];
 
@@ -173,16 +173,13 @@ const Index = ({ classes }) => (
                   <Typography>{card.description}</Typography>
                 </CardContent>
                 <CardActions>
-                  <Button
+                  {card.buttons.map(button => (<Button
                     size="small"
                     color="primary"
-                    onClick={() => Router.push(card.href)}
+                    onClick={() => Router.push(button.href)}
                   >
-                    Ver
-                  </Button>
-                  {/* <Button size="small" color="primary">
-                      Edit
-                    </Button> */}
+                    {button.name}
+                  </Button>))}
                 </CardActions>
               </Card>
             </Grid>
