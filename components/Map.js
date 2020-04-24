@@ -79,7 +79,6 @@ class Map extends React.Component {
             markers={stationMarkers}
           />
         )}
-        <ZoomControl position="topright" />
       </LeafletMap>
     );
   }

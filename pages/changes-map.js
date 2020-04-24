@@ -3,17 +3,21 @@ import { withStyles } from "@material-ui/core/styles";
 import Head from "next/head";
 import {
   Fab,
-  Drawer,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
   Select,
   MenuItem,
   FormControl,
   TextField,
   InputLabel,
+  Typography,
   FilledInput,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
 import RemoveIcon from "@material-ui/icons/Remove";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classnames from "classnames";
 import axios from "axios";
 import dynamic from "next/dynamic";
@@ -42,9 +46,17 @@ const styles = (theme) => ({
     top: theme.spacing.unit,
     left: theme.spacing.unit,
   },
+  topRight: {
+    top: theme.spacing.unit,
+    right: theme.spacing.unit,
+  },
   bottomLeft: {
     bottom: theme.spacing.unit,
     left: theme.spacing.unit,
+  },
+  bottomRight: {
+    bottom: theme.spacing.unit,
+    right: theme.spacing.unit
   },
   fabContainer: {
     display: "block",
@@ -64,12 +76,15 @@ const styles = (theme) => ({
   textField: {
     margin: theme.spacing.unit,
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
   drawerPaper: {
-    width: drawerWidth,
+    width: 360,
+  },
+  plotsControl: {
+    width: 360,
+  },
+  plotsControlHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular
   },
 });
 
@@ -270,30 +285,25 @@ let LayersControl = ({ classes }) => (
 
 LayersControl = withStyles(styles)(LayersControl);
 
-class PlotsDrawer extends Component {
-  render() {
-    const { classes, dates, scope, custom_scope } = this.props;
-    return (
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        anchor="right"
-      >
+let PlotsControl = ({ classes, dates, scope, custom_scope }) => (
+  <div className={classnames(classes.controlGroup, classes.topRight, classes.plotsControl)}>
+    <ExpansionPanel>
+      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography className={classes.plotsControlHeading}>Serie de tiempo</Typography>
+      </ExpansionPanelSummary>
+      <ExpansionPanelDetails>
         <Dashboard
           dateFrom={dates.dashboardDateFrom}
           dateTo={dates.dashboardDateTo}
           scope={scope}
           custom_scope={custom_scope}
         />
-      </Drawer>
-    );
-  }
-}
+      </ExpansionPanelDetails>
+    </ExpansionPanel>
+  </div>
+);
 
-PlotsDrawer = withStyles(styles)(PlotsDrawer);
+PlotsControl = withStyles(styles)(PlotsControl);
 
 class ChangesMap extends Component {
   state = {
@@ -364,21 +374,21 @@ class ChangesMap extends Component {
 
     let dates = await this.getDates();
 
-    //Se obtiene el primer dia del mes actual o de la fecha mas reciente
+    // Get first day of the current month or the most recent date
     let today = new Date();
     today.setDate(1);
     if (today > dates.lastDate) {
       today = new Date(dates.lastDate);
     }
 
-    //Se calculan seis meses para atras, o la primer fecha posible, para generar el rango para el dashboard
+    // Get six months ago or the first available date, for the time series plot
     let sixmonthago = new Date();
     sixmonthago.setMonth(today.getMonth() - 6);
     if (sixmonthago < dates.firstDate) {
       sixmonthago = new Date(dates.firstDate);
     }
 
-    //Se crea el arreglo con las fechas seleccionables
+    // Build list of available dates
     let availableDates = [];
     let reference_date = new Date(sixmonthago);
     while (reference_date < today) {
@@ -533,7 +543,7 @@ class ChangesMap extends Component {
           <LayersControl />
         </div>
         {loadDrawer && (
-          <PlotsDrawer
+          <PlotsControl
             dates={dates}
             scope={scopes.scope}
             custom_scope={customScope}
