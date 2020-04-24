@@ -14,7 +14,6 @@ import {
   Typography,
   FilledInput,
 } from "@material-ui/core";
-import LayersIcon from "@material-ui/icons/Layers";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classnames from "classnames";
 import axios from "axios";
@@ -26,7 +25,8 @@ import MapDrawer from "../components/MapDrawer";
 import SearchFab from "../components/SearchFab";
 import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
-import ZoomControl from "../components/ZoomControl"
+import ZoomControl from "../components/ZoomControl";
+import LayersControl from "../components/LayersControl";
 
 const drawerWidth = 360;
 const mapboxStyle = "mapbox.streets";
@@ -239,23 +239,6 @@ class SearchControl extends Component {
 }
 
 SearchControl = withStyles(styles)(SearchControl);
-
-let LayersControl = ({ classes }) => (
-  <div>
-    <div className={classes.fabContainer}>
-      <Fab
-        color="primary"
-        size="small"
-        aria-label="Toggle Layers"
-        className={classes.fab}
-      >
-        <LayersIcon />
-      </Fab>
-    </div>
-  </div>
-);
-
-LayersControl = withStyles(styles)(LayersControl);
 
 let PlotsControl = ({ classes, dates, scope, custom_scope }) => (
   <div className={classnames(classes.controlGroup, classes.topRight, classes.plotsControl)}>
@@ -512,7 +495,7 @@ class ChangesMap extends Component {
         </MapDrawer>
         <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
           <ZoomControl />
-          <LayersControl />
+          <LayersControl layers={[]} activeLayers={[]} />
         </div>
         {loadDrawer && (
           <PlotsControl
