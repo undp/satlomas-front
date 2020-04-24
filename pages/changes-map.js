@@ -451,6 +451,24 @@ class ChangesMap extends Component {
     this.setState({ viewport });
   };
 
+  handleZoomInClick = () => {
+    this.setState((prevState) => ({
+      viewport: {
+        ...prevState.viewport,
+        zoom: Math.min(prevState.viewport.zoom + 1, 21)
+      }
+    }))
+  }
+
+  handleZoomOutClick = () => {
+    this.setState((prevState) => ({
+      viewport: {
+        ...prevState.viewport,
+        zoom: Math.max(prevState.viewport.zoom - 1, 1)
+      }
+    }))
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -494,8 +512,12 @@ class ChangesMap extends Component {
           )}
         </MapDrawer>
         <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
-          <ZoomControl />
-          <LayersControl layers={[]} activeLayers={[]} />
+          <ZoomControl
+            onZoomInClick={this.handleZoomInClick}
+            onZoomOutClick={this.handleZoomOutClick} />
+          <LayersControl
+            layers={[]}
+            activeLayers={[]} />
         </div>
         {loadDrawer && (
           <PlotsControl

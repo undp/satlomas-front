@@ -14,7 +14,7 @@ const styles = (theme) => ({
   },
 });
 
-const ZoomControl = ({ classes }) => (
+const ZoomControl = ({ classes, onZoomInClick, onZoomOutClick }) => (
   <div>
     <div className={classes.fabContainer}>
       <Fab
@@ -22,6 +22,7 @@ const ZoomControl = ({ classes }) => (
         size="small"
         aria-label="Zoom in"
         className={classes.fab}
+        onClick={onZoomInClick}
       >
         <AddIcon />
       </Fab>
@@ -32,6 +33,7 @@ const ZoomControl = ({ classes }) => (
         size="small"
         aria-label="Zoom out"
         className={classes.fab}
+        onClick={onZoomOutClick}
       >
         <RemoveIcon />
       </Fab>
