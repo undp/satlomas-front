@@ -3,12 +3,13 @@ import { withStyles } from "@material-ui/core/styles";
 import Head from "next/head";
 import {
   Fab,
-  Paper,
   Drawer,
   Select,
   MenuItem,
   FormControl,
   TextField,
+  InputLabel,
+  FilledInput,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
@@ -24,7 +25,7 @@ import SearchFab from "../components/SearchFab";
 import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
 
-const drawerWidth = 450;
+const drawerWidth = 360;
 const mapboxStyle = "mapbox.streets";
 
 const Map = dynamic(() => import("../components/Map"), {
@@ -52,30 +53,13 @@ const styles = (theme) => ({
     margin: theme.spacing.unit,
   },
   searchAndDateControl: {
-    position: "fixed",
-    top: theme.spacing.unit,
-    left: theme.spacing.unit,
+    display: "flex",
+    flexWrap: "wrap",
+    margin: theme.spacing.unit,
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 300,
-  },
-  extendedIcon: {
-    marginRight: theme.spacing.unit,
-  },
-  dateField: {
-    padding: "2px 4px",
-    margin: "10px",
-    display: "flex",
-    alignItems: "center",
-    width: 320,
-  },
-  selectsField: {
-    padding: "2px 4px",
-    margin: "10px",
-    display: "flex",
-    alignItems: "center",
-    width: 320,
+    minWidth: 350,
   },
   textField: {
     margin: theme.spacing.unit,
@@ -116,7 +100,12 @@ let ZoomControl = ({ classes }) => (
 
 ZoomControl = withStyles(styles)(ZoomControl);
 
-let DateField = ({ classes, dates, onChangeFrom, onChangeTo }) => {
+let DateField = ({
+  classes,
+  dates,
+  onChangeFrom: onFromChange,
+  onChangeTo: onToChange,
+}) => {
   const createSelect = () => {
     let items = [];
     for (let i = 0; i <= dates.availableDates.length - 1; i++) {
@@ -130,49 +119,53 @@ let DateField = ({ classes, dates, onChangeFrom, onChangeTo }) => {
   };
 
   return (
-    <div>
-      <Paper className={classes.dateField}>
-        <TextField
-          id="date_from"
-          label="Date from"
-          type="date"
-          defaultValue={dates.dashboardDateFrom.toISOString().slice(0, 10)}
-          className={classes.textField}
-          onChange={onChangeFrom}
-          InputProps={{
-            inputProps: {
-              min: dates.initDate.toISOString().slice(0, 10),
-              max: dates.dashboardDateTo.toISOString().slice(0, 10),
-            },
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          id="date_to"
-          label="Date to"
-          type="date"
-          defaultValue={dates.dashboardDateTo.toISOString().slice(0, 10)}
-          className={classes.textField}
-          onChange={onChangeTo}
-          InputProps={{
-            inputProps: {
-              min: dates.dashboardDateFrom.toISOString().slice(0, 10),
-              max: dates.endDate.toISOString().slice(0, 10),
-            },
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-      </Paper>
-      <Paper className={classes.selectsField}>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <Select value={dates.availableDates[0]}>{createSelect()}</Select>
-        </FormControl>
-      </Paper>
-    </div>
+    <>
+      <TextField
+        id="date_from"
+        label="Date from"
+        type="date"
+        defaultValue={dates.dashboardDateFrom.toISOString().slice(0, 10)}
+        className={classes.textField}
+        onChange={onFromChange}
+        variant="filled"
+        InputProps={{
+          inputProps: {
+            min: dates.initDate.toISOString().slice(0, 10),
+            max: dates.dashboardDateTo.toISOString().slice(0, 10),
+          },
+        }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+      <TextField
+        id="date_to"
+        label="Date to"
+        type="date"
+        defaultValue={dates.dashboardDateTo.toISOString().slice(0, 10)}
+        className={classes.textField}
+        onChange={onToChange}
+        variant="filled"
+        InputProps={{
+          inputProps: {
+            min: dates.dashboardDateFrom.toISOString().slice(0, 10),
+            max: dates.endDate.toISOString().slice(0, 10),
+          },
+        }}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="map-date">Fecha del mapa</InputLabel>
+        <Select
+          value={dates.availableDates[0]}
+          input={<FilledInput id="map-date" />}
+        >
+          {createSelect()}
+        </Select>
+      </FormControl>
+    </>
   );
 };
 
@@ -224,27 +217,30 @@ class SearchControl extends Component {
     return (
       <div className={classes.searchAndDateControl}>
         {/* <SearchField /> */}
-        <Paper className={classes.selectsField}>
-          <FormControl variant="outlined" className={classes.formControl}>
-            <Select value={scopes.selectedType} onChange={selectTypeChange}>
-              {this.createSelectTypes()}
+        <FormControl variant="filled" className={classes.formControl}>
+          <InputLabel htmlFor="scope-type">Tipo de Ámbito</InputLabel>
+          <Select
+            value={scopes.selectedType}
+            onChange={selectTypeChange}
+            input={<FilledInput id="scope-type" />}
+          >
+            {this.createSelectTypes()}
+          </Select>
+        </FormControl>
+        <FormControl variant="filled" className={classes.formControl}>
+          <InputLabel htmlFor="scope">Ámbito</InputLabel>
+          {scopeItems.length > 0 ? (
+            <Select
+              onChange={selectScopeChange}
+              value={scopes.selectedScope != null ? scopes.selectedScope : 0}
+              input={<FilledInput id="scope" />}
+            >
+              {this.createSelectScopes(scopes.selectedType)}
             </Select>
-          </FormControl>
-        </Paper>
-        <Paper className={classes.selectsField}>
-          <FormControl variant="outlined" className={classes.formControl}>
-            {scopeItems.length > 0 ? (
-              <Select
-                onChange={selectScopeChange}
-                value={scopes.selectedScope != null ? scopes.selectedScope : 0}
-              >
-                {this.createSelectScopes(scopes.selectedType)}
-              </Select>
-            ) : (
-              <Select value="-1"></Select>
+          ) : (
+              <Select value="-1" input={<FilledInput id="scope" />} />
             )}
-          </FormControl>
-        </Paper>
+        </FormControl>
         <DateField
           dates={dates}
           onChangeFrom={onChangeFrom}
@@ -328,6 +324,10 @@ class ChangesMap extends Component {
     mapDate: null,
     loadSearchDate: false,
   };
+
+  static getInitialProps = async () => ({
+    namespacesRequired: ["common"],
+  });
 
   getDates = async () => {
     const response = await axios.get(
@@ -512,7 +512,11 @@ class ChangesMap extends Component {
         <div className={classnames(classes.controlGroup, classes.topLeft)}>
           <SearchFab size="medium" onClick={this.handleSearchFabClick} />
         </div>
-        <MapDrawer open={drawerOpen} onClose={this.handleMapDrawerClose}>
+        <MapDrawer
+          open={drawerOpen}
+          onClose={this.handleMapDrawerClose}
+          width={drawerWidth}
+        >
           {loadSearchDate && scopesLoaded && (
             <SearchControl
               scopes={scopes}

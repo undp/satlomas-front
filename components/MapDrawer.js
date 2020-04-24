@@ -3,13 +3,9 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Drawer } from "@material-ui/core";
 
-export const drawerWidth = 360;
+export const drawerWidth = 400;
 
 const styles = (theme) => ({
-  // drawer: {
-  //   width: drawerWidth,
-  //   flexShrink: 0,
-  // },
   drawerPaper: {
     width: drawerWidth,
   },
