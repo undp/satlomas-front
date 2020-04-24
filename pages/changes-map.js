@@ -14,9 +14,7 @@ import {
   Typography,
   FilledInput,
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
-import RemoveIcon from "@material-ui/icons/Remove";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classnames from "classnames";
 import axios from "axios";
@@ -28,6 +26,7 @@ import MapDrawer from "../components/MapDrawer";
 import SearchFab from "../components/SearchFab";
 import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
+import ZoomControl from "../components/ZoomControl"
 
 const drawerWidth = 360;
 const mapboxStyle = "mapbox.streets";
@@ -87,33 +86,6 @@ const styles = (theme) => ({
     fontWeight: theme.typography.fontWeightRegular
   },
 });
-
-let ZoomControl = ({ classes }) => (
-  <div>
-    <div className={classes.fabContainer}>
-      <Fab
-        color="primary"
-        size="small"
-        aria-label="Zoom in"
-        className={classes.fab}
-      >
-        <AddIcon />
-      </Fab>
-    </div>
-    <div className={classes.fabContainer}>
-      <Fab
-        color="primary"
-        size="small"
-        aria-label="Zoom out"
-        className={classes.fab}
-      >
-        <RemoveIcon />
-      </Fab>
-    </div>
-  </div>
-);
-
-ZoomControl = withStyles(styles)(ZoomControl);
 
 let DateField = ({
   classes,
