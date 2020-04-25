@@ -3,10 +3,10 @@ import { routerPush } from "./router";
 import nextCookie from "next-cookies";
 import cookie from "js-cookie";
 
-export const login = async ({ token, expires, redirectTo = "/home" }) => {
+export const login = async ({ token, expires, redirectTo = "/admin" }) => {
   cookie.set("token", token, { expires: expires });
   if (!redirectTo) {
-    redirectTo = "/home";
+    redirectTo = "/admin";
   }
   routerPush(redirectTo);
 };

@@ -14,7 +14,7 @@ const handle = app.getRequestHandler();
   server.use(nextI18NextMiddleware(nextI18next));
 
   server.get("/layers", (req, res) => {
-    return res.redirect("/home/layers");
+    return res.redirect("/admin/layers");
   });
 
   server.get("/layers/:uuid", (req, res) => {
@@ -26,7 +26,7 @@ const handle = app.getRequestHandler();
   });
 
   server.get("/maps", (req, res) => {
-    return res.redirect("/home/maps");
+    return res.redirect("/admin/maps");
   });
 
   server.get("/maps/:uuid", (req, res) => {
@@ -37,24 +37,9 @@ const handle = app.getRequestHandler();
     app.render(req, res, actualPage, queryParams);
   });
 
-  server.get("/me", (req, res) => {
-    return res.redirect("/home");
-  });
-
-  server.get("/home/:section", (req, res) => {
+  server.get("/admin/:section", (req, res) => {
     const { section } = req.params;
-    return app.render(req, res, "/home", { section: section });
-  });
-
-  server.get("/models", (req, res) => {
-    return res.redirect("/home/models");
-  });
-
-
-  server.get("/models/new/od/:step", (req, res) => {
-    const { step } = req.params;
-    const { id } = req.query;
-    return app.render(req, res, "/models/new/od", { step: step, id: id });
+    return app.render(req, res, "/admin", { section: section });
   });
 
   server.get("*", (req, res) => handle(req, res));
