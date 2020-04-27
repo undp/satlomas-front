@@ -7,6 +7,12 @@ import { buildApiUrl } from "../utils/api";
 
 const styles = (theme) => ({});
 
+const axisStyle = {
+  fontSize: 12,
+  fontWeight: 500,
+  fontFamily: "Roboto, sans-serif",
+};
+
 class Dashboard extends React.Component {
   state = {
     data: [],
@@ -49,15 +55,15 @@ class Dashboard extends React.Component {
       <div>
         {dataAvaible && (
           <LineChart
-            width={600}
+            width={500}
             height={300}
             data={data}
             margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
           >
-            <Line dataKey="area" stroke="#8884d8" />
-            <CartesianGrid stroke="#ccc" />
-            <XAxis dataKey="date" />
-            <YAxis />
+            <XAxis dataKey="date" style={axisStyle} />
+            <YAxis style={axisStyle} />
+            <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+            <Line type="monotone" dataKey="area" stroke="#8884d8" />
           </LineChart>
         )}
       </div>

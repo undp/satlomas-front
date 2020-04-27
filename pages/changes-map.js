@@ -79,7 +79,7 @@ const styles = (theme) => ({
     width: 360,
   },
   plotsControl: {
-    width: 360,
+    width: 550,
   },
   plotsControlHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -244,7 +244,7 @@ let PlotsControl = ({ classes, dates, scope, custom_scope }) => (
   <div className={classnames(classes.controlGroup, classes.topRight, classes.plotsControl)}>
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography className={classes.plotsControlHeading}>Serie de tiempo</Typography>
+        <Typography className={classes.plotsControlHeading}>Cobertura de vegetación (MODIS VI)</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Dashboard
