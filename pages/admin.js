@@ -33,6 +33,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import RulesList from "../components/RulesList";
 
 const drawerWidth = 200;
 
@@ -121,32 +122,25 @@ const styles = (theme) => ({
   },
 });
 
-const sortedSections = ["stations", "maps", "layers", "keys"];
-const sortedSectionsBeta = ["stations", "maps", "layers", "keys"];
+const sortedSections = ["rules", "alerts", "profile"];
 
 const sections = {
-  stations: {
-    path: "/stations",
+  rules: {
+    path: "/rules",
     icon: <DashboardIcon />,
+    content: <RulesList />,
+  },
+  alerts: {
+    key: "alerts",
+    path: "/alerts",
+    icon: <LayersIcon />,
     content: null,
   },
-  layers: {
-    key: "layers",
-    path: "/layers",
-    icon: <LayersIcon />,
-    content: <LayersContent />,
-  },
-  maps: {
-    key: "maps",
-    path: "/maps",
+  profile: {
+    key: "profile",
+    path: "/profile",
     icon: <MapIcon />,
-    content: <MapsContent />,
-  },
-  keys: {
-    key: "keys",
-    path: "/keys",
-    icon: <VpnKeyIcon />,
-    content: <KeysContent />,
+    content: null,
   },
 };
 
@@ -225,7 +219,7 @@ class Admin extends React.Component {
     const { t, classes, token } = this.props;
     const { section, open, beta, contextualMenuOpen, userEmail } = this.state;
 
-    const sectionList = beta ? sortedSectionsBeta : sortedSections;
+    const sectionList = sortedSections;
 
     const originalContent = section && sections[section].content;
     const content =
