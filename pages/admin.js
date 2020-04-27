@@ -34,6 +34,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RulesList from "../components/RulesList";
+import AlertsTable from "../components/AlertsTable";
 
 const drawerWidth = 200;
 
@@ -134,7 +135,7 @@ const sections = {
     key: "alerts",
     path: "/alerts",
     icon: <LayersIcon />,
-    content: null,
+    content: <AlertsTable />,
   },
   profile: {
     key: "profile",
