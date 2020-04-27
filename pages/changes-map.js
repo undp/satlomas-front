@@ -36,6 +36,14 @@ const Map = dynamic(() => import("../components/Map"), {
   loadingProgress: <LoadingProgress />,
 });
 
+const TileLayer = dynamic(() => import("../components/TileLayer"), {
+  ssr: false,
+});
+
+const GeoJSON = dynamic(() => import("../components/GeoJSON"), {
+  ssr: false
+});
+
 const styles = (theme) => ({
   controlGroup: {
     position: "fixed",
@@ -86,6 +94,19 @@ const styles = (theme) => ({
     fontWeight: theme.typography.fontWeightRegular
   },
 });
+
+const ScopePolygons = ({ data }) => (
+  <GeoJSON
+    data={data}
+    style={{
+      fillColor: "#000000",
+      fillOpacity: 0.0,
+      color: "#fcba03",
+      weight: 2
+    }}
+  />
+);
+
 
 let DateField = ({
   classes,
