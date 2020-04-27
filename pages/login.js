@@ -51,9 +51,6 @@ const styles = theme => ({
   },
   passwordReset: {
     marginTop: theme.spacing.unit * 2
-  },
-  signup: {
-    marginTop: theme.spacing.unit
   }
 });
 
@@ -209,17 +206,6 @@ class Login extends React.Component {
             {t("login.cant_remember")}{" "}
             <Link href="/password/reset">
               <a>{t("login.request_new_password")}</a>
-            </Link>
-          </Typography>
-          <Typography className={classes.signup}>
-            {t("login.has_no_account")}{" "}
-            <Link
-              href={{
-                pathname: "signup",
-                query: { redirect: redirect, beta: beta, email: email }
-              }}
-            >
-              <a>{t("login.signup")}</a>
             </Link>
           </Typography>
         </Paper>
