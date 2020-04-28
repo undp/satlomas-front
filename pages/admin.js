@@ -43,6 +43,9 @@ const styles = (theme) => ({
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
   },
+  menuItem: {
+    minWidth: 150,
+  },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
@@ -156,7 +159,7 @@ class Admin extends React.Component {
     section: null,
     beta: false,
     contextualMenuOpen: null,
-    userEmail: "",
+    username: "",
   };
 
   static async getInitialProps({ query }) {
@@ -178,10 +181,10 @@ class Admin extends React.Component {
   }
 
   componentDidMount() {
-    this.getEmail();
+    this.getUserName();
   }
 
-  async getEmail() {
+  async getUserName() {
     const { token } = this.props;
     try {
       const response = await axios.get(buildApiUrl("/auth/user/"), {
@@ -190,8 +193,11 @@ class Admin extends React.Component {
           Authorization: token,
         },
       });
-      const userData = response.data;
-      this.setState({ userEmail: userData.email });
+      const {
+        username
+      } = response.data;
+
+      this.setState({ username });
     } catch (error) {
       console.error(error);
     }
@@ -223,7 +229,7 @@ class Admin extends React.Component {
 
   render() {
     const { t, classes, token } = this.props;
-    const { section, open, beta, contextualMenuOpen, userEmail } = this.state;
+    const { section, open, beta, contextualMenuOpen, username } = this.state;
 
     const sectionList = beta ? sortedSectionsBeta : sortedSections;
 
@@ -284,8 +290,13 @@ class Admin extends React.Component {
               open={Boolean(contextualMenuOpen)}
               onClose={this.handleContextualMenuClose}
             >
-              <MenuItem>{userEmail}</MenuItem>
-              <MenuItem onClick={this.profileLogout}>
+              <MenuItem className={classes.menuItem}>
+                {username}
+              </MenuItem>
+              <MenuItem 
+                className={classes.menuItem} 
+                onClick={this.profileLogout}
+              >
                 {t("common:logout_btn")}
                 <ListItemSecondaryAction>
                   <ListItemIcon edge="end" aria-label="logout">
