@@ -12,13 +12,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import axios from "axios";
-import { i18n } from "../i18n";
+import { i18n } from "../../i18n";
 import Moment from "react-moment";
-import { buildApiUrl } from "../utils/api";
+import { buildApiUrl } from "../../utils/api";
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
+
 
 let TableToolBar = props => {
   const { classes } = props;
@@ -132,6 +133,18 @@ class RulesList extends React.Component {
   async componentDidMount(){
     await this.fetchData();
   }
+
+  handleAddClick = () => {
+    //Check - Pasar el value del state para saber que formulario mostar
+    /*const { router } = this.props;
+    const { query } = router;
+
+    router.push({
+      pathname: "/admin/rules/new",
+      query,
+    });*/
+  }
+
 
 
   async fetchData(){

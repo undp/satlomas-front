@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, TableCell, TableSortLabel } from '@material-ui/core';
-import { buildApiUrl } from "../utils/api";
+import { buildApiUrl } from "../../utils/api";
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import _ from 'lodash';
 import { withSnackbar } from 'notistack';
-import strftime from '../utils/strftime';
+import strftime from '../../utils/strftime';
 
 const styles = theme => ({
   table: {
@@ -167,10 +167,9 @@ class AlertsTable extends React.Component {
     rows: [],
     columns: [
         {width: 120,flexGrow: 1.0, label: "Fecha y hora", dataKey: "created_at"},
-        {width: 120, label: "Tipo de regla", dataKey: "rule_content_type"},
-        {width: 120, label: "Regla", dataKey: "rule_id"},
-        {width: 120, label: "Tipo de medida", dataKey: "measurement_content_type"},
-        {width: 120, label: "Medida", dataKey: "measurement_id"},
+        {width: 120,flexGrow: 1.0, label: "Tipo de regla", dataKey: "rule_content_type"},
+        {width: 120,flexGrow: 1.0, label: "Regla", dataKey: "rule_id"},
+        {width: 120,flexGrow: 1.0, label: "Tipo de medida", dataKey: "measurement_content_type"},
     ],
   }
 

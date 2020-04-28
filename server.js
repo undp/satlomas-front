@@ -42,6 +42,14 @@ const handle = app.getRequestHandler();
     return app.render(req, res, "/admin", { section: section });
   });
 
+  server.get("/admin/rules/new", (req, res) => {
+    return app.render(req, res, "/admin", { section: "create_rule" });
+  });
+  server.get("/admin/rules/:id", (req, res) => {
+    const { id } = req.params;
+    return app.render(req, res, "/admin", { section: "create_rule", id });
+  });
+
   server.get("*", (req, res) => handle(req, res));
 
   await server.listen(3000);

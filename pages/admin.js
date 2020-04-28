@@ -25,6 +25,7 @@ import LayersContent from "../components/admin/LayersContent";
 import MapsContent from "../components/admin/MapsContent";
 import KeysContent from "../components/admin/KeysContent";
 import HomeContent from "../components/admin/HomeContent";
+import RulesCreate from "../components/admin/RulesCreateContent";
 import { Link, withNamespaces, i18n } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { withAuthSync, logout } from "../utils/auth";
@@ -33,8 +34,8 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import RulesList from "../components/RulesList";
-import AlertsTable from "../components/AlertsTable";
+import RulesListContent from "../components/admin/RulesListContent";
+import AlertsTableContent from "../components/admin/AlertsTableContent";
 
 const drawerWidth = 200;
 
@@ -123,19 +124,19 @@ const styles = (theme) => ({
   },
 });
 
-const sortedSections = ["rules", "alerts", "profile"];
+const sortedSections = ["rules", "alerts", "profile", "create_rule"];
 
 const sections = {
   rules: {
     path: "/rules",
     icon: <DashboardIcon />,
-    content: <RulesList />,
+    content: <RulesListContent />,
   },
   alerts: {
     key: "alerts",
     path: "/alerts",
     icon: <LayersIcon />,
-    content: <AlertsTable />,
+    content: <AlertsTableContent />,
   },
   profile: {
     key: "profile",
@@ -143,6 +144,12 @@ const sections = {
     icon: <MapIcon />,
     content: null,
   },
+  create_rule: {
+    key: "create_rule",
+    path: "/rules/new",
+    icon: <MapIcon />,
+    content: <RulesCreate/>,
+  }
 };
 
 class Admin extends React.Component {
@@ -217,7 +224,7 @@ class Admin extends React.Component {
   };
 
   render() {
-    const { t, classes, token } = this.props;
+    const { t, classes, token, query } = this.props;
     const { section, open, beta, contextualMenuOpen, userEmail } = this.state;
 
     const sectionList = sortedSections;
@@ -226,6 +233,7 @@ class Admin extends React.Component {
     const content =
       originalContent &&
       React.cloneElement(originalContent, {
+        ...query,
         token: token,
       });
 
