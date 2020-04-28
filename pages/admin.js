@@ -308,28 +308,6 @@ class Admin extends React.Component {
           </div>
           <Divider />
           <List>
-            <Link href="/admin">
-              <ListItem button selected={!sectionList.includes(section)}>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary={t(`sidebar.home`)} />
-              </ListItem>
-            </Link>
-          </List>
-          <Divider />
-          <List>
-            <Link href="/stations-map">
-              <ListItem button>
-                <ListItemIcon>
-                  <MapIcon />
-                </ListItemIcon>
-                <ListItemText primary={t(`sidebar.stations_map`)} />
-              </ListItem>
-            </Link>
-          </List>
-          <Divider />
-          <List>
             {sectionList.map((key) => (
               <Link
                 key={key}

@@ -12,21 +12,26 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import axios from "axios";
+import { i18n } from "../i18n";
+import Moment from "react-moment";
 import { buildApiUrl } from "../utils/api";
+import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton';
 
-const tableStyles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 700,
-  },
-});
-
-
-
+let TableToolBar = props => {
+  const { classes } = props;
+  return (
+    <Toolbar>
+      <Tooltip title="Create">
+        <IconButton aria-label="Create">
+          <AddIcon />
+        </IconButton>
+      </Tooltip>
+    </Toolbar>
+  )
+}
 
 
 function SimpleRuleTable(props) {
@@ -41,9 +46,17 @@ function SimpleRuleTable(props) {
   }
 
   function createRow(elem){
+    const locale = i18n.language;
     let row = [];
+    let dates_set = new Set().add("created_at").add("updated_at")
     for (var key in elem){
-        if (key != "id"){row.push(<TableCell>{elem[key]}</TableCell>)}
+      if (dates_set.has(key)){
+        row.push(<TableCell><Moment locale={locale}>{elem[key]}</Moment></TableCell>)
+      }
+      else{
+        row.push(<TableCell>{elem[key].toString()}</TableCell>)
+      }
+        
     }
     return row;
   }
@@ -52,6 +65,7 @@ function SimpleRuleTable(props) {
     <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
+          <TableToolBar classes={classes}></TableToolBar>
           <TableRow>
             {createTable(columns)}
           </TableRow>
@@ -123,9 +137,7 @@ class RulesList extends React.Component {
   async fetchData(){
     const response = await axios.get(buildApiUrl(tabs[this.state.value].url));
     if (response.data.length > 0){
-        let cols = Object.keys(response.data[0]).filter(function(item) {
-            return item !== "id"
-        })
+        let cols = Object.keys(response.data[0]);
         this.setState({rows: response.data, cols: cols});
     }
     else {
