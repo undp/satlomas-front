@@ -5,11 +5,113 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-
+import axios from "axios";
+import { buildApiUrl } from "../../utils/api";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Paper from "@material-ui/core/Paper";
+import Input from "@material-ui/core/Input";
+import FormLabel from '@material-ui/core/FormLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class ParameterRuleForm extends Component {
+  state ={
+    station : null,
+    parameter: null,
+    is_absolute: false,
+    min: null,
+    max: null,
+  }
+
+  handleSubmit(){
+    console.log("Submit form");
+  }
+
+  async createStationSelect(){
+    let items = [];
+    const response = await axios.get(buildApiUrl("/stations"));
+    console.log(response);
+    //Create select with that response
+  }
   render(){
-    return (<div>Paramter form</div>)
+    const { classes }  = this.props;
+    return (<Paper className={classes.root}>
+      <form
+      className={classes.form}
+      method="post"
+      onSubmit={this.handleSubmit}
+      >
+        <FormControl className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="station">Station</InputLabel>
+          <Select
+            value={this.state.station}
+            inputProps={{
+              name: 'station',
+              id: 'station',
+            }}
+          >
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="station">Parameter</InputLabel>
+          <Select
+            value={this.state.parameter}
+            inputProps={{
+              name: 'parameter',
+              id: 'parameter',
+            }}
+          >
+            <MenuItem value={"humidity"}>Humidity</MenuItem>
+            <MenuItem value={"temperature"}>Temperature</MenuItem>
+            <MenuItem value={"wind_speed"}>Wind speed</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="min_val">
+            Valor minimo
+          </InputLabel>
+          <Input
+            id="min_val"
+            name="min_val"
+            autoFocus
+            value={this.state.min}
+          />
+        </FormControl>
+
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="max_val">
+            Valor maximo
+          </InputLabel>
+          <Input
+            id="max_val"
+            name="max_val"
+            autoFocus
+            value={this.state.max}
+          />
+        </FormControl>
+
+        <FormControl component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend">Absoluta</FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              control={
+              <Checkbox checked={this.state.is_absolute} onChange={() => this.setState({is_absolute: !this.state.is_absolute})}/>
+              }
+            />
+          </FormGroup>
+          </FormControl>
+      </form></Paper>
+    )
   }
 }
 
@@ -89,7 +191,7 @@ class RulesCreate extends Component {
             {this.createTabs()}
           </Tabs>
         </AppBar>
-        {tabs[value].content}
+        {React.cloneElement(tabs[value].content, { classes })}
       </div>
       
     );
