@@ -21,7 +21,6 @@ import dynamic from "next/dynamic";
 import { withAuthSync } from "../utils/auth";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../utils/api";
-
 import MapDrawer from "../components/MapDrawer";
 import SearchFab from "../components/SearchFab";
 import LoadingProgress from "../components/LoadingProgress";
@@ -114,68 +113,14 @@ const ScopePolygons = ({ data }) => (
 let DateField = ({
   classes,
   dates,
-  onChangeFrom: onFromChange,
-  onChangeTo: onToChange,
+  onDateFromChange,
+  onDateToChange,
 }) => {
-  const createSelect = () => {
-    let items = [];
-    for (let i = 0; i <= dates.availableDates.length - 1; i++) {
-      items.push(
-        <MenuItem key={i} value={dates.availableDates[i]}>
-          {dates.availableDates[i]}
-        </MenuItem>
-      );
-    }
-    return items;
-  };
+  const { periods } = this.state
+  const { firstDate, lastDate, availables } = periods;
 
   return (
     <>
-      <TextField
-        id="date_from"
-        label="Date from"
-        type="date"
-        defaultValue={dates.dashboardDateFrom.toISOString().slice(0, 10)}
-        className={classes.textField}
-        onChange={onFromChange}
-        variant="filled"
-        InputProps={{
-          inputProps: {
-            min: dates.initDate.toISOString().slice(0, 10),
-            max: dates.dashboardDateTo.toISOString().slice(0, 10),
-          },
-        }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      <TextField
-        id="date_to"
-        label="Date to"
-        type="date"
-        defaultValue={dates.dashboardDateTo.toISOString().slice(0, 10)}
-        className={classes.textField}
-        onChange={onToChange}
-        variant="filled"
-        InputProps={{
-          inputProps: {
-            min: dates.dashboardDateFrom.toISOString().slice(0, 10),
-            max: dates.endDate.toISOString().slice(0, 10),
-          },
-        }}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="map-date">Fecha del mapa</InputLabel>
-        <Select
-          value={dates.availableDates[0]}
-          input={<FilledInput id="map-date" />}
-        >
-          {createSelect()}
-        </Select>
-      </FormControl>
     </>
   );
 };
@@ -189,15 +134,22 @@ class SearchControl extends Component {
       scopeTypes,
       selectedScopeType,
       selectedScope,
-      // dates,
-      // onChangeFrom,
-      // onChangeTo,
+      periods,
+      onDateFromChange,
+      onDateToChange,
       onScopeTypeSelectChange,
       onScopeSelectChange,
     } = this.props;
 
     const scopeTypeItems = Object.values(scopeTypes).sort(st => st.type);
     const scopeItems = scopeTypes[selectedScopeType].scopes.sort(sc => sc.name);
+
+    let firstDate = null, lastDate = null, availables = [];
+    if (periods) {
+      firstDate = periods.firstDate.toISOString().slice(0, 10);
+      lastDate = periods.lastDate.toISOString().slice(0, 10);
+      availables = periods.availables;
+    }
 
     return (
       <div className={classes.searchAndDateControl}>
@@ -222,11 +174,42 @@ class SearchControl extends Component {
             {scopeItems.map(sc => (<MenuItem key={sc.pk} value={sc.pk}>{sc.name}</MenuItem>))}
           </Select>
         </FormControl>
-        {/* <DateField
-          dates={dates}
-          onChangeFrom={onChangeFrom}
-          onChangeTo={onChangeTo}
-        /> */}
+        <TextField
+          id="date_from"
+          label="Date from"
+          type="date"
+          defaultValue={firstDate}
+          className={classes.textField}
+          onChange={onDateFromChange}
+          variant="filled"
+          InputProps={{
+            inputProps: {
+              min: firstDate,
+              max: lastDate,
+            },
+          }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <TextField
+          id="date_to"
+          label="Date to"
+          type="date"
+          defaultValue={lastDate}
+          className={classes.textField}
+          onChange={onDateToChange}
+          variant="filled"
+          InputProps={{
+            inputProps: {
+              min: firstDate,
+              max: lastDate,
+            },
+          }}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
       </div>
     );
   }
@@ -320,7 +303,7 @@ class ChangesMap extends Component {
 
   componentDidMount = async () => {
     this.fetchScopeTypes();
-    // this.fetchPeriods();
+    this.fetchPeriods();
 
     /*
     // Get first day of the current month or the most recent date
@@ -364,7 +347,7 @@ class ChangesMap extends Component {
     */
   };
 
-  handleChangeFrom = (event) => {
+  handleDateFromChange = (event) => {
     let date_from = new Date(event.target.value + " 00:00:00");
     let availableDates = [];
     while (date_from < this.state.dates.endDate) {
@@ -386,7 +369,7 @@ class ChangesMap extends Component {
     });
   };
 
-  handleChangeTo = (event) => {
+  handleDateToChange = (event) => {
     let date_to = new Date(event.target.value + " 00:00:00");
     let availableDates = [];
     let { initDate } = this.state.dates;
@@ -465,13 +448,13 @@ class ChangesMap extends Component {
     const {
       viewport,
       bounds,
-      dates,
       drawerOpen,
       loadDrawer,
       scopesLoaded,
       scopeTypes,
       selectedScopeType,
       selectedScope,
+      periods,
     } = this.state;
 
     return (
@@ -496,9 +479,9 @@ class ChangesMap extends Component {
               scopeTypes={scopeTypes}
               selectedScopeType={selectedScopeType}
               selectedScope={selectedScope}
-              dates={dates}
-              onChangeFrom={this.handleChangeFrom}
-              onChangeTo={this.handleChangeTo}
+              periods={periods}
+              onDateFromChange={this.handleDateFromChange}
+              onDateToChange={this.handleDateToChange}
               onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
               onScopeSelectChange={this.handleScopeSelectChange}
             />
