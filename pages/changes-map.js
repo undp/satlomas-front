@@ -19,6 +19,7 @@ import classnames from "classnames";
 import axios from "axios";
 import dynamic from "next/dynamic";
 import { withAuthSync } from "../utils/auth";
+import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../utils/api";
 
 import MapDrawer from "../components/MapDrawer";
@@ -43,6 +44,8 @@ const TileLayer = dynamic(() => import("../components/TileLayer"), {
 const GeoJSON = dynamic(() => import("../components/GeoJSON"), {
   ssr: false
 });
+
+const someScopesData = require("../static/corredores.json");
 
 const styles = (theme) => ({
   controlGroup: {
@@ -180,47 +183,21 @@ let DateField = ({
 DateField = withStyles(styles)(DateField);
 
 class SearchControl extends Component {
-  createSelectTypes = () => {
-    let items = [];
-    for (let i = 0; i <= this.props.scopes.types.length - 1; i++) {
-      items.push(
-        <MenuItem key={i} value={i}>
-          {this.props.scopes.types[i]["name"]}
-        </MenuItem>
-      );
-    }
-    return items;
-  };
-
-  createSelectScopes = (pos) => {
-    let items = [];
-    for (
-      let i = 0;
-      i <= this.props.scopes.types[pos]["scopes"].length - 1;
-      i++
-    ) {
-      items.push(
-        <MenuItem key={i} value={i}>
-          {this.props.scopes.types[pos]["scopes"][i]["name"]}
-        </MenuItem>
-      );
-    }
-    return items;
-  };
-
   render() {
     const {
       classes,
-      scopes,
-      dates,
-      onChangeFrom,
-      onChangeTo,
-      selectTypeChange,
-      selectScopeChange,
+      scopeTypes,
+      selectedScopeType,
+      selectedScope,
+      // dates,
+      // onChangeFrom,
+      // onChangeTo,
+      onScopeTypeSelectChange,
+      onScopeSelectChange,
     } = this.props;
 
-    const scopeType = scopes.types[scopes.selectedType];
-    const scopeItems = scopeType ? scopeType["scopes"] : [];
+    const scopeTypeItems = Object.values(scopeTypes).sort(st => st.type);
+    const scopeItems = scopeTypes[selectedScopeType].scopes.sort(sc => sc.name);
 
     return (
       <div className={classes.searchAndDateControl}>
@@ -228,32 +205,28 @@ class SearchControl extends Component {
         <FormControl variant="filled" className={classes.formControl}>
           <InputLabel htmlFor="scope-type">Tipo de Ámbito</InputLabel>
           <Select
-            value={scopes.selectedType}
-            onChange={selectTypeChange}
+            value={selectedScopeType}
+            onChange={onScopeTypeSelectChange}
             input={<FilledInput id="scope-type" />}
           >
-            {this.createSelectTypes()}
+            {scopeTypeItems.map(sc => (<MenuItem key={sc.type} value={sc.type}>{sc.name}</MenuItem>))}
           </Select>
         </FormControl>
         <FormControl variant="filled" className={classes.formControl}>
           <InputLabel htmlFor="scope">Ámbito</InputLabel>
-          {scopeItems.length > 0 ? (
-            <Select
-              onChange={selectScopeChange}
-              value={scopes.selectedScope != null ? scopes.selectedScope : 0}
-              input={<FilledInput id="scope" />}
-            >
-              {this.createSelectScopes(scopes.selectedType)}
-            </Select>
-          ) : (
-              <Select value="-1" input={<FilledInput id="scope" />} />
-            )}
+          <Select
+            onChange={onScopeSelectChange}
+            value={selectedScope}
+            input={<FilledInput id="scope" />}
+          >
+            {scopeItems.map(sc => (<MenuItem key={sc.pk} value={sc.pk}>{sc.name}</MenuItem>))}
+          </Select>
         </FormControl>
-        <DateField
+        {/* <DateField
           dates={dates}
           onChangeFrom={onChangeFrom}
           onChangeTo={onChangeTo}
-        />
+        /> */}
       </div>
     );
   }
@@ -290,21 +263,18 @@ class ChangesMap extends Component {
       zoom: 10,
     },
     drawerOpen: false,
-    dates: {
-      dashboardDateFrom: null,
-      dashboardDateTo: null,
-      availableDates: [],
-      allAvaibleDates: [],
-      initDate: null,
-      endDate: null,
-    },
-    scopes: {
-      types: [],
-      selectedType: null,
-      selectedScope: null,
-      scope: null,
-    },
+    scopeTypes: {},
+    selectedScopeType: null,
+    selectedScope: null,
     scopesLoaded: false,
+    // dates: {
+    //   dashboardDateFrom: null,
+    //   dashboardDateTo: null,
+    //   availableDates: [],
+    //   allAvaibleDates: [],
+    //   initDate: null,
+    //   endDate: null,
+    // },
     customScope: null,
     loadDrawer: false,
     mapDate: null,
@@ -315,60 +285,63 @@ class ChangesMap extends Component {
     namespacesRequired: ["common"],
   });
 
-  getDates = async () => {
-    const response = await axios.get(
-      buildApiUrl("/scopes/available-dates/"),
-      {}
-    );
-    const dates = {
-      firstDate: new Date(response.data.first_date),
-      lastDate: new Date(response.data.last_date),
-      availables: response.data.availables,
-    };
-    return dates;
+  fetchScopeTypes = async () => {
+    try {
+      const response = await axios.get(buildApiUrl("/scopes/types/"), {});
+      const scopeTypes = response.data;
+
+      const selectedScopeType = scopeTypes[0].type;
+      const selectedScope = scopeTypes[0].scopes[0].pk;
+
+      // Convert array to an object by "type"
+      let scopeTypesObj = {}
+      for (let i = 0; i < scopeTypes.length; i++) {
+        const sc = scopeTypes[i];
+        scopeTypesObj[sc.type] = sc;
+      }
+
+      this.setState({
+        scopeTypes: scopeTypesObj,
+        selectedScopeType,
+        selectedScope,
+        scopesLoaded: true,
+      });
+    } catch (err) {
+      this.props.enqueueSnackbar(`Failed to get scope types`, {
+        variant: "error",
+      });
+    }
   };
 
-  getScopes = async () => {
-    const response = await axios.get(buildApiUrl("/scopes/types/"), {});
-    const types = response.data;
-    const scope = types[0] && types[0]["scopes"][0]["pk"];
-
-    this.setState((prevState) => ({
-      scopes: {
-        ...prevState.scopes,
-        types,
-        scope,
-        selectedType: 0,
-        selectedScope: 0,
-      },
-      scopesLoaded: true,
-    }));
+  fetchPeriods = async () => {
+    const response = await axios.get(buildApiUrl("/vi-lomas/periods/"));
+    this.setState({ periods: response.data })
   };
 
   componentDidMount = async () => {
-    this.getScopes();
+    this.fetchScopeTypes();
+    // this.fetchPeriods();
 
-    let dates = await this.getDates();
-
+    /*
     // Get first day of the current month or the most recent date
     let today = new Date();
     today.setDate(1);
-    if (today > dates.lastDate) {
-      today = new Date(dates.lastDate);
+    if (today > lastDate) {
+      today = new Date(lastDate);
     }
 
     // Get six months ago or the first available date, for the time series plot
     let sixmonthago = new Date();
     sixmonthago.setMonth(today.getMonth() - 6);
-    if (sixmonthago < dates.firstDate) {
-      sixmonthago = new Date(dates.firstDate);
+    if (sixmonthago < firstDate) {
+      sixmonthago = new Date(firstDate);
     }
 
     // Build list of available dates
     let availableDates = [];
     let reference_date = new Date(sixmonthago);
     while (reference_date < today) {
-      if (dates.availables.includes(reference_date.toISOString().slice(0, 7))) {
+      if (availables.includes(reference_date.toISOString().slice(0, 7))) {
         availableDates.push(reference_date.toISOString().slice(0, 7));
       }
       reference_date.setMonth(reference_date.getMonth() + 1);
@@ -377,10 +350,10 @@ class ChangesMap extends Component {
       dates: {
         dashboardDateFrom: sixmonthago,
         dashboardDateTo: today,
-        initDate: dates.firstDate,
-        endDate: dates.lastDate,
+        initDate: firstDate,
+        endDate: lastDate,
         availableDates: availableDates,
-        allAvaibleDates: dates.availables,
+        allAvaibleDates: availables,
       },
       mapDate: today,
       selected_scope: 1,
@@ -388,9 +361,10 @@ class ChangesMap extends Component {
       loadDrawer: true,
       loadSearchDate: true,
     });
+    */
   };
 
-  onChangeFrom = (event) => {
+  handleChangeFrom = (event) => {
     let date_from = new Date(event.target.value + " 00:00:00");
     let availableDates = [];
     while (date_from < this.state.dates.endDate) {
@@ -412,7 +386,7 @@ class ChangesMap extends Component {
     });
   };
 
-  onChangeTo = (event) => {
+  handleChangeTo = (event) => {
     let date_to = new Date(event.target.value + " 00:00:00");
     let availableDates = [];
     let { initDate } = this.state.dates;
@@ -435,29 +409,25 @@ class ChangesMap extends Component {
     });
   };
 
-  selectTypeChange = (event) => {
-    let s = this.state.scopes.types[event.target.value]["scopes"][0]["pk"];
+  // componentDidUpdate(_prevProps, prevState) {
+  //   // TODO If selectedScopeType changed, refresh geojson layer with scopes from scopetype
+  //   // TODO If selectedScope changed, highlight new scope and center map
+  // }
+
+  handleScopeTypeSelectChange = (e) => {
+    const { scopeTypes } = this.state
+    const type = e.target.value;
+
     this.setState({
-      scopes: {
-        ...this.state.scopes,
-        selectedScope: 0,
-        selectedType: event.target.value,
-        scope: s,
-      },
+      selectedScopeType: type,
+      selectedScope: scopeTypes[type].scopes[0].pk
     });
   };
 
-  selectScopeChange = (event) => {
-    let s = this.state.scopes.types[this.state.scopes.selectedType]["scopes"][
-      event.target.value
-    ]["pk"];
-    this.setState({
-      scopes: {
-        ...this.state.scopes,
-        selectedScope: event.target.value,
-        scope: s,
-      },
-    });
+  handleScopeSelectChange = (e) => {
+    const scope = e.target.value;
+
+    this.setState({ selectedScope: scope })
   };
 
   handleSearchFabClick = (e) => {
@@ -498,10 +468,10 @@ class ChangesMap extends Component {
       dates,
       drawerOpen,
       loadDrawer,
-      customScope,
-      loadSearchDate,
       scopesLoaded,
-      scopes,
+      scopeTypes,
+      selectedScopeType,
+      selectedScope,
     } = this.state;
 
     return (
@@ -521,14 +491,16 @@ class ChangesMap extends Component {
           onClose={this.handleMapDrawerClose}
           width={drawerWidth}
         >
-          {loadSearchDate && scopesLoaded && (
+          {scopesLoaded && (
             <SearchControl
-              scopes={scopes}
+              scopeTypes={scopeTypes}
+              selectedScopeType={selectedScopeType}
+              selectedScope={selectedScope}
               dates={dates}
-              onChangeFrom={this.onChangeFrom}
-              onChangeTo={this.onChangeTo}
-              selectTypeChange={this.selectTypeChange}
-              selectScopeChange={this.selectScopeChange}
+              onChangeFrom={this.handleChangeFrom}
+              onChangeTo={this.handleChangeTo}
+              onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
+              onScopeSelectChange={this.handleScopeSelectChange}
             />
           )}
         </MapDrawer>
@@ -553,7 +525,10 @@ class ChangesMap extends Component {
           viewport={viewport}
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
-        />
+        >
+          <ScopePolygons data={someScopesData} />
+          {/* <TileLayer type="raster" url="http://localhost:8080/{z}/{x}/{y}.png" maxZoom={13} /> */}
+        </Map>
         <style jsx>
           {`
             #map {
@@ -572,6 +547,7 @@ class ChangesMap extends Component {
 }
 
 ChangesMap = withStyles(styles)(ChangesMap);
+ChangesMap = withSnackbar(ChangesMap);
 ChangesMap = withAuthSync(ChangesMap, { redirect: false });
 
 export default ChangesMap;
