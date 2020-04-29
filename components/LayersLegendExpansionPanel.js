@@ -13,7 +13,7 @@ import { withNamespaces } from "../i18n";
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     width: "18%",
     position: "fixed",
     left: 10,

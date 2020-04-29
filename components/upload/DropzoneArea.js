@@ -23,7 +23,7 @@ const styles = theme => ({
     }
   },
   paper: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   dropZone: {
     position: "relative",
@@ -34,7 +34,7 @@ const styles = theme => ({
     boxSizing: "border-box"
   },
   dropzoneText: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   },
   stripes: {
     border: "solid",
@@ -59,7 +59,7 @@ const styles = theme => ({
     color: "#909090"
   },
   progress: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing(2)
   }
 });
 

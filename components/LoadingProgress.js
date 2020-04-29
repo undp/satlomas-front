@@ -11,7 +11,7 @@ const styles = theme => ({
     justifyContent: "center"
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
     color: "#fff"
   }
 });

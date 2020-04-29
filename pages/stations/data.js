@@ -45,9 +45,9 @@ const styles = (theme) => ({
   },
   layout: {
     width: "auto",
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
-    [theme.breakpoints.up(1500 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up(1500 + theme.spacing(3) * 2)]: {
       width: 1500,
       marginLeft: "auto",
       marginRight: "auto",
@@ -61,12 +61,12 @@ const styles = (theme) => ({
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing(1),
       width: "auto",
     },
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 3}px 0`,
+    padding: `${theme.spacing(3)}px 0`,
   },
   card: {
     height: "100%",
@@ -78,14 +78,14 @@ const styles = (theme) => ({
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing.unit * 6,
+    padding: theme.spacing(6),
   },
   body: {
     fontFamily: "Roboto, sans-serif",
     fontSize: 10,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   }
 });
 

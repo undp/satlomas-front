@@ -12,7 +12,7 @@ const styles = theme => ({
   },
   logo: {
     height: 25,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     cursor: "pointer"
   },
   title: {

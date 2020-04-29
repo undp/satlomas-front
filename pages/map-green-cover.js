@@ -22,31 +22,31 @@ const drawerWidth = 450;
 const styles = theme => ({
   searchAndDateControl: {
     position: "fixed",
-    top: theme.spacing.unit,
-    left: theme.spacing.unit
+    top: theme.spacing(1),
+    left: theme.spacing(1)
   },
   formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     minWidth: 300
   },
   topRightControlGroup: {
     position: "fixed",
-    top: theme.spacing.unit,
-    right: theme.spacing.unit
+    top: theme.spacing(1),
+    right: theme.spacing(1)
   },
   bottomLeftControlGroup: {
     position: "fixed",
-    bottom: theme.spacing.unit,
-    left: theme.spacing.unit
+    bottom: theme.spacing(1),
+    left: theme.spacing(1)
   },
   fabContainer: {
     display: "block"
   },
   fab: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   },
   extendedIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   dateField: {
     padding: "2px 4px",
@@ -63,7 +63,7 @@ const styles = theme => ({
     width: 320
   },
   textField: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   },
   drawer: {
     width: drawerWidth,

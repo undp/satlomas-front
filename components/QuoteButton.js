@@ -7,7 +7,7 @@ import { routerPush } from "../utils/router";
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     width: "18%",
     position: "fixed",
     right: -65,

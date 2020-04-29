@@ -52,10 +52,10 @@ export const groupingIntervalItems = {
 
 const styles = (theme) => ({
   buttonIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
   popover: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
   },
   form: {
     display: "flex",
@@ -63,7 +63,7 @@ const styles = (theme) => ({
     width: 300,
   },
   formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     minWidth: 290,
   },
 });
