@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import App from "next/app";
 import i18next from "i18next";
 import { SnackbarProvider } from "notistack";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -18,7 +19,7 @@ function CustomApp(props) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
 
-    const { query: { lang } } = this.props.router;
+    const { query: { lang } } = props.router;
 
     // Change language if query string contains "lang" parameter
     if (lang) {
@@ -38,6 +39,11 @@ function CustomApp(props) {
       </SnackbarProvider>
     </ThemeProvider>
   );
+}
+
+CustomApp.getInitialProps = async (appContext) => {
+  const appProps = await App.getInitialProps(appContext)
+  return { ...appProps }
 }
 
 CustomApp.propTypes = {
