@@ -16,6 +16,7 @@ module.exports = withCSS({
     config.module.rules.push({
       test: /\.js$/,
       include: [/node_modules/],
+      exclude: [/node_modules\/process/],
       //include: [/node_modules\/next-i18next/],
       use: [options.defaultLoaders.babel]
     });

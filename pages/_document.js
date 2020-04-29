@@ -5,8 +5,6 @@ import theme from "../utils/theme";
 
 class CustomDocument extends Document {
   render() {
-    const { pageContext } = this.props;
-
     return (
       <Html lang="en" dir="ltr">
         <Head>
