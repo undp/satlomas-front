@@ -19,37 +19,45 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+const parameters = ["temperature", "humidity"]
+
 class ParameterRuleForm extends Component {
-  state ={
-    station : null,
+  state = {
+    station: null,
     parameter: null,
     is_absolute: false,
     min: null,
     max: null,
   }
 
-  handleSubmit(){
+  handleSubmit() {
     console.log("Submit form");
   }
 
-  async createStationSelect(){
+  handleChange = (event) => {
+    const { target } = event
+    this.setState({ [target.name]: target.value });
+  }
+
+  async createStationSelect() {
     let items = [];
     const response = await axios.get(buildApiUrl("/stations"));
     console.log(response);
     //Create select with that response
   }
-  render(){
-    const { classes }  = this.props;
+  render() {
+    const { classes } = this.props;
     return (<Paper className={classes.root}>
       <form
-      className={classes.form}
-      method="post"
-      onSubmit={this.handleSubmit}
+        className={classes.form}
+        method="post"
+        onSubmit={this.handleSubmit}
       >
         <FormControl className={classes.formControl} fullWidth>
           <InputLabel htmlFor="station">Station</InputLabel>
           <Select
             value={this.state.station}
+            onChange={this.handleChange}
             inputProps={{
               name: 'station',
               id: 'station',
@@ -65,14 +73,13 @@ class ParameterRuleForm extends Component {
           <InputLabel htmlFor="station">Parameter</InputLabel>
           <Select
             value={this.state.parameter}
+            onChange={this.handleChange}
             inputProps={{
               name: 'parameter',
               id: 'parameter',
             }}
           >
-            <MenuItem value={"humidity"}>Humidity</MenuItem>
-            <MenuItem value={"temperature"}>Temperature</MenuItem>
-            <MenuItem value={"wind_speed"}>Wind speed</MenuItem>
+            {parameters.map(parameter => (<MenuItem key={parameter} value={parameter}>{parameter}</MenuItem>))}
           </Select>
         </FormControl>
 
@@ -82,8 +89,9 @@ class ParameterRuleForm extends Component {
           </InputLabel>
           <Input
             id="min_val"
-            name="min_val"
+            name="min"
             autoFocus
+            onChange={this.handleChange}
             value={this.state.min}
           />
         </FormControl>
@@ -94,8 +102,9 @@ class ParameterRuleForm extends Component {
           </InputLabel>
           <Input
             id="max_val"
-            name="max_val"
+            name="max"
             autoFocus
+            onChange={this.handleChange}
             value={this.state.max}
           />
         </FormControl>
@@ -105,21 +114,21 @@ class ParameterRuleForm extends Component {
           <FormGroup>
             <FormControlLabel
               control={
-              <Checkbox checked={this.state.is_absolute} onChange={() => this.setState({is_absolute: !this.state.is_absolute})}/>
+                <Checkbox checked={this.state.is_absolute} onChange={() => this.setState({ is_absolute: !this.state.is_absolute })} />
               }
             />
           </FormGroup>
-          </FormControl>
+        </FormControl>
       </form></Paper>
     )
   }
 }
 
-function ScopeRuleForm(){
+function ScopeRuleForm() {
   return (<div>Scope rule</div>)
 }
 
-function ScopeTypeRuleForm(){
+function ScopeTypeRuleForm() {
   return (<div>Scope type rule</div>)
 }
 
@@ -143,18 +152,18 @@ const styles = theme => ({
 });
 
 const tabs = [
-    {
-        'title': "Crear regla de parametros",
-        'content': <ParameterRuleForm />
-    },
-    {
-        'title': "Crear reglas por ambito",
-        'content': <ScopeRuleForm />
-    },
-    {
-        'title': "Crar regla por tipo de ambito",
-        'content': <ScopeTypeRuleForm />
-    }
+  {
+    'title': "Crear regla de parametros",
+    'content': <ParameterRuleForm />
+  },
+  {
+    'title': "Crear reglas por ambito",
+    'content': <ScopeRuleForm />
+  },
+  {
+    'title': "Crar regla por tipo de ambito",
+    'content': <ScopeTypeRuleForm />
+  }
 
 ]
 
@@ -163,7 +172,7 @@ class RulesCreate extends Component {
     value: 0,
   }
 
-  componentDidMount(){
+  componentDidMount() {
     //TODO: Cambiar value dependiendo de query params, para setear pestaña 
   }
 
@@ -175,11 +184,11 @@ class RulesCreate extends Component {
   createTabs = () => {
     let arr = [];
     tabs.forEach(function (value, i) {
-      arr.push( <Tab key={i} label={value.title}/>);
+      arr.push(<Tab key={i} label={value.title} />);
     });
     return arr;
   }
-    
+
   render() {
     const { classes } = this.props;
     const { value } = this.state;
@@ -193,7 +202,7 @@ class RulesCreate extends Component {
         </AppBar>
         {React.cloneElement(tabs[value].content, { classes })}
       </div>
-      
+
     );
   }
 }
