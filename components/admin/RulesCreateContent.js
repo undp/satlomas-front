@@ -19,7 +19,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
-import router from "../../utils/router";
+import { routerPush } from "../../utils/router";
 import config from "../../config";
 
 const { stationParameters } = config;
@@ -55,7 +55,7 @@ class ParameterRuleForm extends Component {
       data, 
       { headers: { Authorization: token } }
     ).then(response => {
-      router.push("/admin/rules");
+      routerPush ("/admin/rules");
     })
     .catch(error => {
       //TODO: Informar errores
@@ -153,12 +153,284 @@ class ParameterRuleForm extends Component {
   }
 }
 
-function ScopeRuleForm() {
-  return (<div>Scope rule</div>)
+const COVERAGE_MEASUREMENT_MODELS = [
+  {id: 'lomas_change', name: 'Lomas'},
+  {id: 'vi_lomas_change', name: 'Vegetacion'}
+]
+
+class ScopeRuleForm extends Component {
+  state = {
+    scopes: [],
+    scope : null,
+    measurement_content_type : null,
+    change_type: null,
+    valid_max: "",
+    valid_min: "",
+  }
+
+  constructor(props){
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  async componentDidMount(){
+    const { token } = this.props;
+    const response = await axios.get(buildApiUrl("/scopes"), { headers: { Authorization: token } });
+    this.setState({scopes : response.data});
+  }
+  handleChange = (event) => {
+    const { target } = event
+    this.setState({ [target.name]: target.value });
+  }
+
+  async handleSubmit() {
+    event.preventDefault();
+    const data = this.state;
+    const { token } = this.props;
+    console.log(data);
+    //Error: "Request failed with status code 400"
+    //api_1_ec142b081fd2 | Bad Request: /scopes-rules/
+    //api_1_ec142b081fd2 | [29/Apr/2020 19:20:44] "POST /scopes-rules/ HTTP/1.1" 400 142
+    await axios.
+      post(buildApiUrl("/scopes-rules/"), 
+      data, 
+      { headers: { Authorization: token } }
+    ).then(response => {
+      routerPush ("/admin/rules");
+    })
+    .catch(error => {
+      //TODO: Informar errores
+      console.error(error);
+    });
+  }
+
+
+  render(){
+    const { classes } = this.props;
+    return (<Paper className={classes.root}>
+      <form
+        className={classes.form}
+        method="post"
+        onSubmit={this.handleSubmit}
+      >
+        <FormControl required className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="scope">Ambito</InputLabel>
+          <Select
+            value={this.state.scope}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'scope',
+              id: 'scope',
+            }}
+          >
+            {this.state.scopes.map(scope => 
+              (<MenuItem key={scope.id} value={scope.id}>{scope.name}</MenuItem>)
+            )}
+          </Select>
+        </FormControl>
+
+        <FormControl required className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="measurement_content_type">Medida</InputLabel>
+          <Select
+            value={this.state.measurement_content_type}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'measurement_content_type',
+              id: 'measurement_content_type',
+            }}
+            className={classes.selectEmpty}
+          >
+            {COVERAGE_MEASUREMENT_MODELS.map(coverage => 
+              (<MenuItem key={coverage.id} value={coverage.id}>{coverage.name}</MenuItem>)
+            )}
+          </Select>
+        </FormControl>
+
+        <FormControl required className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="change_type">Tipo de medida</InputLabel>
+          <Select
+            value={this.state.change_type}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'change_type',
+              id: 'change_type',
+            }}
+            className={classes.selectEmpty}
+          >
+            <MenuItem value={"A"}>{"Area"}</MenuItem>)
+            <MenuItem value={"P"}>{"Porcentaje"}</MenuItem>)
+          </Select>
+        </FormControl>
+
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="valid_min">
+            Valor minimo
+          </InputLabel>
+          <Input
+            id="valid_min"
+            name="valid_min"
+            autoFocus
+            onChange={this.handleChange}
+            value={this.state.valid_min}
+          />
+        </FormControl>
+
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="valid_max">
+            Valor maximo
+          </InputLabel>
+          <Input
+            id="valid_max"
+            name="valid_max"
+            autoFocus
+            onChange={this.handleChange}
+            value={this.state.valid_max}
+          />
+        </FormControl>
+        <Button variant="contained" color="primary" type="submit" className={classes.button}>
+          Crear
+        </Button>
+      </form></Paper>
+    )
+  }
 }
 
-function ScopeTypeRuleForm() {
-  return (<div>Scope type rule</div>)
+
+const SCOPE_TYPES = [
+  {id: 'CE', name: 'Corredores Ecologicos' },
+  {id: 'AC', name: 'ACR' },
+  {id: 'DI', name: 'Distritos' },
+  {id: 'EF', name: 'Ecosistemas fragiles' },
+  {id: 'SA', name: 'Sitios arqueologicos' },
+]
+
+
+class ScopeTypeRuleForm extends Component {
+  state = {
+    scope_type : null,
+    measurement_content_type : null,
+    change_type: null,
+    valid_max: "",
+    valid_min: "",
+  }
+
+  constructor(props){
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange = (event) => {
+    const { target } = event
+    this.setState({ [target.name]: target.value });
+  }
+
+  async handleSubmit() {
+    event.preventDefault();
+    const data = this.state;
+    const { token } = this.props;
+    console.log(data);
+    await axios.
+      post(buildApiUrl("/scopes-type-rule/"), 
+      data, 
+      { headers: { Authorization: token } }
+    ).then(response => {
+      routerPush ("/admin/rules");
+    })
+    .catch(error => {
+      //TODO: Informar errores
+      console.error(error);
+    });
+  }
+
+
+  render(){
+    const { classes } = this.props;
+    return (<Paper className={classes.root}>
+      <form
+        className={classes.form}
+        method="post"
+        onSubmit={this.handleSubmit}
+      >
+        <FormControl required className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="scope_type">Tipo de Ambito</InputLabel>
+          <Select
+            value={this.state.scope_type}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'scope_type',
+              id: 'scope_type',
+            }}
+          >
+            {SCOPE_TYPES.map(scope => 
+              (<MenuItem key={scope.id} value={scope.id}>{scope.name}</MenuItem>)
+            )}
+          </Select>
+        </FormControl>
+
+        <FormControl required className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="measurement_content_type">Medida</InputLabel>
+          <Select
+            value={this.state.measurement_content_type}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'measurement_content_type',
+              id: 'measurement_content_type',
+            }}
+            className={classes.selectEmpty}
+          >
+            {COVERAGE_MEASUREMENT_MODELS.map(coverage => 
+              (<MenuItem key={coverage.id} value={coverage.id}>{coverage.name}</MenuItem>)
+            )}
+          </Select>
+        </FormControl>
+
+        <FormControl required className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="change_type">Tipo de medida</InputLabel>
+          <Select
+            value={this.state.change_type}
+            onChange={this.handleChange}
+            inputProps={{
+              name: 'change_type',
+              id: 'change_type',
+            }}
+            className={classes.selectEmpty}
+          >
+            <MenuItem value={"A"}>{"Area"}</MenuItem>)
+            <MenuItem value={"P"}>{"Porcentaje"}</MenuItem>)
+          </Select>
+        </FormControl>
+
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="valid_min">
+            Valor minimo
+          </InputLabel>
+          <Input
+            id="valid_min"
+            name="valid_min"
+            autoFocus
+            onChange={this.handleChange}
+            value={this.state.valid_min}
+          />
+        </FormControl>
+
+        <FormControl margin="normal" required fullWidth>
+          <InputLabel htmlFor="valid_max">
+            Valor maximo
+          </InputLabel>
+          <Input
+            id="valid_max"
+            name="valid_max"
+            autoFocus
+            onChange={this.handleChange}
+            value={this.state.valid_max}
+          />
+        </FormControl>
+        <Button variant="contained" color="primary" type="submit" className={classes.button}>
+          Crear
+        </Button>
+      </form></Paper>
+    )
+  }
 }
 
 function TabContainer(props) {

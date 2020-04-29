@@ -19,7 +19,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
-
+import { routerPush } from "../../utils/router";
 
 let TableToolBar = props => {
   const { classes } = props;
@@ -27,7 +27,7 @@ let TableToolBar = props => {
     <Toolbar>
       <Tooltip title="Create">
         <IconButton aria-label="Create">
-          <AddIcon />
+          <AddIcon onClick={()=>{routerPush("/admin/rules/new")}}/>
         </IconButton>
       </Tooltip>
     </Toolbar>
@@ -41,7 +41,7 @@ function SimpleRuleTable(props) {
   function createTable(columns){
     let table = []
     for (let i = 0; i < columns.length; i++) {
-      table.push(<TableCell>{columns[i]}</TableCell>)
+      table.push(<TableCell key={i}>{columns[i]}</TableCell>)
     }
     return table
   }
@@ -52,10 +52,10 @@ function SimpleRuleTable(props) {
     let dates_set = new Set().add("created_at").add("updated_at")
     for (var key in elem){
       if (dates_set.has(key)){
-        row.push(<TableCell><Moment locale={locale}>{elem[key]}</Moment></TableCell>)
+        row.push(<TableCell key={key}><Moment locale={locale}>{elem[key]}</Moment></TableCell>)
       }
       else{
-        row.push(<TableCell>{elem[key].toString()}</TableCell>)
+        row.push(<TableCell key={key}>{elem[key].toString()}</TableCell>)
       }
         
     }
