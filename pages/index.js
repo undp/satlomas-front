@@ -167,7 +167,9 @@ const Index = ({ classes }) => (
                     className={classes.cardMedia}
                     image={card.image}
                     title="Screenshot"
-                  />
+                  >
+                    &nbsp;
+                  </CardMedia>
                 </Link>
                 <CardContent className={classes.cardContent}>
                   <Typography gutterBottom variant="h5" component="h2">
