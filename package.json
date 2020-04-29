@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/moment": "1.x",
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.9.10",
     "@zeit/next-css": "^1.0.1",
     "axios": "^0.18.0",
