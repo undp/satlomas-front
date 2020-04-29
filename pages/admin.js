@@ -16,7 +16,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import HomeIcon from "@material-ui/icons/Home";
-import axios from "axios";
 import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
@@ -25,14 +24,9 @@ import LayersContent from "../components/admin/LayersContent";
 import MapsContent from "../components/admin/MapsContent";
 import KeysContent from "../components/admin/KeysContent";
 import HomeContent from "../components/admin/HomeContent";
+import ButtonsContent from "../components/ButtonsContent";
 import { Link, withNamespaces, i18n } from "../i18n";
-import { buildApiUrl } from "../utils/api";
-import { withAuthSync, logout } from "../utils/auth";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import { withAuthSync } from "../utils/auth";
 
 const drawerWidth = 200;
 
@@ -42,9 +36,6 @@ const styles = (theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
-  },
-  menuItem: {
-    minWidth: 150,
   },
   toolbarIcon: {
     display: "flex",
@@ -180,29 +171,6 @@ class Admin extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getUserName();
-  }
-
-  async getUserName() {
-    const { token } = this.props;
-    try {
-      const response = await axios.get(buildApiUrl("/auth/user/"), {
-        headers: {
-          "Accept-Language": i18n.language,
-          Authorization: token,
-        },
-      });
-      const {
-        username
-      } = response.data;
-
-      this.setState({ username });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -215,21 +183,10 @@ class Admin extends React.Component {
     this.setState({ section });
   };
 
-  handleContextualMenuClick = (event) => {
-    this.setState({ contextualMenuOpen: event.currentTarget });
-  };
-
-  handleContextualMenuClose = () => {
-    this.setState({ contextualMenuOpen: null });
-  };
-
-  profileLogout = () => {
-    logout();
-  };
 
   render() {
     const { t, classes, token } = this.props;
-    const { section, open, beta, contextualMenuOpen, username } = this.state;
+    const { section, open, beta } = this.state;
 
     const sectionList = beta ? sortedSectionsBeta : sortedSections;
 
@@ -275,36 +232,7 @@ class Admin extends React.Component {
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="inherit"
-              onClick={this.handleContextualMenuClick}
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              anchorEl={contextualMenuOpen}
-              keepMounted
-              open={Boolean(contextualMenuOpen)}
-              onClose={this.handleContextualMenuClose}
-            >
-              <MenuItem className={classes.menuItem}>
-                {username}
-              </MenuItem>
-              <MenuItem 
-                className={classes.menuItem} 
-                onClick={this.profileLogout}
-              >
-                {t("common:logout_btn")}
-                <ListItemSecondaryAction>
-                  <ListItemIcon edge="end" aria-label="logout">
-                    <PowerSettingsNewIcon />
-                  </ListItemIcon>
-                </ListItemSecondaryAction>
-              </MenuItem>
-            </Menu>
+            <ButtonsContent/>
           </Toolbar>
         </AppBar>
         <Drawer

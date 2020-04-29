@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import MenuItem from "@material-ui/core/MenuItem";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -11,22 +10,13 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Menu from "@material-ui/core/Menu";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import { withNamespaces, i18n } from "../i18n";
-import { logout } from "../utils/auth";
-import { buildApiUrl } from "../utils/api";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
-import axios from "axios";
-import cookie from "js-cookie";
+import ButtonsContent from "../components/ButtonsContent";
 
 const styles = (theme) => ({
   appBar: {
@@ -144,47 +134,8 @@ class Index extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getUserName();
-  }
-
-  async getUserName() {
-    const token = cookie.get("token");
-    try {
-      const response = await axios.get(buildApiUrl("/auth/user/"), {
-        headers: {
-          "Accept-Language": i18n.language,
-          Authorization: token,
-        },
-      });
-      const {
-        username
-      } = response.data;
-      this.setState({ username });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  handleContextualMenuClose = () => {
-    this.setState({ contextualMenuOpen: null });
-  }
-
-  handleContextualMenuClick = (event) => {
-    this.setState({ contextualMenuOpen: event.currentTarget });
-  }
-
-  profileLogout = () => {
-    logout();
-  }
-
-  menuDashboardClick = () => {
-    routerPush("/admin");
-  }
-
   render(){
     const { classes, t } = this.props;
-    const { contextualMenuOpen, username } = this.state;
 
     return(
       <React.Fragment>
@@ -201,48 +152,7 @@ class Index extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               GeoLomas
             </Typography>
-            <div className={classes.toolbarButtons}>
-            { username != "" ? 
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-                onClick={this.handleContextualMenuClick}
-              >
-                <AccountCircle />
-              </IconButton>
-              :
-              <Button variant="contained"
-              onClick={() => Router.push("/login")}>
-                Login
-            </Button>
-            }
-              <Menu
-                anchorEl={contextualMenuOpen}
-                keepMounted
-                open={Boolean(contextualMenuOpen)}
-                onClose={this.handleContextualMenuClose}
-              >
-                <MenuItem className={classes.menuItem}>
-                  {username}
-                </MenuItem>
-                <MenuItem className={classes.menuItem}
-                onClick={() => Router.push("/admin")}>
-                Dashboard
-                </MenuItem>
-                <MenuItem className={classes.menuItem} 
-                onClick={this.profileLogout} 
-                >
-                  {t("common:logout_btn")}
-                  <ListItemSecondaryAction>
-                    <ListItemIcon edge="end" aria-label="logout">
-                      <PowerSettingsNewIcon />
-                    </ListItemIcon>
-                  </ListItemSecondaryAction>
-                </MenuItem>
-              </Menu>
-            </div>
+            <ButtonsContent/>
           </Toolbar>
         </AppBar>
         <main>
