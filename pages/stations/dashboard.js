@@ -403,7 +403,7 @@ class StationsDashboard extends React.Component {
         <main>
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {stationParameters.map((param) => (
                   <Grid item key={param.id} sm={6} md={4} lg={4}>
                     <Card className={classes.card}>

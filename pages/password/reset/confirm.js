@@ -231,7 +231,7 @@ class PasswordResetConfirm extends React.Component {
                 <FormHelperText>{this.state.err_pass2_msg}</FormHelperText>
               )}
             </FormControl>
-            <Grid container spacing={24}>
+            <Grid container spacing={3}>
               <Grid item xs>
                 <Link href="/login">
                   <Button

@@ -354,7 +354,7 @@ class Invite extends React.Component {
                 </FormHelperText>
               )}
             </FormControl>
-            <Grid container spacing={24}>
+            <Grid container spacing={3}>
               <Grid item xs>
                 <Button
                   type="submit"

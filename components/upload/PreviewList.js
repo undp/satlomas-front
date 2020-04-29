@@ -45,7 +45,7 @@ const styles = {
 function PreviewList(props) {
   const { fileObjects, handleRemove, showFileNames, classes } = props;
   return (
-    <Grid container spacing={8}>
+    <Grid container spacing={1}>
       {fileObjects.map((fileObject, i) => {
         const img = isImage(fileObject.file) ? (
           <img
