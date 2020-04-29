@@ -3,9 +3,9 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { i18n, withNamespaces } from "../i18n";
-import withStyles from "@material-ui/core/styles/withStyles";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   main: {

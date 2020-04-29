@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import withStyles from "@material-ui/core/styles/withStyles";
 import Fab from "@material-ui/core/Fab";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -8,8 +7,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import LayersIcon from "@material-ui/icons/Layers";
 import { withNamespaces } from "../i18n";
-
 import OpacitySlider from "./OpacitySlider";
+
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   fab: {

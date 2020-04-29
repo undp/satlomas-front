@@ -7,7 +7,6 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Paper from "@material-ui/core/Paper";
-import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import axios from "axios";
@@ -17,6 +16,7 @@ import React from "react";
 import { i18n, Link, withNamespaces } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { login } from "../utils/auth";
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   main: {

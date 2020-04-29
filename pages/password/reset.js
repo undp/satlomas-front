@@ -11,10 +11,10 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Head from "next/head";
-import withStyles from "@material-ui/core/styles/withStyles";
 import axios from "axios";
 import { i18n, withNamespaces, Link } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   main: {
