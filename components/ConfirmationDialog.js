@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-import Typography from "@material-ui/core/Typography";
-
 
 import { withNamespaces } from "../i18n";
+
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, Typography } from '@material-ui/core';
 
 class ConfirmationDialog extends React.Component{
     

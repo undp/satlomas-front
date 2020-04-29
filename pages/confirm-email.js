@@ -1,11 +1,10 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import { i18n, withNamespaces } from "../i18n";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
 import { withStyles } from '@material-ui/core/styles';
+
+import { Paper, Typography, LinearProgress } from '@material-ui/core';
 
 const styles = theme => ({
   main: {

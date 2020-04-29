@@ -2,16 +2,12 @@ import React from "react";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
-import {
-  Table,
-  TableHead,
-  TableCell,
-  TableRow,
-  TableBody,
-} from "@material-ui/core/Table";
+import { TableHead, TableRow } from "@material-ui/core/Table";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../utils/api";
 import _ from "lodash";
+
+import { Table, TableCell, TableBody } from '@material-ui/core';
 
 const axisStyle = {
   fontSize: 12,

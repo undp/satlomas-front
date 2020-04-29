@@ -1,10 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Snackbar from "@material-ui/core/Snackbar";
-import Paper from "@material-ui/core/Paper";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Dropzone from "react-dropzone";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { convertBytesToMbsOrKbs } from "./helpers";
@@ -12,6 +8,8 @@ import SnackbarContentWrapper from "./SnackbarContentWrapper";
 import PreviewList from "./PreviewList";
 import classNames from "classnames";
 import { withNamespaces } from "../../i18n";
+
+import { Typography, Snackbar, Paper, LinearProgress } from '@material-ui/core';
 
 const styles = theme => ({
   "@keyframes progress": {

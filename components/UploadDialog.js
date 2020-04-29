@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import UploadImageContent from "./home/UploadImageContent";
-import Dialog from '@material-ui/core/Dialog';
-
 import { withNamespaces } from "../i18n";
+
+import { Dialog } from '@material-ui/core';
 
 class UploadDialog extends React.Component{
   

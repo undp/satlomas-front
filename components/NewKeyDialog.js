@@ -3,17 +3,21 @@ import PropTypes from "prop-types";
 import axios from "axios";
 
 import { withStyles } from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import { withNamespaces } from "../i18n";
 import { buildApiUrl } from "../utils/api";
+
+
+import {
+    Button,
+    TextField,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from '@material-ui/core';
 
 
 const styles = theme => ({
@@ -129,7 +133,7 @@ class NewKeyDialogForm extends React.Component {
 NewKeyDialogForm.propTypes = {
     classes: PropTypes.object.isRequired
 };
-  
+
 NewKeyDialogForm = withStyles(styles)(NewKeyDialogForm);
 NewKeyDialogForm = withNamespaces("me")(NewKeyDialogForm);
 

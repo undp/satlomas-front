@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import i18next from "i18next";
 import { SnackbarProvider } from "notistack";
 import { ThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import { appWithTranslation, Router } from "../i18n";
 import withGA from "../utils/ga";
 import theme from "../utils/theme";
+import { CssBaseline } from '@material-ui/core';
 
 function CustomApp(props) {
   const { Component, pageProps, analytics } = props;

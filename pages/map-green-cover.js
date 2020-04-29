@@ -1,21 +1,16 @@
-import Fab from "@material-ui/core/Fab";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Drawer from "@material-ui/core/Drawer";
 import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
 import RemoveIcon from "@material-ui/icons/Remove";
 import Head from "next/head";
 import React, { Component } from "react";
 import SearchField from "../components/SearchField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
 import { withAuthSync } from "../utils/auth";
 import Dashboard from "../components/Dashboard";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
+
+import { Fab, Paper, Drawer, Select, MenuItem, FormControl, TextField } from '@material-ui/core';
 
 const drawerWidth = 450;
 

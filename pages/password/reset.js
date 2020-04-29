@@ -1,20 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
 import Head from "next/head";
 import axios from "axios";
 import { i18n, withNamespaces, Link } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withStyles } from '@material-ui/core/styles';
+
+import {
+  Avatar,
+  Button,
+  LinearProgress,
+  FormControl,
+  Input,
+  InputLabel,
+  Paper,
+  Typography,
+  Grid,
+} from '@material-ui/core';
 
 const styles = theme => ({
   main: {

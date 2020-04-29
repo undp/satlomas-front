@@ -1,11 +1,9 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { isImage } from "./helpers.js";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import Fab from "@material-ui/core/Fab";
+import { Grid, Typography, Fab } from '@material-ui/core';
 
 const styles = {
   removeBtn: {

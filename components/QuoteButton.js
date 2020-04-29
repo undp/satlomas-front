@@ -1,9 +1,9 @@
-import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import React from "react";
 import { withNamespaces } from "../i18n";
 import { routerPush } from "../utils/router";
 import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
 
 const styles = theme => ({
   root: {

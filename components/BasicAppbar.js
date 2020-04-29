@@ -1,10 +1,9 @@
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "../i18n";
 import { withStyles } from '@material-ui/core/styles';
+
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 
 const styles = theme => ({
   appBar: {
