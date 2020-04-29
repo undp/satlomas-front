@@ -186,7 +186,8 @@ class AlertsTable extends React.Component {
   }
 
   async fetchData() {
-    const response = await axios.get(buildApiUrl("/alerts"));
+    const { token } = this.props;
+    const response = await axios.get(buildApiUrl("/alerts"), { headers: { Authorization: token } });
     console.log(response);
     if (response.data.length > 0){
         this.setState({loading: false, rows: this.prepareRows(response.data)});

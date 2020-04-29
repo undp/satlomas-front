@@ -148,7 +148,8 @@ class RulesList extends React.Component {
 
 
   async fetchData(){
-    const response = await axios.get(buildApiUrl(tabs[this.state.value].url));
+    const { token } = this.props;
+    const response = await axios.get(buildApiUrl(tabs[this.state.value].url), { headers: { Authorization: token } });
     if (response.data.length > 0){
         let cols = Object.keys(response.data[0]);
         this.setState({rows: response.data, cols: cols});
