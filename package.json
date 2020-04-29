@@ -16,7 +16,7 @@
     "moment-timezone": "^0.5.23",
     "next": "^9.3.6",
     "next-cookies": "^1.1.0",
-    "next-i18next": "^0.32.0",
+    "next-i18next": "^4.3.0",
     "notistack": "^0.9.9",
     "prop-types": "^15.7.2",
     "react": "^16.8.0",
