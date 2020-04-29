@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Head from "next/head";
 import axios from "axios";
-import { i18n, withNamespaces, Router, Link } from "../../../i18n";
+import { i18n, withTranslation, Router, Link } from "../../../i18n";
 import { buildApiUrl } from "../../../utils/api";
 import { withStyles } from '@material-ui/core/styles';
 
@@ -269,6 +269,6 @@ PasswordResetConfirm.propTypes = {
 };
 
 PasswordResetConfirm = withStyles(styles)(PasswordResetConfirm);
-PasswordResetConfirm = withNamespaces()(PasswordResetConfirm);
+PasswordResetConfirm = withTranslation()(PasswordResetConfirm);
 
 export default PasswordResetConfirm;

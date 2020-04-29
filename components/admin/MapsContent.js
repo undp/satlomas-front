@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import MapIcon from "@material-ui/icons/Map";
 
-import { i18n, withNamespaces } from "../../i18n";
+import { i18n, withTranslation } from "../../i18n";
 import { logout } from "../../utils/auth";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
@@ -128,6 +128,6 @@ MapsContent.propTypes = {
 };
 
 MapsContent = withStyles(styles)(MapsContent);
-MapsContent = withNamespaces("me")(MapsContent);
+MapsContent = withTranslation("me")(MapsContent);
 
 export default MapsContent;

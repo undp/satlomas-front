@@ -5,7 +5,7 @@ import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 
 
@@ -135,6 +135,6 @@ NewKeyDialogForm.propTypes = {
 };
 
 NewKeyDialogForm = withStyles(styles)(NewKeyDialogForm);
-NewKeyDialogForm = withNamespaces("me")(NewKeyDialogForm);
+NewKeyDialogForm = withTranslation("me")(NewKeyDialogForm);
 
 export default NewKeyDialogForm;

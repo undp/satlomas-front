@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import { withStyles } from '@material-ui/core/styles';
 
 import {
@@ -94,4 +94,4 @@ LayersLegendExpansionPanel.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withNamespaces()(withStyles(styles)(LayersLegendExpansionPanel));
+export default withTranslation()(withStyles(styles)(LayersLegendExpansionPanel));

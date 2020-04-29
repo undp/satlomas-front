@@ -3,7 +3,7 @@ import axios from "axios";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import { i18n, Link, withNamespaces } from "../i18n";
+import { i18n, Link, withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { login } from "../utils/auth";
 import { withStyles } from '@material-ui/core/styles';
@@ -222,6 +222,6 @@ Login.propTypes = {
 };
 
 Login = withStyles(styles)(Login);
-Login = withNamespaces()(Login);
+Login = withTranslation()(Login);
 
 export default Login;

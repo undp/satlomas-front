@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import LayersIcon from "@material-ui/icons/Layers";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import OpacitySlider from "./OpacitySlider";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -108,4 +108,4 @@ LayersFab.propTypes = {
   onOpacityChange: PropTypes.func
 };
 
-export default withNamespaces()(withStyles(styles)(LayersFab));
+export default withTranslation()(withStyles(styles)(LayersFab));

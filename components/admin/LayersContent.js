@@ -7,7 +7,7 @@ import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import MapIcon from "@material-ui/icons/Map";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { i18n, withNamespaces } from "../../i18n";
+import { i18n, withTranslation } from "../../i18n";
 import { logout } from "../../utils/auth";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
@@ -197,6 +197,6 @@ LayersContent.propTypes = {
 };
 
 LayersContent = withStyles(styles)(LayersContent);
-LayersContent = withNamespaces("me")(LayersContent);
+LayersContent = withTranslation("me")(LayersContent);
 
 export default LayersContent;

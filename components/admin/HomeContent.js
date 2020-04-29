@@ -5,7 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import { withNamespaces } from "../../i18n";
+import { withTranslation } from "../../i18n";
 import cookie from "js-cookie";
 
 import { IconButton, InputAdornment, Typography, TextField, Paper } from '@material-ui/core';
@@ -53,6 +53,6 @@ HomeContent.propTypes = {
 };
 
 HomeContent = withStyles(styles)(HomeContent);
-HomeContent = withNamespaces("me")(HomeContent);
+HomeContent = withTranslation("me")(HomeContent);
 
 export default HomeContent;

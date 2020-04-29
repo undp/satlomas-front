@@ -15,7 +15,7 @@ import LayersContent from "../components/admin/LayersContent";
 import MapsContent from "../components/admin/MapsContent";
 import KeysContent from "../components/admin/KeysContent";
 import HomeContent from "../components/admin/HomeContent";
-import { Link, withNamespaces, i18n } from "../i18n";
+import { Link, withTranslation, i18n } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { withAuthSync, logout } from "../utils/auth";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -386,7 +386,7 @@ Admin.propTypes = {
 };
 
 Admin = withStyles(styles)(Admin);
-Admin = withNamespaces(["me", "common"])(Admin);
+Admin = withTranslation(["me", "common"])(Admin);
 Admin = withAuthSync(Admin);
 
 export default Admin;

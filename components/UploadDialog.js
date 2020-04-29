@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import UploadImageContent from "./home/UploadImageContent";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 
 import { Dialog } from '@material-ui/core';
 
@@ -86,6 +86,6 @@ UploadDialog.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-UploadDialog = withNamespaces("common")(UploadDialog);
+UploadDialog = withTranslation("common")(UploadDialog);
 
 export default UploadDialog;

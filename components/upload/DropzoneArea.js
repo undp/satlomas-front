@@ -7,7 +7,7 @@ import { convertBytesToMbsOrKbs } from "./helpers";
 import SnackbarContentWrapper from "./SnackbarContentWrapper";
 import PreviewList from "./PreviewList";
 import classNames from "classnames";
-import { withNamespaces } from "../../i18n";
+import { withTranslation } from "../../i18n";
 
 import { Typography, Snackbar, Paper, LinearProgress } from '@material-ui/core';
 
@@ -295,6 +295,6 @@ DropzoneArea.propTypes = {
 };
 
 DropzoneArea = withStyles(styles)(DropzoneArea);
-DropzoneArea = withNamespaces("dropzone")(DropzoneArea);
+DropzoneArea = withTranslation("dropzone")(DropzoneArea);
 
 export default DropzoneArea;

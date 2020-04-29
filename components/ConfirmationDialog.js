@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 
 import { Button, DialogTitle, DialogContent, DialogActions, Dialog, Typography } from '@material-ui/core';
 
@@ -47,6 +47,6 @@ ConfirmationDialog.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-ConfirmationDialog = withNamespaces("common")(ConfirmationDialog);
+ConfirmationDialog = withTranslation("common")(ConfirmationDialog);
 
 export default ConfirmationDialog;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import React from "react";
-import { withNamespaces } from "../../i18n";
+import { withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 
 import {
@@ -145,6 +145,6 @@ class ContactFormModalContent extends React.Component {
   }
 }
 
-ContactFormModalContent = withNamespaces("models")(ContactFormModalContent);
+ContactFormModalContent = withTranslation("models")(ContactFormModalContent);
 
 export default ContactFormModalContent;

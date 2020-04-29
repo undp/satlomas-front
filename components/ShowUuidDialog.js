@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import { Typography, Button, DialogTitle, DialogContent, DialogActions, Dialog } from '@material-ui/core';
 
 class ShowUuidDialog extends React.Component{
@@ -49,6 +49,6 @@ ShowUuidDialog.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-ShowUuidDialog = withNamespaces("common")(ShowUuidDialog);
+ShowUuidDialog = withTranslation("common")(ShowUuidDialog);
 
 export default ShowUuidDialog;

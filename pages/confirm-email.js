@@ -1,5 +1,5 @@
 import React from "react";
-import { i18n, withNamespaces } from "../i18n";
+import { i18n, withTranslation } from "../i18n";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
 import { withStyles } from '@material-ui/core/styles';
@@ -100,6 +100,6 @@ class ConfirmEmail extends React.Component {
 }
 
 ConfirmEmail = withStyles(styles)(ConfirmEmail);
-ConfirmEmail = withNamespaces()(ConfirmEmail);
+ConfirmEmail = withTranslation()(ConfirmEmail);
 
 export default ConfirmEmail;

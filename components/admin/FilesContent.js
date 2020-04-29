@@ -6,7 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { i18n, withNamespaces } from "../../i18n";
+import { i18n, withTranslation } from "../../i18n";
 import { logout } from "../../utils/auth";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
@@ -215,6 +215,6 @@ FilesContent.propTypes = {
 };
 
 FilesContent = withStyles(styles)(FilesContent);
-FilesContent = withNamespaces("me")(FilesContent);
+FilesContent = withTranslation("me")(FilesContent);
 
 export default FilesContent;

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import { routerPush } from "../utils/router";
 import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
@@ -47,6 +47,6 @@ QuoteButton.defaultProps = {
 };
 
 QuoteButton = withStyles(styles)(QuoteButton);
-QuoteButton = withNamespaces()(QuoteButton);
+QuoteButton = withTranslation()(QuoteButton);
 
 export default QuoteButton;

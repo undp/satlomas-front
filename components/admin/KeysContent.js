@@ -8,7 +8,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import NewKeyDialogForm from "../NewKeyDialog";
 import ConfirmationDialog from "../ConfirmationDialog";
-import { i18n, withNamespaces } from "../../i18n";
+import { i18n, withTranslation } from "../../i18n";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
 
@@ -189,6 +189,6 @@ KeysContent.propTypes = {
 };
 
 KeysContent = withStyles(styles)(KeysContent);
-KeysContent = withNamespaces("me")(KeysContent);
+KeysContent = withTranslation("me")(KeysContent);
 
 export default KeysContent;
