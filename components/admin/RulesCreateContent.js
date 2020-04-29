@@ -18,20 +18,49 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import router from "../../utils/router";
+import config from "../../config";
 
-const parameters = ["temperature", "humidity"]
+const { stationParameters } = config;
 
 class ParameterRuleForm extends Component {
   state = {
     station: null,
     parameter: null,
     is_absolute: false,
-    min: null,
-    max: null,
+    valid_min: "",
+    valid_max: "",
+    stations : [],
   }
 
-  handleSubmit() {
-    console.log("Submit form");
+  constructor(props){
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  
+
+  async componentDidMount(){
+    const { token } = this.props;
+    const response = await axios.get(buildApiUrl("/stations"), { headers: { Authorization: token } });
+    this.setState({stations : response.data});
+  }
+
+  async handleSubmit() {
+    event.preventDefault();
+    const data = this.state;
+    const { token } = this.props;
+    await axios.
+      post(buildApiUrl("/parameter-rules/"), 
+      data, 
+      { headers: { Authorization: token } }
+    ).then(response => {
+      router.push("/admin/rules");
+    })
+    .catch(error => {
+      //TODO: Informar errores
+      console.error(error);
+    });
   }
 
   handleChange = (event) => {
@@ -39,12 +68,6 @@ class ParameterRuleForm extends Component {
     this.setState({ [target.name]: target.value });
   }
 
-  async createStationSelect() {
-    let items = [];
-    const response = await axios.get(buildApiUrl("/stations"));
-    console.log(response);
-    //Create select with that response
-  }
   render() {
     const { classes } = this.props;
     return (<Paper className={classes.root}>
@@ -53,7 +76,7 @@ class ParameterRuleForm extends Component {
         method="post"
         onSubmit={this.handleSubmit}
       >
-        <FormControl className={classes.formControl} fullWidth>
+        <FormControl required className={classes.formControl} fullWidth>
           <InputLabel htmlFor="station">Station</InputLabel>
           <Select
             value={this.state.station}
@@ -63,13 +86,13 @@ class ParameterRuleForm extends Component {
               id: 'station',
             }}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+            {this.state.stations.map(station => 
+              (<MenuItem key={station.id} value={station.id}>{station.name}</MenuItem>)
+            )}
           </Select>
         </FormControl>
 
-        <FormControl className={classes.formControl} fullWidth>
+        <FormControl required className={classes.formControl} fullWidth>
           <InputLabel htmlFor="station">Parameter</InputLabel>
           <Select
             value={this.state.parameter}
@@ -78,34 +101,37 @@ class ParameterRuleForm extends Component {
               name: 'parameter',
               id: 'parameter',
             }}
+            className={classes.selectEmpty}
           >
-            {parameters.map(parameter => (<MenuItem key={parameter} value={parameter}>{parameter}</MenuItem>))}
+            {stationParameters.map(parameter => 
+              (<MenuItem key={parameter.id} value={parameter.id}>{parameter.name}</MenuItem>)
+            )}
           </Select>
         </FormControl>
 
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="min_val">
+          <InputLabel htmlFor="valid_min">
             Valor minimo
           </InputLabel>
           <Input
-            id="min_val"
-            name="min"
+            id="valid_min"
+            name="valid_min"
             autoFocus
             onChange={this.handleChange}
-            value={this.state.min}
+            value={this.state.valid_min}
           />
         </FormControl>
 
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="max_val">
+          <InputLabel htmlFor="valid_max">
             Valor maximo
           </InputLabel>
           <Input
-            id="max_val"
-            name="max"
+            id="valid_max"
+            name="valid_max"
             autoFocus
             onChange={this.handleChange}
-            value={this.state.max}
+            value={this.state.valid_max}
           />
         </FormControl>
 
@@ -119,6 +145,9 @@ class ParameterRuleForm extends Component {
             />
           </FormGroup>
         </FormControl>
+        <Button variant="contained" color="primary" type="submit" className={classes.button}>
+          Crear
+        </Button>
       </form></Paper>
     )
   }
@@ -190,7 +219,7 @@ class RulesCreate extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, token } = this.props;
     const { value } = this.state;
 
     return (
@@ -200,7 +229,7 @@ class RulesCreate extends Component {
             {this.createTabs()}
           </Tabs>
         </AppBar>
-        {React.cloneElement(tabs[value].content, { classes })}
+        {React.cloneElement(tabs[value].content, { classes, token })}
       </div>
 
     );
