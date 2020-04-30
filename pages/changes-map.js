@@ -10,7 +10,6 @@ import {
   FormControl,
   InputLabel,
   Typography,
-  FilledInput,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import classnames from "classnames";
@@ -19,15 +18,12 @@ import dynamic from "next/dynamic";
 import { withAuthSync } from "../utils/auth";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../utils/api";
-import MapDrawer from "../components/MapDrawer";
-import SearchFab from "../components/SearchFab";
 import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
 import { KeyboardDatePicker } from "@material-ui/pickers"
 
-const drawerWidth = 360;
 const mapboxStyle = "mapbox.streets";
 
 const Map = dynamic(() => import("../components/Map"), {
@@ -345,7 +341,6 @@ class ChangesMap extends Component {
       mapDate: today,
       selected_scope: 1,
       custom_scope: null,
-      loadDrawer: true,
       loadSearchDate: true,
     });
     */
@@ -378,14 +373,6 @@ class ChangesMap extends Component {
     const scope = e.target.value;
 
     this.setState({ selectedScope: scope })
-  };
-
-  handleSearchFabClick = (e) => {
-    this.setState((prevState) => ({ drawerOpen: !prevState.drawerOpen }));
-  };
-
-  handleMapDrawerClose = (e) => {
-    this.setState({ drawerOpen: false });
   };
 
   handleMapViewportChanged = (viewport) => {
@@ -436,9 +423,6 @@ class ChangesMap extends Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
-          <SearchFab size="medium" onClick={this.handleSearchFabClick} />
-        </div>
         {loaded && (<div className={classnames(classes.controlGroup, classes.topLeft)}>
           <SearchControl
             scopeTypes={scopeTypes}
