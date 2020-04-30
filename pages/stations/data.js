@@ -247,7 +247,7 @@ class StationsData extends React.Component {
     try {
       const response = await axios.get(buildApiUrl(`/stations/measurements/summary`), {
         params,
-        headers: { Authorization: this.props.token, Accept: 'text/csv' },
+        headers: { Accept: 'text/csv' },
         responseType: 'blob'
       });
       console.log(response);
