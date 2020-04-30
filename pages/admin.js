@@ -1,14 +1,4 @@
-import AppBar from "@material-ui/core/AppBar";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import { withStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import LayersIcon from "@material-ui/icons/Layers";
 import MapIcon from "@material-ui/icons/Map";
@@ -25,8 +15,27 @@ import MapsContent from "../components/admin/MapsContent";
 import KeysContent from "../components/admin/KeysContent";
 import HomeContent from "../components/admin/HomeContent";
 import ButtonsContent from "../components/ButtonsContent";
-import { Link, withNamespaces, i18n } from "../i18n";
+import { Link, withTranslation, i18n } from "../i18n";
+import { buildApiUrl } from "../utils/api";
 import { withAuthSync } from "../utils/auth";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+
+import {
+  AppBar,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+  Menu,
+  MenuItem,
+  ListItemSecondaryAction,
+} from '@material-ui/core';
 
 const drawerWidth = 200;
 
@@ -89,15 +98,15 @@ const styles = (theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing.unit * 7,
+    width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9,
+      width: theme.spacing(9),
     },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     height: "100vh",
     overflow: "auto",
   },
@@ -108,7 +117,7 @@ const styles = (theme) => ({
     height: 320,
   },
   h5: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
   button: {
     color: "white",
@@ -322,7 +331,7 @@ Admin.propTypes = {
 };
 
 Admin = withStyles(styles)(Admin);
-Admin = withNamespaces(["me", "common"])(Admin);
+Admin = withTranslation(["me", "common"])(Admin);
 Admin = withAuthSync(Admin);
 
 export default Admin;

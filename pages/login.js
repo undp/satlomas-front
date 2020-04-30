@@ -1,59 +1,58 @@
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import Paper from "@material-ui/core/Paper";
-import withStyles from "@material-ui/core/styles/withStyles";
-import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import axios from "axios";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import { i18n, Link, withNamespaces } from "../i18n";
+import { i18n, Link, withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { login } from "../utils/auth";
+import { withStyles } from '@material-ui/core/styles';
+
+import {
+  Avatar,
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Input,
+  InputLabel,
+  LinearProgress,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 
 const styles = theme => ({
   main: {
     width: "auto",
     display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(400 + theme.spacing(3) * 2)]: {
       width: 400,
       marginLeft: "auto",
       marginRight: "auto"
     }
   },
   paper: {
-    marginTop: theme.spacing.unit * 8,
+    marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
   },
   avatar: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   submit: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   passwordReset: {
-    marginTop: theme.spacing.unit * 2
-  },
-  signup: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(2)
   }
 });
 
@@ -211,17 +210,6 @@ class Login extends React.Component {
               <a>{t("login.request_new_password")}</a>
             </Link>
           </Typography>
-          <Typography className={classes.signup}>
-            {t("login.has_no_account")}{" "}
-            <Link
-              href={{
-                pathname: "signup",
-                query: { redirect: redirect, beta: beta, email: email }
-              }}
-            >
-              <a>{t("login.signup")}</a>
-            </Link>
-          </Typography>
         </Paper>
       </main>
     );
@@ -234,6 +222,6 @@ Login.propTypes = {
 };
 
 Login = withStyles(styles)(Login);
-Login = withNamespaces()(Login);
+Login = withTranslation()(Login);
 
 export default Login;

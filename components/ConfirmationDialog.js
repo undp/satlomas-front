@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
-import Typography from "@material-ui/core/Typography";
 
+import { withTranslation } from "../i18n";
 
-import { withNamespaces } from "../i18n";
+import { Button, DialogTitle, DialogContent, DialogActions, Dialog, Typography } from '@material-ui/core';
 
 class ConfirmationDialog extends React.Component{
     
@@ -31,7 +26,7 @@ class ConfirmationDialog extends React.Component{
           open={open}
         >
           <DialogTitle id="confirmation-dialog-title">{title}</DialogTitle>
-          <DialogContent dividers><Typography variant="body1">{content}</Typography></DialogContent>
+          <DialogContent dividers><Typography variant="body2">{content}</Typography></DialogContent>
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary">
               {t("confirmation.cancel")}
@@ -52,6 +47,6 @@ ConfirmationDialog.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-ConfirmationDialog = withNamespaces("common")(ConfirmationDialog);
+ConfirmationDialog = withTranslation("common")(ConfirmationDialog);
 
 export default ConfirmationDialog;

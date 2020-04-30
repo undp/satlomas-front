@@ -1,17 +1,15 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Snackbar from "@material-ui/core/Snackbar";
-import Paper from "@material-ui/core/Paper";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import Dropzone from "react-dropzone";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { convertBytesToMbsOrKbs } from "./helpers";
 import SnackbarContentWrapper from "./SnackbarContentWrapper";
 import PreviewList from "./PreviewList";
 import classNames from "classnames";
-import { withNamespaces } from "../../i18n";
+import { withTranslation } from "../../i18n";
+
+import { Typography, Snackbar, Paper, LinearProgress } from '@material-ui/core';
 
 const styles = theme => ({
   "@keyframes progress": {
@@ -23,7 +21,7 @@ const styles = theme => ({
     }
   },
   paper: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   dropZone: {
     position: "relative",
@@ -34,7 +32,7 @@ const styles = theme => ({
     boxSizing: "border-box"
   },
   dropzoneText: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   },
   stripes: {
     border: "solid",
@@ -59,7 +57,7 @@ const styles = theme => ({
     color: "#909090"
   },
   progress: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing(2)
   }
 });
 
@@ -297,6 +295,6 @@ DropzoneArea.propTypes = {
 };
 
 DropzoneArea = withStyles(styles)(DropzoneArea);
-DropzoneArea = withNamespaces("dropzone")(DropzoneArea);
+DropzoneArea = withTranslation("dropzone")(DropzoneArea);
 
 export default DropzoneArea;

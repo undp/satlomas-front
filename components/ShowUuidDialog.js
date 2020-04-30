@@ -1,15 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-import { withNamespaces } from "../i18n";
-import { Typography } from '@material-ui/core';
+import { withTranslation } from "../i18n";
+import { Typography, Button, DialogTitle, DialogContent, DialogActions, Dialog } from '@material-ui/core';
 
 class ShowUuidDialog extends React.Component{
     
@@ -31,7 +26,7 @@ class ShowUuidDialog extends React.Component{
           open={open}
         >
           <DialogTitle id="confirmation-dialog-title">{title}</DialogTitle>
-          <DialogContent dividers><Typography variant="body1">{content}</Typography></DialogContent>
+          <DialogContent dividers><Typography variant="body2">{content}</Typography></DialogContent>
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary">
               {t("confirmation.cancel")}
@@ -54,6 +49,6 @@ ShowUuidDialog.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-ShowUuidDialog = withNamespaces("common")(ShowUuidDialog);
+ShowUuidDialog = withTranslation("common")(ShowUuidDialog);
 
 export default ShowUuidDialog;

@@ -1,13 +1,13 @@
-import Button from "@material-ui/core/Button";
-import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import React from "react";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import { routerPush } from "../utils/router";
+import { withStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     width: "18%",
     position: "fixed",
     right: -65,
@@ -47,6 +47,6 @@ QuoteButton.defaultProps = {
 };
 
 QuoteButton = withStyles(styles)(QuoteButton);
-QuoteButton = withNamespaces()(QuoteButton);
+QuoteButton = withTranslation()(QuoteButton);
 
 export default QuoteButton;
