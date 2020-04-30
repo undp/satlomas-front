@@ -1,89 +1,62 @@
 import React from "react";
-import App, { Container } from "next/app";
-import { MuiThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import JssProvider from "react-jss/lib/JssProvider";
-import getPageContext from "../utils/getPageContext";
-import withGA from "../utils/ga";
-import { appWithTranslation, Router } from "../i18n";
+import PropTypes from 'prop-types';
+import App from "next/app";
 import i18next from "i18next";
-import NProgress from "next-nprogress/component";
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { SnackbarProvider } from "notistack";
+import MomentUtils from '@date-io/moment';
+import { ThemeProvider } from "@material-ui/core/styles";
+import { appWithTranslation, Router } from "../i18n";
+import withGA from "../utils/ga";
+import theme from "../utils/theme";
+import { CssBaseline } from '@material-ui/core';
 
-class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
-    let pageProps = {};
+function CustomApp(props) {
+  const { Component, pageProps, analytics } = props;
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
+  React.useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
     }
 
-    return { pageProps };
-  }
-
-  constructor() {
-    super();
-    this.pageContext = getPageContext();
-  }
-
-  componentDidMount() {
-    const {
-      query: { lang },
-    } = this.props.router;
+    const { query: { lang } } = props.router;
 
     // Change language if query string contains "lang" parameter
     if (lang) {
       console.log(`Setting language to '${lang}'`);
       i18next.changeLanguage(lang);
     }
+  }, []);
 
-    // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles);
-    }
-  }
+  return (
+    <ThemeProvider theme={theme}>
 
-  render() {
-    const { Component, pageProps, analytics } = this.props;
-
-    return (
-      <Container>
-        {/* Wrap every page in Jss and Theme providers */}
-        <JssProvider
-          registry={this.pageContext.sheetsRegistry}
-          generateClassName={this.pageContext.generateClassName}
-        >
-          {/* MuiThemeProvider makes the theme available down the React
-              tree thanks to React context. */}
-          <MuiThemeProvider
-            theme={this.pageContext.theme}
-            sheetsManager={this.pageContext.sheetsManager}
-          >
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
-
-            {/* Progress indicator for page transitioning */}
-            <NProgress />
-
-            {/* Pass pageContext to the _document though the renderPage enhancer
-                to render collected styles on server-side. */}
-
-            <SnackbarProvider maxSnack={3}>
-              <Component
-                pageContext={this.pageContext}
-                {...pageProps}
-                analytics={analytics}
-              />
-            </SnackbarProvider>
-          </MuiThemeProvider>
-        </JssProvider>
-      </Container>
-    );
-  }
+      <CssBaseline />
+      <SnackbarProvider maxSnack={3}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <Component
+            {...pageProps}
+            analytics={analytics}
+          />
+        </MuiPickersUtilsProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
+  );
 }
 
-MyApp = appWithTranslation(MyApp);
-MyApp = withGA("UA-105156301-5", Router)(MyApp);
+CustomApp.getInitialProps = async (appContext) => {
+  const appProps = await App.getInitialProps(appContext)
+  return { ...appProps }
+}
 
-export default MyApp;
+CustomApp.propTypes = {
+  Component: PropTypes.elementType.isRequired,
+  pageProps: PropTypes.object.isRequired,
+};
+
+CustomApp = appWithTranslation(CustomApp);
+CustomApp = withGA("UA-105156301-5", Router)(CustomApp);
+
+export default CustomApp;

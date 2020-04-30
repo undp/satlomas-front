@@ -1,6 +1,6 @@
 import React from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { withStyles } from '@material-ui/core/styles';
+import { CircularProgress } from '@material-ui/core';
 
 const styles = theme => ({
   progressContainer: {
@@ -11,7 +11,7 @@ const styles = theme => ({
     justifyContent: "center"
   },
   progress: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
     color: "#fff"
   }
 });

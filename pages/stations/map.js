@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import { withNamespaces } from "../../i18n";
+import { withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withSnackbar } from "notistack";
 import LoadingProgress from "../../components/LoadingProgress";
@@ -196,7 +196,7 @@ StationsMap.propTypes = {
 };
 
 StationsMap = withSnackbar(StationsMap);
-StationsMap = withNamespaces()(StationsMap);
+StationsMap = withTranslation()(StationsMap);
 StationsMap = withStyles(styles)(StationsMap);
 
 export default StationsMap;

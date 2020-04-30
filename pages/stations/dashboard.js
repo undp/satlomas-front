@@ -44,9 +44,9 @@ const styles = (theme) => ({
   },
   layout: {
     width: "auto",
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
-    [theme.breakpoints.up(1500 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up(1500 + theme.spacing(3) * 2)]: {
       width: 1500,
       marginLeft: "auto",
       marginRight: "auto",
@@ -60,12 +60,12 @@ const styles = (theme) => ({
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing(1),
       width: "auto",
     },
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 3}px 0`,
+    padding: `${theme.spacing(3)}px 0`,
   },
   card: {
     height: "100%",
@@ -77,7 +77,7 @@ const styles = (theme) => ({
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing.unit * 6,
+    padding: theme.spacing(6),
   },
   body: {
     fontFamily: "Roboto, sans-serif",
@@ -91,7 +91,7 @@ class StationsDashboard extends React.Component {
     station: null,
     mode: DEFAULT_MODE,
     realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
-    historicParams: { start: DEFAULT_HISTORIC_START, end: DEFAULT_HISTORIC_END },
+    historicParams: { start: new Date(DEFAULT_HISTORIC_START), end: new Date(DEFAULT_HISTORIC_END) },
     aggregationFunc: DEFAULT_AGG_FUNC,
     groupingInterval: DEFAULT_GROUP_INT,
     stationsAnchorEl: null,
@@ -236,22 +236,16 @@ class StationsDashboard extends React.Component {
     }));
   };
 
-  handleTimeRangeStartTimeChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      this.setState((prevState) => ({
-        historicParams: { ...prevState.historicParams, start: value },
-      }));
-    }
+  handleTimeRangeStartTimeChange = (datetime) => {
+    this.setState((prevState) => ({
+      historicParams: { ...prevState.historicParams, start: datetime },
+    }));
   };
 
-  handleTimeRangeEndTimeChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      this.setState((prevState) => ({
-        historicParams: { ...prevState.historicParams, end: value },
-      }));
-    }
+  handleTimeRangeEndTimeChange = (datetime) => {
+    this.setState((prevState) => ({
+      historicParams: { ...prevState.historicParams, end: datetime },
+    }));
   };
 
   handleAggregationFunctionSelectChange = (e) => {
@@ -313,9 +307,12 @@ class StationsDashboard extends React.Component {
     if (!Object.keys(groupingIntervalItems).includes(groupInt)) {
       groupInt = DEFAULT_GROUP_INT;
     }
+
+    start = new Date(start);
+    end = new Date(end);
     if (!isDate(start) || !isDate(end)) {
-      start = DEFAULT_HISTORIC_START;
-      end = DEFAULT_HISTORIC_END;
+      start = new Date(DEFAULT_HISTORIC_START);
+      end = new Date(DEFAULT_HISTORIC_END);
     }
 
     return {
@@ -403,7 +400,7 @@ class StationsDashboard extends React.Component {
         <main>
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {stationParameters.map((param) => (
                   <Grid item key={param.id} sm={6} md={4} lg={4}>
                     <Card className={classes.card}>

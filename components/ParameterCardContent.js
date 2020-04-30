@@ -2,16 +2,12 @@ import React from "react";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 import { LineChart, XAxis, YAxis, CartesianGrid, Line } from "recharts";
-import {
-  Table,
-  TableHead,
-  TableCell,
-  TableRow,
-  TableBody,
-} from "@material-ui/core/Table";
 import { withSnackbar } from "notistack";
+import moment from "moment";
 import { buildApiUrl } from "../utils/api";
 import _ from "lodash";
+
+import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 
 const axisStyle = {
   fontSize: 12,
@@ -119,11 +115,18 @@ class ParameterCardContent extends React.Component {
 
     const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
 
+    const mStart = moment(start);
+    const mEnd = moment(end);
+
+    if (!mStart.isValid() || !mStart.isValid()) {
+      return;
+    }
+
     const params = {
       station: stationId,
       parameter,
-      start,
-      end,
+      start: mStart.format("YYYY-MM-DDTHH:mm"),
+      end: mEnd.format("YYYY-MM-DDTHH:mm"),
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };

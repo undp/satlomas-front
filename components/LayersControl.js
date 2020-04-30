@@ -1,25 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import {
-  Menu,
-  MenuItem,
-  Checkbox,
-  FormControlLabel,
-  Fab,
-} from "@material-ui/core";
 import LayersIcon from "@material-ui/icons/Layers";
-import { withNamespaces } from "../i18n";
-
+import { withTranslation } from "../i18n";
 import OpacitySlider from "./OpacitySlider";
+
+import { withStyles } from '@material-ui/core/styles';
+
+import { Fab, Menu, MenuItem, Checkbox, FormControlLabel } from '@material-ui/core';
 
 const styles = theme => ({
   fabContainer: {
     display: "block",
   },
   fab: {
-    margin: theme.spacing.unit,
-  },
+    position: "fixed",
+    left: 10,
+    bottom: 10,
+    margin: theme.spacing(1),
+    zIndex: 1000
+  }
 });
 
 class LayersControl extends React.Component {
@@ -114,6 +113,6 @@ LayersControl.propTypes = {
 };
 
 LayersControl = withStyles(styles)(LayersControl);
-LayersControl = withNamespaces()(LayersControl);
+LayersControl = withTranslation()(LayersControl);
 
 export default LayersControl;
