@@ -19,14 +19,14 @@ const styles = (theme) => ({
     zIndex: 1000,
   },
   topLeft: {
-    top: theme.spacing.unit,
-    left: theme.spacing.unit,
+    top: theme.spacing(1),
+    left: theme.spacing(1),
   },
   fabContainer: {
     display: "block",
   },
   fab: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
 });
 
@@ -67,7 +67,9 @@ class StationsMap extends Component {
       zoom: 10,
     },
     stations: [],
+    filteredStations: [],
     selectedStation: null,
+    searchFieldValue: "",
     drawerOpen: false,
   };
 
@@ -78,27 +80,29 @@ class StationsMap extends Component {
     };
   }
 
-  async fetchStations() {
+  async fetchStations(name) {
     const { token } = this.props;
     const headers = token ? { Authorization: token } : {};
 
-    let stations = [];
+    const params = name ? { name } : {};
+
     try {
       const response = await axios.get(buildApiUrl(`/stations/stations/`), {
-        headers: headers,
+        params,
+        headers
       });
-      stations = response.data || [];
+      return response.data || [];
     } catch (err) {
       this.props.enqueueSnackbar("Failed to fetch stations", {
         variant: "error",
       });
+      return [];
     }
-
-    this.setState({ stations });
   }
 
-  componentDidMount() {
-    this.fetchStations();
+  componentDidMount = async () => {
+    const stations = await this.fetchStations();
+    this.setState({ stations, filteredStations: stations });
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -116,6 +120,15 @@ class StationsMap extends Component {
   handleMapViewportChanged = (viewport) => {
     this.setState({ viewport });
   };
+
+  handleSearchFieldChange = async (e) => {
+    const { value } = e.target;
+    const filteredStations = await this.fetchStations(value)
+    this.setState({
+      searchFieldValue: value,
+      filteredStations
+    });
+  }
 
   handleStationSelect = (station) => {
     this.setState({
@@ -142,6 +155,8 @@ class StationsMap extends Component {
       viewport,
       bounds,
       stations,
+      filteredStations,
+      searchFieldValue,
       selectedStation,
       drawerOpen,
     } = this.state;
@@ -163,8 +178,10 @@ class StationsMap extends Component {
         <MapDrawer
           open={drawerOpen}
           onClose={this.handleMapDrawerClose}
-          stations={stations}
+          stations={filteredStations}
+          searchFieldValue={searchFieldValue}
           selectedStation={selectedStation}
+          onSearchFieldChange={this.handleSearchFieldChange}
           onStationSelect={this.handleStationSelect}
           onMenuClick={this.handleMenuClick}
         />
