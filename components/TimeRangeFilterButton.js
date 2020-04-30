@@ -1,6 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import Moment from "react-moment"
 import {
   Button,
   Popover,
@@ -11,6 +12,7 @@ import {
   Tab,
 } from "@material-ui/core";
 import SelectControl from "./SelectControl";
+import { KeyboardDatePicker } from "@material-ui/pickers"
 
 export const DEFAULT_MODE = "historic";
 export const DEFAULT_RT_LAST_TIME = "1-year";
@@ -80,15 +82,15 @@ const LastTimeControl = ({ value, onChange }) => (
 
 let DateTimeControl = ({ classes, id, label, value, onChange }) => (
   <FormControl component="fieldset" className={classes.formControl}>
-    <TextField
+    <KeyboardDatePicker
+      ampm={false}
+      variant="inline"
+      format="YYYY-MM-DD HH:mm"
+      margin="normal"
       id={id}
       label={label}
-      type="datetime-local"
       value={value}
       onChange={onChange}
-      InputLabelProps={{
-        shrink: true,
-      }}
     />
   </FormControl>
 );
@@ -154,10 +156,7 @@ class TimeRangeSelectorButton extends React.Component {
     const { lastTime } = realtimeParams;
     const { start, end } = historicParams;
 
-    const title =
-      mode === "realtime"
-        ? `Tiempo real: ${lastTimeItems[lastTime]}`
-        : `Histórico: ${start} - ${end}`;
+    const title = mode === "realtime" ? `Tiempo real:` : `Histórico:`;
     const tabIndex = this.modes.findIndex((m) => m.key === mode);
 
     return (
@@ -173,7 +172,10 @@ class TimeRangeSelectorButton extends React.Component {
             color="inherit"
           >
             <AccessTimeIcon className={classes.buttonIcon} />
-            {title}
+            {title}{` `}
+            {mode === "realtime" ? lastTimeItems[lastTime] : (<>
+              <Moment format="YYYY-MM-DD HH:mm">{start}</Moment> - <Moment format="YYYY-MM-DD HH:mm">{end}</Moment>
+            </>)}
           </Button>
         </Tooltip>
         <Popover

@@ -91,7 +91,7 @@ class StationsDashboard extends React.Component {
     station: null,
     mode: DEFAULT_MODE,
     realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
-    historicParams: { start: DEFAULT_HISTORIC_START, end: DEFAULT_HISTORIC_END },
+    historicParams: { start: new Date(DEFAULT_HISTORIC_START), end: new Date(DEFAULT_HISTORIC_END) },
     aggregationFunc: DEFAULT_AGG_FUNC,
     groupingInterval: DEFAULT_GROUP_INT,
     stationsAnchorEl: null,
@@ -236,22 +236,16 @@ class StationsDashboard extends React.Component {
     }));
   };
 
-  handleTimeRangeStartTimeChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      this.setState((prevState) => ({
-        historicParams: { ...prevState.historicParams, start: value },
-      }));
-    }
+  handleTimeRangeStartTimeChange = (datetime) => {
+    this.setState((prevState) => ({
+      historicParams: { ...prevState.historicParams, start: datetime },
+    }));
   };
 
-  handleTimeRangeEndTimeChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      this.setState((prevState) => ({
-        historicParams: { ...prevState.historicParams, end: value },
-      }));
-    }
+  handleTimeRangeEndTimeChange = (datetime) => {
+    this.setState((prevState) => ({
+      historicParams: { ...prevState.historicParams, end: datetime },
+    }));
   };
 
   handleAggregationFunctionSelectChange = (e) => {
@@ -313,9 +307,12 @@ class StationsDashboard extends React.Component {
     if (!Object.keys(groupingIntervalItems).includes(groupInt)) {
       groupInt = DEFAULT_GROUP_INT;
     }
+
+    start = new Date(start);
+    end = new Date(end);
     if (!isDate(start) || !isDate(end)) {
-      start = DEFAULT_HISTORIC_START;
-      end = DEFAULT_HISTORIC_END;
+      start = new Date(DEFAULT_HISTORIC_START);
+      end = new Date(DEFAULT_HISTORIC_END);
     }
 
     return {
