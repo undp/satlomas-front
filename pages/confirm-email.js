@@ -1,31 +1,29 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import { i18n, withNamespaces } from "../i18n";
-import withStyles from "@material-ui/core/styles/withStyles";
+import { i18n, withTranslation } from "../i18n";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
+import { withStyles } from '@material-ui/core/styles';
+
+import { Paper, Typography, LinearProgress } from '@material-ui/core';
 
 const styles = theme => ({
   main: {
     width: "auto",
     display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(400 + theme.spacing(3) * 2)]: {
       width: 400,
       marginLeft: "auto",
       marginRight: "auto"
     }
   },
   paper: {
-    marginTop: theme.spacing.unit * 8,
+    marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-      .spacing.unit * 3}px`
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
   },
   successMsg: {},
   errorMsg: {
@@ -102,6 +100,6 @@ class ConfirmEmail extends React.Component {
 }
 
 ConfirmEmail = withStyles(styles)(ConfirmEmail);
-ConfirmEmail = withNamespaces()(ConfirmEmail);
+ConfirmEmail = withTranslation()(ConfirmEmail);
 
 export default ConfirmEmail;

@@ -1,11 +1,8 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DropzoneArea from "./DropzoneArea";
+
+import { Button, Dialog, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 
 class DropzoneDialog extends React.Component {
   constructor(props) {

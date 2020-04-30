@@ -1,52 +1,47 @@
-import Fab from "@material-ui/core/Fab";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Drawer from "@material-ui/core/Drawer";
 import AddIcon from "@material-ui/icons/Add";
 import LayersIcon from "@material-ui/icons/Layers";
 import RemoveIcon from "@material-ui/icons/Remove";
 import Head from "next/head";
 import React, { Component } from "react";
 import SearchField from "../components/SearchField";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
 import { withAuthSync } from "../utils/auth";
 import Dashboard from "../components/Dashboard";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
+
+import { Fab, Paper, Drawer, Select, MenuItem, FormControl, TextField } from '@material-ui/core';
 
 const drawerWidth = 450;
 
 const styles = theme => ({
   searchAndDateControl: {
     position: "fixed",
-    top: theme.spacing.unit,
-    left: theme.spacing.unit
+    top: theme.spacing(1),
+    left: theme.spacing(1)
   },
   formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     minWidth: 300
   },
   topRightControlGroup: {
     position: "fixed",
-    top: theme.spacing.unit,
-    right: theme.spacing.unit
+    top: theme.spacing(1),
+    right: theme.spacing(1)
   },
   bottomLeftControlGroup: {
     position: "fixed",
-    bottom: theme.spacing.unit,
-    left: theme.spacing.unit
+    bottom: theme.spacing(1),
+    left: theme.spacing(1)
   },
   fabContainer: {
     display: "block"
   },
   fab: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   },
   extendedIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   dateField: {
     padding: "2px 4px",
@@ -63,7 +58,7 @@ const styles = theme => ({
     width: 320
   },
   textField: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   },
   drawer: {
     width: drawerWidth,

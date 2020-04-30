@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Head from "next/head";
 import axios from "axios";
+import moment from "moment"
 import {
   AppBar,
   CssBaseline,
@@ -36,8 +37,6 @@ const { stationParameters } = config;
 
 // FIXME Move to config.js
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
-const DEFAULT_START = "2011-01-01T00:00";
-const DEFAULT_END = "2012-01-01T00:00";
 
 const styles = (theme) => ({
   appBar: {
@@ -45,9 +44,9 @@ const styles = (theme) => ({
   },
   layout: {
     width: "auto",
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
-    [theme.breakpoints.up(1500 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up(1500 + theme.spacing(3) * 2)]: {
       width: 1500,
       marginLeft: "auto",
       marginRight: "auto",
@@ -61,12 +60,12 @@ const styles = (theme) => ({
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing(1),
       width: "auto",
     },
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 3}px 0`,
+    padding: `${theme.spacing(3)}px 0`,
   },
   card: {
     height: "100%",
@@ -78,14 +77,14 @@ const styles = (theme) => ({
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing.unit * 6,
+    padding: theme.spacing(6),
   },
   body: {
     fontFamily: "Roboto, sans-serif",
     fontSize: 10,
   },
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   }
 });
 
@@ -102,11 +101,11 @@ class StationsData extends React.Component {
   state = {
     loading: true,
     station: null,
-    mode: "historic",
-    realtimeParams: { now: new Date(), lastTime: "1-year" },
-    historicParams: { start: DEFAULT_START, end: DEFAULT_END },
-    aggregationFunc: "avg",
-    groupingInterval: "month",
+    mode: DEFAULT_MODE,
+    realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
+    historicParams: { start: new Date(DEFAULT_HISTORIC_START), end: new Date(DEFAULT_HISTORIC_END) },
+    aggregationFunc: DEFAULT_AGG_FUNC,
+    groupingInterval: DEFAULT_GROUP_INT,
     stationsAnchorEl: null,
     data: {},
   };
@@ -227,11 +226,18 @@ class StationsData extends React.Component {
     const timeRangeParams = mode === "realtime" ? realtimeParams : historicParams;
     const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
 
+    const mStart = moment(start);
+    const mEnd = moment(end);
+
+    if (!mStart.isValid() || !mStart.isValid()) {
+      return;
+    }
+
     const params = {
       station: station.id,
       parameter,
-      start,
-      end,
+      start: mStart.format("YYYY-MM-DDTHH:mm"),
+      end: mEnd.format("YYYY-MM-DDTHH:mm"),
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };
@@ -241,7 +247,7 @@ class StationsData extends React.Component {
     try {
       const response = await axios.get(buildApiUrl(`/stations/measurements/summary`), {
         params,
-        headers: { Authorization: this.props.token, Accept: 'text/csv' },
+        headers: { Accept: 'text/csv' },
         responseType: 'blob'
       });
       console.log(response);
@@ -307,22 +313,16 @@ class StationsData extends React.Component {
     }));
   };
 
-  handleTimeRangeStartTimeChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      this.setState((prevState) => ({
-        historicParams: { ...prevState.historicParams, start: value },
-      }));
-    }
+  handleTimeRangeStartTimeChange = (datetime) => {
+    this.setState((prevState) => ({
+      historicParams: { ...prevState.historicParams, start: datetime },
+    }));
   };
 
-  handleTimeRangeEndTimeChange = (e) => {
-    const { value } = e.target;
-    if (value) {
-      this.setState((prevState) => ({
-        historicParams: { ...prevState.historicParams, end: value },
-      }));
-    }
+  handleTimeRangeEndTimeChange = (datetime) => {
+    this.setState((prevState) => ({
+      historicParams: { ...prevState.historicParams, end: datetime },
+    }));
   };
 
   handleAggregationFunctionSelectChange = (e) => {
@@ -369,9 +369,12 @@ class StationsData extends React.Component {
     if (!Object.keys(groupingIntervalItems).includes(groupInt)) {
       groupInt = DEFAULT_GROUP_INT;
     }
+
+    start = new Date(start);
+    end = new Date(end);
     if (!isDate(start) || !isDate(end)) {
-      start = DEFAULT_HISTORIC_START;
-      end = DEFAULT_HISTORIC_END;
+      start = new Date(DEFAULT_HISTORIC_START);
+      end = new Date(DEFAULT_HISTORIC_END);
     }
 
     return {

@@ -8,7 +8,7 @@ import LayersFab from "../components/LayersFab";
 import LayersLegendExpansionPanel from "../components/LayersLegendExpansionPanel";
 import LoadingProgress from "../components/LoadingProgress";
 import QuoteButton from "../components/QuoteButton";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { withAuthSync } from "../utils/auth";
 
@@ -245,7 +245,7 @@ Maps.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-Maps = withNamespaces()(Maps);
+Maps = withTranslation()(Maps);
 Maps = withAuthSync(Maps, { redirect: false });
 
 export default Maps;

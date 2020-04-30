@@ -9,7 +9,7 @@ import MapDrawer from "../../components/MapDrawer";
 import { Fab } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { withStyles } from "@material-ui/core/styles";
-import { withNamespaces } from "../../i18n";
+import { withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withSnackbar } from "notistack";
 
@@ -190,7 +190,7 @@ StationsMap.propTypes = {
 };
 
 StationsMap = withSnackbar(StationsMap);
-StationsMap = withNamespaces()(StationsMap);
+StationsMap = withTranslation()(StationsMap);
 StationsMap = withStyles(styles)(StationsMap);
 
 export default StationsMap;

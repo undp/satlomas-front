@@ -1,27 +1,30 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Grid from "@material-ui/core/Grid";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
+
+import {
+  AppBar,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  CssBaseline,
+  Grid,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
 
 const styles = (theme) => ({
   appBar: {
     position: "relative",
   },
   icon: {
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing(2),
   },
   heroUnit: {
     backgroundColor: theme.palette.background.paper,
@@ -29,23 +32,23 @@ const styles = (theme) => ({
   heroContent: {
     maxWidth: 600,
     margin: "0 auto",
-    padding: `${theme.spacing.unit * 8}px 0 ${theme.spacing.unit * 6}px`,
+    padding: `${theme.spacing(8)}px 0 ${theme.spacing(6)}px`,
   },
   heroButtons: {
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing(4),
   },
   layout: {
     width: "auto",
-    marginLeft: theme.spacing.unit * 3,
-    marginRight: theme.spacing.unit * 3,
-    [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.up(1100 + theme.spacing(3) * 2)]: {
       width: 1100,
       marginLeft: "auto",
       marginRight: "auto",
     },
   },
   cardGrid: {
-    padding: `${theme.spacing.unit * 8}px 0`,
+    padding: `${theme.spacing(8)}px 0`,
   },
   card: {
     height: "100%",
@@ -61,7 +64,7 @@ const styles = (theme) => ({
   },
   footer: {
     backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing.unit * 6,
+    padding: theme.spacing(6),
   },
 });
 
@@ -138,7 +141,7 @@ const Index = ({ classes }) => (
             folks don&apos;t simply skip over it entirely.
           </Typography>
           <div className={classes.heroButtons}>
-            <Grid container spacing={16} justify="center">
+            <Grid container spacing={2} justify="center">
               <Grid item>
                 <Button variant="contained" color="primary">
                   Más información
@@ -155,7 +158,7 @@ const Index = ({ classes }) => (
       </div>
       <div className={classNames(classes.layout, classes.cardGrid)}>
         {/* End hero unit */}
-        <Grid container spacing={40}>
+        <Grid container spacing={5}>
           {cards.map((card) => (
             <Grid item key={card.key} sm={6} md={4} lg={3}>
               <Card className={classes.card}>
@@ -164,7 +167,9 @@ const Index = ({ classes }) => (
                     className={classes.cardMedia}
                     image={card.image}
                     title="Screenshot"
-                  />
+                  >
+                    &nbsp;
+                  </CardMedia>
                 </Link>
                 <CardContent className={classes.cardContent}>
                   <Typography gutterBottom variant="h5" component="h2">
