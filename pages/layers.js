@@ -6,8 +6,8 @@ import { withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { logout, withAuthSync } from "../utils/auth";
 
-import "../static/App.css"; // FIXME Convert to JSX styles
-import "../static/index.css"; // FIXME Convert to JSX styles
+import "../public/static/App.css"; // FIXME Convert to JSX styles
+import "../public/static/index.css"; // FIXME Convert to JSX styles
 
 const initialViewport = {
   center: [-36.179114636463652, -62.846142338298094],

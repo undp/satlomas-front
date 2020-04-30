@@ -5,11 +5,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+import PowerSettingsNewRoundedIcon from '@material-ui/icons/PowerSettingsNewRounded';
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import { withStyles } from "@material-ui/core/styles";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import { withNamespaces, i18n } from "../i18n";
+import { withTranslation, i18n } from "../i18n";
 import { logout } from "../utils/auth";
 import { buildApiUrl } from "../utils/api";
 import Router from "next/router";
@@ -18,9 +18,13 @@ import cookie from "js-cookie";
 import Snackbar from "@material-ui/core/Snackbar";
 
 const styles = (theme) => ({
-  
+
+
   menuItem: {
     minWidth: 150,
+  },
+  MuiListItemIcon:{
+    minWidth: 0,
   },
   toolbarButtons: {
     marginLeft: 'auto',
@@ -64,8 +68,6 @@ class ButtonsContent extends React.Component {
     };
   }
 
- 
-
   componentDidMount() {
     this.getUserName();
   }
@@ -107,7 +109,10 @@ class ButtonsContent extends React.Component {
 
   render(){
     const { classes, t } = this.props;
-    const { contextualMenuOpen, username, loading } = this.state;
+    const { 
+        contextualMenuOpen, 
+        username, 
+        loading } = this.state;
 
     return(
      
@@ -146,10 +151,10 @@ class ButtonsContent extends React.Component {
                 <MenuItem className={classes.menuItem} 
                 onClick={this.profileLogout} 
                 >
-                  {t("common:logout_btn")}
+                    Cerrar sesión
                   <ListItemSecondaryAction>
-                    <ListItemIcon edge="end" aria-label="logout">
-                      <PowerSettingsNewIcon />
+                    <ListItemIcon edge="end" aria-label="logout" className={classes.MuiListItemIcon}>
+                      <PowerSettingsNewRoundedIcon />
                     </ListItemIcon>
                   </ListItemSecondaryAction>
                 </MenuItem>
@@ -166,7 +171,7 @@ ButtonsContent.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-ButtonsContent = withNamespaces(["me", "common"])(ButtonsContent);
+ButtonsContent = withTranslation(["me", "common"])(ButtonsContent);
 ButtonsContent = withStyles(styles)(ButtonsContent);
 
 export default ButtonsContent;

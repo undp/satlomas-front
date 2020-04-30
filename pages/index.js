@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import { withNamespaces, i18n } from "../i18n";
+import { withTranslation, i18n } from "../i18n";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
@@ -258,7 +258,7 @@ class Index extends React.Component {
 Index.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-Index = withNamespaces(["me", "common"])(Index);
+Index = withTranslation(["me", "common"])(Index);
 Index = withStyles(styles)(Index);
 
 export default Index;
