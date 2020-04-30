@@ -2,14 +2,12 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Head from "next/head";
 import {
-  Fab,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Select,
   MenuItem,
   FormControl,
-  TextField,
   InputLabel,
   Typography,
   FilledInput,
@@ -27,6 +25,7 @@ import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
+import { KeyboardDatePicker } from "@material-ui/pickers"
 
 const drawerWidth = 360;
 const mapboxStyle = "mapbox.streets";
@@ -44,7 +43,7 @@ const GeoJSON = dynamic(() => import("../components/GeoJSON"), {
   ssr: false
 });
 
-const someScopesData = require("../static/corredores.json");
+const someScopesData = require("../public/static/corredores.json");
 
 const styles = (theme) => ({
   controlGroup: {
@@ -52,41 +51,46 @@ const styles = (theme) => ({
     zIndex: 1000,
   },
   topLeft: {
-    top: theme.spacing.unit,
-    left: theme.spacing.unit,
+    top: theme.spacing(1),
+    left: theme.spacing(1),
   },
   topRight: {
-    top: theme.spacing.unit,
-    right: theme.spacing.unit,
+    top: theme.spacing(1),
+    right: theme.spacing(1),
   },
   bottomLeft: {
-    bottom: theme.spacing.unit,
-    left: theme.spacing.unit,
+    bottom: theme.spacing(1),
+    left: theme.spacing(1),
   },
   bottomRight: {
-    bottom: theme.spacing.unit,
-    right: theme.spacing.unit
+    bottom: theme.spacing(1),
+    right: theme.spacing(1)
   },
   fabContainer: {
     display: "block",
   },
   fab: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
   searchAndDateControl: {
     display: "flex",
     flexWrap: "wrap",
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
   formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 350,
+    margin: theme.spacing(1),
+  },
+  datePickerControl: {
+    width: '46%',
   },
   textField: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
-  drawerPaper: {
-    width: 360,
+  searchControl: {
+    width: 450,
+  },
+  searchControlContent: {
+    flexFlow: "column"
   },
   plotsControl: {
     width: 550,
@@ -109,24 +113,6 @@ const ScopePolygons = ({ data }) => (
   />
 );
 
-
-let DateField = ({
-  classes,
-  dates,
-  onDateFromChange,
-  onDateToChange,
-}) => {
-  const { periods } = this.state
-  const { firstDate, lastDate, availables } = periods;
-
-  return (
-    <>
-    </>
-  );
-};
-
-DateField = withStyles(styles)(DateField);
-
 class SearchControl extends Component {
   render() {
     const {
@@ -135,6 +121,8 @@ class SearchControl extends Component {
       selectedScopeType,
       selectedScope,
       periods,
+      dateFrom,
+      dateTo,
       onDateFromChange,
       onDateToChange,
       onScopeTypeSelectChange,
@@ -143,73 +131,68 @@ class SearchControl extends Component {
 
     const scopeTypeItems = Object.values(scopeTypes).sort(st => st.type);
     const scopeItems = scopeTypes[selectedScopeType].scopes.sort(sc => sc.name);
+    const { firstDate, lastDate } = periods;
 
-    let firstDate = null, lastDate = null, availables = [];
-    if (periods) {
-      firstDate = periods.firstDate.toISOString().slice(0, 10);
-      lastDate = periods.lastDate.toISOString().slice(0, 10);
-      availables = periods.availables;
-    }
+    const selectedScopeTypeName = scopeTypes[selectedScopeType].name;
+    const selectedScopeName = scopeTypes[selectedScopeType].scopes.find(s => s.pk === selectedScope).name;
 
     return (
-      <div className={classes.searchAndDateControl}>
-        {/* <SearchField /> */}
-        <FormControl variant="filled" className={classes.formControl}>
-          <InputLabel htmlFor="scope-type">Tipo de Ámbito</InputLabel>
-          <Select
-            value={selectedScopeType}
-            onChange={onScopeTypeSelectChange}
-            input={<FilledInput id="scope-type" />}
-          >
-            {scopeTypeItems.map(sc => (<MenuItem key={sc.type} value={sc.type}>{sc.name}</MenuItem>))}
-          </Select>
-        </FormControl>
-        <FormControl variant="filled" className={classes.formControl}>
-          <InputLabel htmlFor="scope">Ámbito</InputLabel>
-          <Select
-            onChange={onScopeSelectChange}
-            value={selectedScope}
-            input={<FilledInput id="scope" />}
-          >
-            {scopeItems.map(sc => (<MenuItem key={sc.pk} value={sc.pk}>{sc.name}</MenuItem>))}
-          </Select>
-        </FormControl>
-        <TextField
-          id="date_from"
-          label="Date from"
-          type="date"
-          defaultValue={firstDate}
-          className={classes.textField}
-          onChange={onDateFromChange}
-          variant="filled"
-          InputProps={{
-            inputProps: {
-              min: firstDate,
-              max: lastDate,
-            },
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          id="date_to"
-          label="Date to"
-          type="date"
-          defaultValue={lastDate}
-          className={classes.textField}
-          onChange={onDateToChange}
-          variant="filled"
-          InputProps={{
-            inputProps: {
-              min: firstDate,
-              max: lastDate,
-            },
-          }}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+      <div className={classes.searchControl}>
+        <ExpansionPanel>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>{selectedScopeTypeName} - {selectedScopeName}</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails className={classes.searchControlContent}>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="scope-type">Tipo de Ámbito</InputLabel>
+              <Select
+                value={selectedScopeType}
+                onChange={onScopeTypeSelectChange}
+              >
+                {scopeTypeItems.map(sc => (<MenuItem key={sc.type} value={sc.type}>{sc.name}</MenuItem>))}
+              </Select>
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="scope">Ámbito</InputLabel>
+              <Select
+                onChange={onScopeSelectChange}
+                value={selectedScope}
+              >
+                {scopeItems.map(sc => (<MenuItem key={sc.pk} value={sc.pk}>{sc.name}</MenuItem>))}
+              </Select>
+            </FormControl>
+            <div>
+              <FormControl className={classnames(classes.formControl, classes.datePickerControl)}>
+                <KeyboardDatePicker
+                  ampm={false}
+                  autoOk={true}
+                  variant="inline"
+                  format="YYYY-MM-DD"
+                  id="date-from"
+                  label="Date from"
+                  minDate={firstDate}
+                  maxDate={lastDate}
+                  value={dateFrom}
+                  onChange={onDateFromChange}
+                />
+              </FormControl>
+              <FormControl className={classnames(classes.formControl, classes.datePickerControl)}>
+                <KeyboardDatePicker
+                  ampm={false}
+                  autoOk={true}
+                  variant="inline"
+                  format="YYYY-MM-DD"
+                  id="date-to"
+                  label="Date to"
+                  minDate={firstDate}
+                  maxDate={lastDate}
+                  value={dateTo}
+                  onChange={onDateToChange}
+                />
+              </FormControl>
+            </div>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       </div>
     );
   }
@@ -218,7 +201,7 @@ class SearchControl extends Component {
 SearchControl = withStyles(styles)(SearchControl);
 
 let PlotsControl = ({ classes, dates, scope, custom_scope }) => (
-  <div className={classnames(classes.controlGroup, classes.topRight, classes.plotsControl)}>
+  <div className={classes.plotsControl}>
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography className={classes.plotsControlHeading}>Cobertura de vegetación (MODIS VI)</Typography>
@@ -245,11 +228,14 @@ class ChangesMap extends Component {
       center: [-12.046373, -76.542755],
       zoom: 10,
     },
-    drawerOpen: false,
+    scopesLoaded: false,
     scopeTypes: {},
     selectedScopeType: null,
     selectedScope: null,
-    scopesLoaded: false,
+    periods: {},
+    periodsLoaded: false,
+    dateFrom: null,
+    dateTo: null,
     // dates: {
     //   dashboardDateFrom: null,
     //   dashboardDateTo: null,
@@ -259,9 +245,6 @@ class ChangesMap extends Component {
     //   endDate: null,
     // },
     customScope: null,
-    loadDrawer: false,
-    mapDate: null,
-    loadSearchDate: false,
   };
 
   static getInitialProps = async () => ({
@@ -272,6 +255,7 @@ class ChangesMap extends Component {
     try {
       const response = await axios.get(buildApiUrl("/scopes/types/"), {});
       const scopeTypes = response.data;
+      console.log("ScopeTypes:", scopeTypes);
 
       const selectedScopeType = scopeTypes[0].type;
       const selectedScope = scopeTypes[0].scopes[0].pk;
@@ -283,13 +267,14 @@ class ChangesMap extends Component {
         scopeTypesObj[sc.type] = sc;
       }
 
-      this.setState({
+      await this.setState({
         scopeTypes: scopeTypesObj,
         selectedScopeType,
         selectedScope,
         scopesLoaded: true,
       });
     } catch (err) {
+      console.error(err);
       this.props.enqueueSnackbar(`Failed to get scope types`, {
         variant: "error",
       });
@@ -297,8 +282,27 @@ class ChangesMap extends Component {
   };
 
   fetchPeriods = async () => {
-    const response = await axios.get(buildApiUrl("/vi-lomas/periods/"));
-    this.setState({ periods: response.data })
+    try {
+      const response = await axios.get(buildApiUrl("/vi-lomas/available-periods/"));
+      const periodsRaw = response.data;
+      const periods = {
+        firstDate: new Date(periodsRaw.first_date),
+        lastDate: new Date(periodsRaw.last_date),
+        availables: periodsRaw.availables
+      };
+      console.log("Periods:", periods);
+      this.setState({
+        periods,
+        dateFrom: periods.firstDate,
+        dateTo: periods.lastDate,
+        periodsLoaded: true
+      });
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar(`Failed to get available periods`, {
+        variant: "error",
+      });
+    }
   };
 
   componentDidMount = async () => {
@@ -347,49 +351,12 @@ class ChangesMap extends Component {
     */
   };
 
-  handleDateFromChange = (event) => {
-    let date_from = new Date(event.target.value + " 00:00:00");
-    let availableDates = [];
-    while (date_from < this.state.dates.endDate) {
-      if (
-        this.state.dates.allAvaibleDates.includes(
-          date_from.toISOString().slice(0, 7)
-        )
-      ) {
-        availableDates.push(date_from.toISOString().slice(0, 7));
-      }
-      date_from.setMonth(date_from.getMonth() + 1);
-    }
-    this.setState({
-      dates: {
-        ...this.state.dates,
-        dashboardDateFrom: new Date(event.target.value + " 00:00:00"),
-        availableDates: availableDates,
-      },
-    });
+  handleDateFromChange = (datetime) => {
+    this.setState({ dateFrom: datetime });
   };
 
-  handleDateToChange = (event) => {
-    let date_to = new Date(event.target.value + " 00:00:00");
-    let availableDates = [];
-    let { initDate } = this.state.dates;
-    while (initDate < date_to) {
-      if (
-        this.state.dates.allAvaibleDates.includes(
-          initDate.toISOString().slice(0, 7)
-        )
-      ) {
-        availableDates.push(initDate.toISOString().slice(0, 7));
-      }
-      initDate.setMonth(initDate.getMonth() + 1);
-    }
-    this.setState({
-      dates: {
-        ...this.state.dates,
-        dashboardDateTo: date_to,
-        availableDates: availableDates,
-      },
-    });
+  handleDateToChange = (datetime) => {
+    this.setState({ dateTo: datetime })
   };
 
   // componentDidUpdate(_prevProps, prevState) {
@@ -448,14 +415,17 @@ class ChangesMap extends Component {
     const {
       viewport,
       bounds,
-      drawerOpen,
-      loadDrawer,
-      scopesLoaded,
       scopeTypes,
       selectedScopeType,
       selectedScope,
+      scopesLoaded,
       periods,
+      periodsLoaded,
+      dateFrom,
+      dateTo
     } = this.state;
+
+    const loaded = scopesLoaded && periodsLoaded;
 
     return (
       <div className="index">
@@ -466,27 +436,23 @@ class ChangesMap extends Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        <div className={classnames(classes.controlGroup, classes.topLeft)}>
+        <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
           <SearchFab size="medium" onClick={this.handleSearchFabClick} />
         </div>
-        <MapDrawer
-          open={drawerOpen}
-          onClose={this.handleMapDrawerClose}
-          width={drawerWidth}
-        >
-          {scopesLoaded && (
-            <SearchControl
-              scopeTypes={scopeTypes}
-              selectedScopeType={selectedScopeType}
-              selectedScope={selectedScope}
-              periods={periods}
-              onDateFromChange={this.handleDateFromChange}
-              onDateToChange={this.handleDateToChange}
-              onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
-              onScopeSelectChange={this.handleScopeSelectChange}
-            />
-          )}
-        </MapDrawer>
+        {loaded && (<div className={classnames(classes.controlGroup, classes.topLeft)}>
+          <SearchControl
+            scopeTypes={scopeTypes}
+            selectedScopeType={selectedScopeType}
+            selectedScope={selectedScope}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+            periods={periods}
+            onDateFromChange={this.handleDateFromChange}
+            onDateToChange={this.handleDateToChange}
+            onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
+            onScopeSelectChange={this.handleScopeSelectChange}
+          />
+        </div>)}
         <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
           <ZoomControl
             onZoomInClick={this.handleZoomInClick}
@@ -495,12 +461,14 @@ class ChangesMap extends Component {
             layers={[]}
             activeLayers={[]} />
         </div>
-        {loadDrawer && (
-          <PlotsControl
-            dates={dates}
-            scope={scopes.scope}
-            custom_scope={customScope}
-          />
+        {loaded && (
+          <div className={classnames(classes.controlGroup, classes.topRight)}>
+            {/* <PlotsControl
+              dates={dates}
+              scope={scopes.scope}
+              custom_scope={customScope}
+            /> */}
+          </div>
         )}
         <Map
           className={classes.map}
@@ -524,7 +492,7 @@ class ChangesMap extends Component {
             }
           `}
         </style>
-      </div>
+      </div >
     );
   }
 }
