@@ -1,27 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
-import withStyles from "@material-ui/core/styles/withStyles";
-import Fab from "@material-ui/core/Fab";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import LayersIcon from "@material-ui/icons/Layers";
-import { withNamespaces } from "../i18n";
-
+import { withTranslation } from "../i18n";
 import OpacitySlider from "./OpacitySlider";
 
+import { withStyles } from '@material-ui/core/styles';
+
+import { Fab, Menu, MenuItem, Checkbox, FormControlLabel } from '@material-ui/core';
+
 const styles = theme => ({
+  fabContainer: {
+    display: "block",
+  },
   fab: {
-    position: "fixed",
-    left: 10,
-    bottom: 10,
-    margin: theme.spacing.unit,
-    zIndex: 1000
+    margin: theme.spacing(1),
   }
 });
 
-class LayersFab extends React.Component {
+class LayersControl extends React.Component {
   state = {
     anchorEl: null
   };
@@ -56,14 +52,15 @@ class LayersFab extends React.Component {
     const { anchorEl } = this.state;
 
     return (
-      <div>
+      <div className={classes.fabContainer}>
         <Fab
           className={classes.fab}
           aria-label={t("toggle_layers")}
           aria-owns={anchorEl ? "layers-menu" : undefined}
           aria-haspopup="true"
           onClick={this.handleClick}
-          color="secondary"
+          color="primary"
+          size="small"
         >
           <LayersIcon />
         </Fab>
@@ -101,14 +98,17 @@ class LayersFab extends React.Component {
   }
 }
 
-LayersFab.propTypes = {
+LayersControl.propTypes = {
   classes: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   layers: PropTypes.array.isRequired,
-  layersOpacity: PropTypes.object,
   activeLayers: PropTypes.array.isRequired,
+  layersOpacity: PropTypes.object,
   onToggle: PropTypes.func,
   onOpacityChange: PropTypes.func
 };
 
-export default withNamespaces()(withStyles(styles)(LayersFab));
+LayersControl = withStyles(styles)(LayersControl);
+LayersControl = withTranslation()(LayersControl);
+
+export default LayersControl;

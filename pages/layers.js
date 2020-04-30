@@ -2,12 +2,12 @@ import axios from "axios";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import React from "react";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { logout, withAuthSync } from "../utils/auth";
 
-import "../static/App.css"; // FIXME Convert to JSX styles
-import "../static/index.css"; // FIXME Convert to JSX styles
+import "../public/static/App.css"; // FIXME Convert to JSX styles
+import "../public/static/index.css"; // FIXME Convert to JSX styles
 
 const initialViewport = {
   center: [-36.179114636463652, -62.846142338298094],
@@ -21,7 +21,7 @@ const initialViewport = {
 // Dynamically load TrialMap component as it only works on browser
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
-  loading: withNamespaces()(({ t }) => (
+  loading: withTranslation()(({ t }) => (
     <Dimmer active>
       <Loader size="big">{t("loading")}</Loader>
     </Dimmer>
@@ -139,7 +139,7 @@ class Layers extends React.Component {
   }
 }
 
-Layers = withNamespaces()(Layers);
+Layers = withTranslation()(Layers);
 Layers = withAuthSync(Layers);
 
 export default Layers;

@@ -47,7 +47,7 @@ class Map extends React.Component {
       className,
       children,
       mapboxStyle,
-      markers,
+      stationMarkers,
       selectedMarker,
       boundPoints,
       bounds,
@@ -61,7 +61,7 @@ class Map extends React.Component {
       );
       realBounds = group.getBounds();
     }
-    if (!realBounds.isValid()) realBounds = null;
+    if (realBounds && !realBounds.isValid()) realBounds = null;
 
     return (
       <LeafletMap
@@ -73,13 +73,12 @@ class Map extends React.Component {
       >
         <MapboxBasemap style={mapboxStyle} />
         {children}
-        {markers && (
+        {stationMarkers && (
           <StationMarkerList
             selectedMarker={selectedMarker}
-            markers={markers}
+            markers={stationMarkers}
           />
         )}
-        <ZoomControl position="topright" />
       </LeafletMap>
     );
   }

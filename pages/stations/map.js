@@ -4,14 +4,21 @@ import Head from "next/head";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
 import classnames from "classnames";
-import LoadingProgress from "../../components/LoadingProgress";
-import MapDrawer from "../../components/MapDrawer";
-import { Fab } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
 import { withStyles } from "@material-ui/core/styles";
-import { withNamespaces } from "../../i18n";
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
+import { withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withSnackbar } from "notistack";
+import LoadingProgress from "../../components/LoadingProgress";
+import MapDrawer from "../../components/MapDrawer";
+import SearchFab from "../../components/SearchFab";
+import SearchField from "../../components/SearchField";
 
 const styles = (theme) => ({
   controlGroup: {
@@ -19,14 +26,14 @@ const styles = (theme) => ({
     zIndex: 1000,
   },
   topLeft: {
-    top: theme.spacing.unit,
-    left: theme.spacing.unit,
+    top: theme.spacing(1),
+    left: theme.spacing(1),
   },
   fabContainer: {
     display: "block",
   },
   fab: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
 });
 
@@ -36,27 +43,31 @@ const mapboxStyle = "mapbox.streets";
 //   'Contains modified <a href="http://www.esa.int/Our_Activities/Observing_the_Earth/Copernicus">Copernicus</a> Sentinel data 2019, processed by ESA.';
 // const dymaxionAttribution = "&copy; Dymaxion Labs 2019";
 
-// Dynamically load TrialMap component as it only works on browser
 const Map = dynamic(() => import("../../components/Map"), {
   ssr: false,
   loadingProgress: <LoadingProgress />,
 });
 
-let SearchFab = ({ classes, ...props }) => (
-  <div className={classes.fabContainer}>
-    <Fab
-      color="primary"
-      size="small"
-      aria-label="Search"
-      className={classes.fab}
-      {...props}
-    >
-      <SearchIcon />
-    </Fab>
-  </div>
-);
+const SensorIcon = () => <img src="/static/sensor_icon.png" height={24} />;
 
-SearchFab = withStyles(styles)(SearchFab);
+const StationsList = ({ items, selected, onSelect }) => (
+  <List>
+    {items &&
+      items.map((item) => (
+        <ListItem
+          key={item.id}
+          button
+          selected={selected === item.id}
+          onClick={() => onSelect(item)}
+        >
+          <ListItemIcon>
+            <SensorIcon />
+          </ListItemIcon>
+          <ListItemText primary={item.name} secondary={item.place_name} />
+        </ListItem>
+      ))}
+  </List>
+);
 
 class StationsMap extends Component {
   state = {
@@ -67,7 +78,9 @@ class StationsMap extends Component {
       zoom: 10,
     },
     stations: [],
+    filteredStations: [],
     selectedStation: null,
+    searchFieldValue: "",
     drawerOpen: false,
   };
 
@@ -78,27 +91,29 @@ class StationsMap extends Component {
     };
   }
 
-  async fetchStations() {
+  async fetchStations(name) {
     const { token } = this.props;
     const headers = token ? { Authorization: token } : {};
 
-    let stations = [];
+    const params = name ? { name } : {};
+
     try {
       const response = await axios.get(buildApiUrl(`/stations/stations/`), {
-        headers: headers,
+        params,
+        headers
       });
-      stations = response.data || [];
+      return response.data || [];
     } catch (err) {
       this.props.enqueueSnackbar("Failed to fetch stations", {
         variant: "error",
       });
+      return [];
     }
-
-    this.setState({ stations });
   }
 
-  componentDidMount() {
-    this.fetchStations();
+  componentDidMount = async () => {
+    const stations = await this.fetchStations();
+    this.setState({ stations, filteredStations: stations });
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -116,6 +131,15 @@ class StationsMap extends Component {
   handleMapViewportChanged = (viewport) => {
     this.setState({ viewport });
   };
+
+  handleSearchFieldChange = async (e) => {
+    const { value } = e.target;
+    const filteredStations = await this.fetchStations(value)
+    this.setState({
+      searchFieldValue: value,
+      filteredStations
+    });
+  }
 
   handleStationSelect = (station) => {
     this.setState({
@@ -142,6 +166,8 @@ class StationsMap extends Component {
       viewport,
       bounds,
       stations,
+      filteredStations,
+      searchFieldValue,
       selectedStation,
       drawerOpen,
     } = this.state;
@@ -163,8 +189,10 @@ class StationsMap extends Component {
         <MapDrawer
           open={drawerOpen}
           onClose={this.handleMapDrawerClose}
-          stations={stations}
+          stations={filteredStations}
+          searchFieldValue={searchFieldValue}
           selectedStation={selectedStation}
+          onSearchFieldChange={this.handleSearchFieldChange}
           onStationSelect={this.handleStationSelect}
           onMenuClick={this.handleMenuClick}
         />
@@ -175,7 +203,7 @@ class StationsMap extends Component {
           viewport={viewport}
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
-          markers={stations}
+          stationMarkers={stations}
           selectedMarker={selectedStation}
         />
       </div>
@@ -190,7 +218,7 @@ StationsMap.propTypes = {
 };
 
 StationsMap = withSnackbar(StationsMap);
-StationsMap = withNamespaces()(StationsMap);
+StationsMap = withTranslation()(StationsMap);
 StationsMap = withStyles(styles)(StationsMap);
 
 export default StationsMap;

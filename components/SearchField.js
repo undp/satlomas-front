@@ -1,11 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import InputBase from "@material-ui/core/InputBase";
-import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+
+import { Paper, InputBase, IconButton } from '@material-ui/core';
 
 const styles = {
   root: {
@@ -29,7 +28,7 @@ const styles = {
   },
 };
 
-const SearchField = ({ classes, placeholder, onMenuClick }) => (
+const SearchField = ({ classes, value, placeholder, onChange, onMenuClick }) => (
   <Paper className={classes.root} elevation={1}>
     <IconButton
       className={classes.iconButton}
@@ -38,7 +37,7 @@ const SearchField = ({ classes, placeholder, onMenuClick }) => (
     >
       <MenuIcon />
     </IconButton>
-    <InputBase className={classes.input} placeholder={placeholder} />
+    <InputBase value={value} className={classes.input} placeholder={placeholder} onChange={onChange} />
     <IconButton className={classes.iconButton} aria-label="Search">
       <SearchIcon />
     </IconButton>
@@ -49,13 +48,17 @@ SearchField.propTypes = {
   classes: PropTypes.object.isRequired,
   items: PropTypes.array,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
   onMenuClick: PropTypes.func,
 };
 
 SearchField.defaultProps = {
   items: [],
   placeholder: "Buscar por...",
-  onMenuClick: () => {},
+  value: "",
+  onChange: () => { },
+  onMenuClick: () => { },
 };
 
 export default withStyles(styles)(SearchField);

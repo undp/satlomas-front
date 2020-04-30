@@ -8,6 +8,7 @@ import { buildApiUrl } from "../utils/api";
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import _ from 'lodash';
 import { withSnackbar } from 'notistack';
+import moment from "moment"
 import strftime from '../utils/strftime';
 
 const styles = theme => ({
@@ -228,14 +229,22 @@ class StationTable extends React.Component {
     } = this.props;
 
     const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
+
+    const mStart = moment(start);
+    const mEnd = moment(end);
+
+    if (!mStart.isValid() || !mStart.isValid()) {
+      return;
+    }
+
     let parameter = "";
     parameters.forEach(e => parameter = parameter.concat(e.id).concat(","));
     parameter = parameter.substring(0, parameter.length - 1);
     const params = {
       station: stationId,
       parameter: parameter,
-      start,
-      end,
+      start: mStart.format("YYYY-MM-DDTHH:mm"),
+      end: mEnd.format("YYYY-MM-DDTHH:mm"),
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };

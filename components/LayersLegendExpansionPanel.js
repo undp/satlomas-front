@@ -1,19 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
-import withStyles from "@material-ui/core/styles/withStyles";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { withNamespaces } from "../i18n";
+import { withTranslation } from "../i18n";
+import { withStyles } from '@material-ui/core/styles';
+
+import {
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+} from '@material-ui/core';
 
 const styles = theme => ({
   root: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     width: "18%",
     position: "fixed",
     left: 10,
@@ -91,4 +94,4 @@ LayersLegendExpansionPanel.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withNamespaces()(withStyles(styles)(LayersLegendExpansionPanel));
+export default withTranslation()(withStyles(styles)(LayersLegendExpansionPanel));

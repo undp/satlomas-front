@@ -1,6 +1,6 @@
 const express = require("express");
 const next = require("next");
-const nextI18NextMiddleware = require("next-i18next/middleware");
+const nextI18NextMiddleware = require("next-i18next/middleware").default;
 
 const nextI18next = require("./i18n");
 
@@ -11,29 +11,12 @@ const handle = app.getRequestHandler();
   await app.prepare();
   const server = express();
 
+  await nextI18next.initPromise;
   server.use(nextI18NextMiddleware(nextI18next));
 
-  server.get("/layers", (req, res) => {
-    return res.redirect("/admin/layers");
-  });
-
-  server.get("/layers/:uuid", (req, res) => {
-    const actualPage = "/layers";
-    const queryParams = {
-      uuid: req.params.uuid
-    };
-    app.render(req, res, actualPage, queryParams);
-  });
-
-  server.get("/maps", (req, res) => {
-    return res.redirect("/admin/maps");
-  });
-
-  server.get("/maps/:uuid", (req, res) => {
-    const actualPage = "/maps";
-    const queryParams = {
-      uuid: req.params.uuid
-    };
+  server.get("/maps/:type", (req, res) => {
+    const actualPage = "/changes-map";
+    const queryParams = { type: req.params.type };
     app.render(req, res, actualPage, queryParams);
   });
 

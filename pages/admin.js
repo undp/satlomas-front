@@ -1,14 +1,4 @@
-import AppBar from "@material-ui/core/AppBar";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import { withStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import LayersIcon from "@material-ui/icons/Layers";
 import MapIcon from "@material-ui/icons/Map";
@@ -16,7 +6,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import HomeIcon from "@material-ui/icons/Home";
-import axios from "axios";
 import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
@@ -26,16 +15,30 @@ import MapsContent from "../components/admin/MapsContent";
 import KeysContent from "../components/admin/KeysContent";
 import HomeContent from "../components/admin/HomeContent";
 import RulesCreate from "../components/admin/RulesCreateContent";
-import { Link, withNamespaces, i18n } from "../i18n";
+import { Link, withTranslation, i18n } from "../i18n";
 import { buildApiUrl } from "../utils/api";
-import { withAuthSync, logout } from "../utils/auth";
+import { withAuthSync } from "../utils/auth";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import RulesListContent from "../components/admin/RulesListContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
+
+import {
+  ListItemSecondaryAction,
+  AppBar,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+  Menu,
+  MenuItem,
+  ListItemSecondaryAction,
+} from '@material-ui/core';
 
 const drawerWidth = 200;
 
@@ -98,15 +101,15 @@ const styles = (theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing.unit * 7,
+    width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9,
+      width: theme.spacing(9),
     },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     height: "100vh",
     overflow: "auto",
   },
@@ -117,7 +120,7 @@ const styles = (theme) => ({
     height: 320,
   },
   h5: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
   },
   button: {
     color: "white",
@@ -148,7 +151,7 @@ const sections = {
     key: "create_rule",
     path: "/rules/new",
     icon: <MapIcon />,
-    content: <RulesCreate/>,
+    content: <RulesCreate />,
   }
 };
 
@@ -156,9 +159,8 @@ class Admin extends React.Component {
   state = {
     open: true,
     section: null,
-    beta: false,
     contextualMenuOpen: null,
-    userEmail: "",
+    username: "",
   };
 
   static async getInitialProps({ query }) {
@@ -179,26 +181,6 @@ class Admin extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getEmail();
-  }
-
-  async getEmail() {
-    const { token } = this.props;
-    try {
-      const response = await axios.get(buildApiUrl("/auth/user/"), {
-        headers: {
-          "Accept-Language": i18n.language,
-          Authorization: token,
-        },
-      });
-      const userData = response.data;
-      this.setState({ userEmail: userData.email });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -211,21 +193,10 @@ class Admin extends React.Component {
     this.setState({ section });
   };
 
-  handleContextualMenuClick = (event) => {
-    this.setState({ contextualMenuOpen: event.currentTarget });
-  };
-
-  handleContextualMenuClose = () => {
-    this.setState({ contextualMenuOpen: null });
-  };
-
-  profileLogout = () => {
-    logout();
-  };
 
   render() {
-    const { t, classes, token, query } = this.props;
-    const { section, open, beta, contextualMenuOpen, userEmail } = this.state;
+    const { t, classes, token } = this.props;
+    const { section, open } = this.state;
 
     const sectionList = sortedSections;
 
@@ -272,31 +243,7 @@ class Admin extends React.Component {
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="inherit"
-              onClick={this.handleContextualMenuClick}
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              anchorEl={contextualMenuOpen}
-              keepMounted
-              open={Boolean(contextualMenuOpen)}
-              onClose={this.handleContextualMenuClose}
-            >
-              <MenuItem>{userEmail}</MenuItem>
-              <MenuItem onClick={this.profileLogout}>
-                {t("common:logout_btn")}
-                <ListItemSecondaryAction>
-                  <ListItemIcon edge="end" aria-label="logout">
-                    <PowerSettingsNewIcon />
-                  </ListItemIcon>
-                </ListItemSecondaryAction>
-              </MenuItem>
-            </Menu>
+            <ButtonsContent />
           </Toolbar>
         </AppBar>
         <Drawer
@@ -364,7 +311,7 @@ Admin.propTypes = {
 };
 
 Admin = withStyles(styles)(Admin);
-Admin = withNamespaces(["me", "common"])(Admin);
+Admin = withTranslation(["me", "common"])(Admin);
 Admin = withAuthSync(Admin);
 
 export default Admin;

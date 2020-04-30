@@ -1,27 +1,14 @@
-import { withStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
 import React from "react";
-import {
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
-import SearchField from "./SearchField";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import { Drawer } from "@material-ui/core";
 
-export const drawerWidth = 360;
+export const drawerWidth = 400;
 
 const styles = (theme) => ({
-  // drawer: {
-  //   width: drawerWidth,
-  //   flexShrink: 0,
-  // },
   drawerPaper: {
     width: drawerWidth,
   },
-  toolbar: theme.mixins.toolbar,
 });
 
 const SensorIcon = () => <img src="/static/sensor_icon.png" height={24} />;
@@ -45,41 +32,46 @@ const MapDrawer = ({
   open,
   onClose,
   stations,
+  searchFieldValue,
+  onSearchFieldChange,
   onStationSelect,
   onMenuClick,
 }) => (
-  <Drawer
-    open={open}
-    onClose={onClose}
-    className={classes.drawer}
-    classes={{
-      paper: classes.drawerPaper,
-    }}
-    anchor="left"
-  >
-    <SearchField stations={stations} onMenuClick={onMenuClick} />
-    <Divider />
-    <StationsList items={stations} onSelect={onStationSelect} />
-  </Drawer>
-);
+    <Drawer
+      open={open}
+      onClose={onClose}
+      className={classes.drawer}
+      classes={{
+        paper: classes.drawerPaper,
+      }}
+      anchor="left"
+    >
+      <SearchField value={searchFieldValue} onMenuClick={onMenuClick} onChange={onSearchFieldChange} />
+      <Divider />
+      <StationsList items={stations} onSelect={onStationSelect} />
+    </Drawer>
+  );
 
 MapDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool,
-  onClose: PropTypes.func,
   stations: PropTypes.array,
   selectedStation: PropTypes.object,
+  searchFieldValue: PropTypes.string,
+  onClose: PropTypes.func,
+  onSearchFieldChange: PropTypes.func,
   onStationSelect: PropTypes.func,
   onMenuClick: PropTypes.func,
 };
 
 MapDrawer.defaultProps = {
-  stations: [],
   open: true,
   selectedStation: null,
-  onClose: () => {},
-  onStationSelect: () => {},
-  onMenuClick: () => {},
+  searchFieldValue: "",
+  onClose: () => { },
+  onSearchFieldChange: () => { },
+  onStationSelect: () => { },
+  onMenuClick: () => { },
 };
 
 export default withStyles(styles)(MapDrawer);
