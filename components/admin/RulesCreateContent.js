@@ -468,13 +468,14 @@ const tabs = [
 
 ]
 
-class RulesCreate extends Component {
+class RulesCreateContent extends Component {
   state = {
     value: 0,
   }
 
   componentDidMount() {
-    //TODO: Cambiar value dependiendo de query params, para setear pestaña 
+    const { tab } = this.props;
+    this.setState({ value : parseInt(tab) });
   }
 
 
@@ -508,8 +509,8 @@ class RulesCreate extends Component {
   }
 }
 
-RulesCreate.propTypes = {
+RulesCreateContent.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(RulesCreate);
+export default withStyles(styles)(RulesCreateContent);

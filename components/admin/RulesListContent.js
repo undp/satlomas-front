@@ -22,12 +22,12 @@ import IconButton from '@material-ui/core/IconButton';
 import { routerPush } from "../../utils/router";
 
 let TableToolBar = props => {
-  const { classes } = props;
+  const { classes, value } = props;
   return (
     <Toolbar>
       <Tooltip title="Create">
         <IconButton aria-label="Create">
-          <AddIcon onClick={()=>{routerPush("/admin/rules/new")}}/>
+          <AddIcon onClick={()=>{routerPush("/admin/rules/new/"+value)}}/>
         </IconButton>
       </Tooltip>
     </Toolbar>
@@ -36,7 +36,7 @@ let TableToolBar = props => {
 
 
 function SimpleRuleTable(props) {
-  const { classes, rows, columns } = props;
+  const { classes, rows, columns, value } = props;
 
   function createTable(columns){
     let table = []
@@ -66,7 +66,7 @@ function SimpleRuleTable(props) {
     <Paper className={classes.root}>
       <Table className={classes.table}>
         <TableHead>
-          <TableToolBar classes={classes}></TableToolBar>
+          <TableToolBar classes={classes} value={value}></TableToolBar>
           <TableRow>
             {createTable(columns)}
           </TableRow>
@@ -190,7 +190,7 @@ class RulesList extends React.Component {
             {this.createTabs()}
           </Tabs>
         </AppBar>
-        <SimpleRuleTable classes={classes} rows={rows} columns={cols}/>
+        <SimpleRuleTable classes={classes} value={value} rows={rows} columns={cols}/>
       </div>
     );
   }
