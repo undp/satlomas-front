@@ -31,7 +31,7 @@ const styles = theme => ({
     minWidth: 700
   },
   title: {
-    marginBottom: theme.spacing.units * 10
+    marginBottom: theme.spacing(10)
   }
 });
 

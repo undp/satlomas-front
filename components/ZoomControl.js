@@ -10,7 +10,7 @@ const styles = (theme) => ({
     display: "block",
   },
   fab: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
   },
 });
 

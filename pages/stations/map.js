@@ -26,8 +26,8 @@ const styles = (theme) => ({
     zIndex: 1000,
   },
   topLeft: {
-    top: theme.spacing.unit,
-    left: theme.spacing.unit,
+    top: theme.spacing(1),
+    left: theme.spacing(1),
   },
 });
 
