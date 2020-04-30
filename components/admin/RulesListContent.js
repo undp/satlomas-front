@@ -27,7 +27,7 @@ let TableToolBar = props => {
     <Toolbar>
       <Tooltip title="Create">
         <IconButton aria-label="Create">
-          <AddIcon onClick={()=>{routerPush("/admin/rules/new/"+value)}}/>
+          <AddIcon onClick={() => { routerPush("/admin/rules/new/" + value) }} />
         </IconButton>
       </Tooltip>
     </Toolbar>
@@ -38,7 +38,7 @@ let TableToolBar = props => {
 function SimpleRuleTable(props) {
   const { classes, rows, columns, value } = props;
 
-  function createTable(columns){
+  function createTable(columns) {
     let table = []
     for (let i = 0; i < columns.length; i++) {
       table.push(<TableCell key={i}>{columns[i]}</TableCell>)
@@ -46,18 +46,18 @@ function SimpleRuleTable(props) {
     return table
   }
 
-  function createRow(elem){
+  function createRow(elem) {
     const locale = i18n.language;
     let row = [];
     let dates_set = new Set().add("created_at").add("updated_at")
-    for (var key in elem){
-      if (dates_set.has(key)){
+    for (var key in elem) {
+      if (dates_set.has(key)) {
         row.push(<TableCell key={key}><Moment locale={locale}>{elem[key]}</Moment></TableCell>)
       }
-      else{
+      else {
         row.push(<TableCell key={key}>{elem[key].toString()}</TableCell>)
       }
-        
+
     }
     return row;
   }
@@ -107,30 +107,30 @@ const styles = theme => ({
 });
 
 const tabs = [
-    {
-        'title': "Reglas de parametros",
-        'url': "/parameter-rules"
-    },
-    {
-        'title': "Reglas por ambito",
-        'url': "/scopes-rules"
-    },
-    {
-        'title': "Reglas por tipo de ambito",
-        'url': "/scopes-type-rule"
-    }
+  {
+    'title': "Reglas de parametros",
+    'url': "/alerts/parameter-rules"
+  },
+  {
+    'title': "Reglas por ambito",
+    'url': "/alerts/scope-rules"
+  },
+  {
+    'title': "Reglas por tipo de ambito",
+    'url': "/alerts/scope-type-rules"
+  }
 
 ]
 
 class RulesList extends React.Component {
   state = {
     value: 0,
-    cols : [],
-    rows : [],
-    loaded : false,
+    cols: [],
+    rows: [],
+    loaded: false,
   };
 
-  async componentDidMount(){
+  async componentDidMount() {
     await this.fetchData();
   }
 
@@ -147,22 +147,22 @@ class RulesList extends React.Component {
 
 
 
-  async fetchData(){
+  async fetchData() {
     const { token } = this.props;
     const response = await axios.get(buildApiUrl(tabs[this.state.value].url), { headers: { Authorization: token } });
-    if (response.data.length > 0){
-        let cols = Object.keys(response.data[0]);
-        this.setState({rows: response.data, cols: cols});
+    if (response.data.length > 0) {
+      let cols = Object.keys(response.data[0]);
+      this.setState({ rows: response.data, cols: cols });
     }
     else {
-        this.setState({rows: [], cols: []});
+      this.setState({ rows: [], cols: [] });
     }
-    
+
   }
 
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.value !== prevState.value) {
-        await this.fetchData();
+      await this.fetchData();
     }
   }
 
@@ -171,11 +171,11 @@ class RulesList extends React.Component {
   };
 
   createTabs = () => {
-      let arr = [];
-      tabs.forEach(function (value, i) {
-        arr.push( <Tab key={i} label={value.title}/>);
-      });
-      return arr;
+    let arr = [];
+    tabs.forEach(function (value, i) {
+      arr.push(<Tab key={i} label={value.title} />);
+    });
+    return arr;
   }
 
 
@@ -190,7 +190,7 @@ class RulesList extends React.Component {
             {this.createTabs()}
           </Tabs>
         </AppBar>
-        <SimpleRuleTable classes={classes} value={value} rows={rows} columns={cols}/>
+        <SimpleRuleTable classes={classes} value={value} rows={rows} columns={cols} />
       </div>
     );
   }

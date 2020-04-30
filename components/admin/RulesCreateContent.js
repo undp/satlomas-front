@@ -31,22 +31,22 @@ class ParameterRuleForm extends Component {
     is_absolute: false,
     valid_min: "",
     valid_max: "",
-    stations : [],
+    stations: [],
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
 
-  async componentDidMount(){
+
+  async componentDidMount() {
     const { token } = this.props;
-    const response = await axios.get(buildApiUrl("/stations"), { headers: { Authorization: token } });
-    this.setState({stations : response.data});
+    const response = await axios.get(buildApiUrl("/stations/stations"), { headers: { Authorization: token } });
+    this.setState({ stations: response.data });
     //Check if ID is in params
-    if (false){
-      const response = await axios.get(buildApiUrl("/parameter-rules/"+1), { headers: { Authorization: token } });
+    if (false) {
+      const response = await axios.get(buildApiUrl("/alerts/parameter-rules/" + 1), { headers: { Authorization: token } });
       this.setState({
         parameter: response.data["parameter"],
         valid_max: response.data["valid_max"],
@@ -61,16 +61,16 @@ class ParameterRuleForm extends Component {
     const data = this.state;
     const { token } = this.props;
     await axios.
-      post(buildApiUrl("/parameter-rules/"), 
-      data, 
-      { headers: { Authorization: token } }
-    ).then(response => {
-      routerPush ("/admin/rules");
-    })
-    .catch(error => {
-      //TODO: Informar errores
-      console.error(error);
-    });
+      post(buildApiUrl("/alerts/parameter-rules/"),
+        data,
+        { headers: { Authorization: token } }
+      ).then(response => {
+        routerPush("/admin/rules");
+      })
+      .catch(error => {
+        //TODO: Informar errores
+        console.error(error);
+      });
   }
 
   handleChange = (event) => {
@@ -96,7 +96,7 @@ class ParameterRuleForm extends Component {
               id: 'station',
             }}
           >
-            {this.state.stations.map(station => 
+            {this.state.stations.map(station =>
               (<MenuItem key={station.id} value={station.id}>{station.name}</MenuItem>)
             )}
           </Select>
@@ -113,7 +113,7 @@ class ParameterRuleForm extends Component {
             }}
             className={classes.selectEmpty}
           >
-            {stationParameters.map(parameter => 
+            {stationParameters.map(parameter =>
               (<MenuItem key={parameter.id} value={parameter.id}>{parameter.name}</MenuItem>)
             )}
           </Select>
@@ -164,32 +164,32 @@ class ParameterRuleForm extends Component {
 }
 
 const COVERAGE_MEASUREMENT_MODELS = [
-  {id: 'lomas_change', name: 'Lomas'},
-  {id: 'vi_lomas_change', name: 'Vegetacion'}
+  { id: 'lomas_change', name: 'Lomas' },
+  { id: 'vi_lomas_change', name: 'Vegetacion' }
 ]
 
 class ScopeRuleForm extends Component {
   state = {
     scopes: [],
-    scope : null,
-    measurement_content_type : null,
+    scope: null,
+    measurement_content_type: null,
     change_type: null,
     valid_max: "",
     valid_min: "",
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     const { token } = this.props;
     const response = await axios.get(buildApiUrl("/scopes"), { headers: { Authorization: token } });
-    this.setState({scopes : response.data});
+    this.setState({ scopes: response.data });
     //Check if ID is in params
-    if (false){
-      const response = await axios.get(buildApiUrl("/scopes-rules/"+1), { headers: { Authorization: token } });
+    if (false) {
+      const response = await axios.get(buildApiUrl("/alerts/scope-rules/" + 1), { headers: { Authorization: token } });
       this.setState({
         measurement_content_type: response.data['measurement_content_type'],
         scope: response.data["scope"],
@@ -213,20 +213,20 @@ class ScopeRuleForm extends Component {
     //api_1_ec142b081fd2 | Bad Request: /scopes-rules/
     //api_1_ec142b081fd2 | [29/Apr/2020 19:20:44] "POST /scopes-rules/ HTTP/1.1" 400 142
     await axios.
-      post(buildApiUrl("/scopes-rules/"), 
-      data, 
-      { headers: { Authorization: token } }
-    ).then(response => {
-      routerPush ("/admin/rules");
-    })
-    .catch(error => {
-      //TODO: Informar errores
-      console.error(error);
-    });
+      post(buildApiUrl("/alerts/scopes-rules/"),
+        data,
+        { headers: { Authorization: token } }
+      ).then(response => {
+        routerPush("/admin/rules");
+      })
+      .catch(error => {
+        //TODO: Informar errores
+        console.error(error);
+      });
   }
 
 
-  render(){
+  render() {
     const { classes } = this.props;
     return (<Paper className={classes.root}>
       <form
@@ -244,7 +244,7 @@ class ScopeRuleForm extends Component {
               id: 'scope',
             }}
           >
-            {this.state.scopes.map(scope => 
+            {this.state.scopes.map(scope =>
               (<MenuItem key={scope.id} value={scope.id}>{scope.name}</MenuItem>)
             )}
           </Select>
@@ -261,7 +261,7 @@ class ScopeRuleForm extends Component {
             }}
             className={classes.selectEmpty}
           >
-            {COVERAGE_MEASUREMENT_MODELS.map(coverage => 
+            {COVERAGE_MEASUREMENT_MODELS.map(coverage =>
               (<MenuItem key={coverage.id} value={coverage.id}>{coverage.name}</MenuItem>)
             )}
           </Select>
@@ -318,24 +318,24 @@ class ScopeRuleForm extends Component {
 
 
 const SCOPE_TYPES = [
-  {id: 'CE', name: 'Corredores Ecologicos' },
-  {id: 'AC', name: 'ACR' },
-  {id: 'DI', name: 'Distritos' },
-  {id: 'EF', name: 'Ecosistemas fragiles' },
-  {id: 'SA', name: 'Sitios arqueologicos' },
+  { id: 'CE', name: 'Corredores Ecologicos' },
+  { id: 'AC', name: 'ACR' },
+  { id: 'DI', name: 'Distritos' },
+  { id: 'EF', name: 'Ecosistemas fragiles' },
+  { id: 'SA', name: 'Sitios arqueologicos' },
 ]
 
 
 class ScopeTypeRuleForm extends Component {
   state = {
-    scope_type : null,
-    measurement_content_type : null,
+    scope_type: null,
+    measurement_content_type: null,
     change_type: null,
     valid_max: "",
     valid_min: "",
   }
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -351,20 +351,20 @@ class ScopeTypeRuleForm extends Component {
     const { token } = this.props;
     console.log(data);
     await axios.
-      post(buildApiUrl("/scopes-type-rule/"), 
-      data, 
-      { headers: { Authorization: token } }
-    ).then(response => {
-      routerPush ("/admin/rules");
-    })
-    .catch(error => {
-      //TODO: Informar errores
-      console.error(error);
-    });
+      post(buildApiUrl("/alerts/scope-type-rules/"),
+        data,
+        { headers: { Authorization: token } }
+      ).then(response => {
+        routerPush("/admin/rules");
+      })
+      .catch(error => {
+        //TODO: Informar errores
+        console.error(error);
+      });
   }
 
 
-  render(){
+  render() {
     const { classes } = this.props;
     return (<Paper className={classes.root}>
       <form
@@ -382,7 +382,7 @@ class ScopeTypeRuleForm extends Component {
               id: 'scope_type',
             }}
           >
-            {SCOPE_TYPES.map(scope => 
+            {SCOPE_TYPES.map(scope =>
               (<MenuItem key={scope.id} value={scope.id}>{scope.name}</MenuItem>)
             )}
           </Select>
@@ -399,7 +399,7 @@ class ScopeTypeRuleForm extends Component {
             }}
             className={classes.selectEmpty}
           >
-            {COVERAGE_MEASUREMENT_MODELS.map(coverage => 
+            {COVERAGE_MEASUREMENT_MODELS.map(coverage =>
               (<MenuItem key={coverage.id} value={coverage.id}>{coverage.name}</MenuItem>)
             )}
           </Select>
@@ -497,10 +497,10 @@ class RulesCreateContent extends Component {
 
   componentDidMount() {
     const { tab, id } = this.props;
-    if (id !== 'undefined'){
+    if (id !== 'undefined') {
       this.setState({ id });
     }
-    this.setState({ value : parseInt(tab) });
+    this.setState({ value: parseInt(tab) });
   }
 
 

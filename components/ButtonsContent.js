@@ -122,7 +122,7 @@ class ButtonsContent extends React.Component {
     const token = cookie.get("token");
 
     try {
-      const response = await axios.get(buildApiUrl("/alerts/"), {
+      const response = await axios.get(buildApiUrl("/alerts"), {
         headers: {
           "Accept-Language": i18n.language,
           Authorization: token,

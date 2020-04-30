@@ -4,27 +4,19 @@ import LayersIcon from "@material-ui/icons/Layers";
 import MapIcon from "@material-ui/icons/Map";
 import MenuIcon from "@material-ui/icons/Menu";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import HomeIcon from "@material-ui/icons/Home";
 import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import LayersContent from "../components/admin/LayersContent";
-import MapsContent from "../components/admin/MapsContent";
-import KeysContent from "../components/admin/KeysContent";
 import HomeContent from "../components/admin/HomeContent";
 import RulesCreate from "../components/admin/RulesCreateContent";
 import { Link, withTranslation, i18n } from "../i18n";
-import { buildApiUrl } from "../utils/api";
 import { withAuthSync } from "../utils/auth";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
 import RulesListContent from "../components/admin/RulesListContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
+import ButtonsContent from "../components/ButtonsContent";
 
 import {
-  ListItemSecondaryAction,
   AppBar,
   Divider,
   Drawer,
@@ -35,9 +27,6 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  Menu,
-  MenuItem,
-  ListItemSecondaryAction,
 } from '@material-ui/core';
 
 const drawerWidth = 200;
@@ -193,9 +182,8 @@ class Admin extends React.Component {
     this.setState({ section });
   };
 
-
   render() {
-    const { t, classes, token } = this.props;
+    const { t, classes, token, query } = this.props;
     const { section, open } = this.state;
 
     const sectionList = sortedSections;
