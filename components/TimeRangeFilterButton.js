@@ -84,6 +84,7 @@ let DateTimeControl = ({ classes, id, label, value, onChange }) => (
   <FormControl component="fieldset" className={classes.formControl}>
     <KeyboardDatePicker
       ampm={false}
+      autoOk={true}
       variant="inline"
       format="YYYY-MM-DD HH:mm"
       margin="normal"
