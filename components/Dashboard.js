@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import moment from "moment";
+import { withSnackbar } from "notistack";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
@@ -16,7 +18,7 @@ const axisStyle = {
 class Dashboard extends React.Component {
   state = {
     data: [],
-    dataAvaible: false,
+    dataAvailable: false,
   };
 
   componentDidMount() {
@@ -24,22 +26,35 @@ class Dashboard extends React.Component {
   }
 
   getTimeSeries = async () => {
-    const { dateFrom, dateTo, scope, custom_scope } = this.props;
-    if (scope > 0) {
-      const dataSend = {
+    const { periods, scope } = this.props;
+
+    if (periods.length === 0 || !scope) return;
+
+    const dateFrom = Math.min(...periods.map(p => Math.min(p[0], p[1])));
+    const dateTo = Math.max(...periods.map(p => Math.max(p[0], p[1])));
+    console.log("min date on periods:", dateFrom);
+    console.log("max date on periods:", dateTo);
+
+    if (scope) {
+      const body = {
         scope_id: scope,
-        from_date:
-          dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-1",
-        end_date: dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-1",
+        from_date: moment(dateFrom).format("YYYY-MM-DD"),
+        end_date: moment(dateTo).format("YYYY-MM-DD"),
       };
-      const response = await axios.post(
-        buildApiUrl("/scopes/coverage/"),
-        dataSend
-      );
-      this.setState({
-        data: response.data.intersection_area,
-        dataAvaible: true,
-      });
+      console.log(body);
+      try {
+        const response = await axios.post(buildApiUrl("/vi-lomas/coverage/"), body);
+        console.log(response.data);
+        this.setState({
+          data: response.data.values,
+          dataAvailable: true,
+        });
+      } catch (err) {
+        console.error(err);
+        this.props.enqueueSnackbar(`Failed to get scope types`, {
+          variant: "error",
+        });
+      }
     }
   };
 
@@ -50,10 +65,10 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { data, dataAvaible } = this.state;
+    const { data, dataAvailable } = this.state;
     return (
       <div>
-        {dataAvaible && (
+        {dataAvailable && (
           <LineChart
             width={500}
             height={300}
@@ -73,12 +88,12 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
-  dateFrom: PropTypes.object.isRequired,
-  dateTo: PropTypes.object.isRequired,
+  periods: PropTypes.array.isRequired,
   scope: PropTypes.number,
-  custom_scope: PropTypes.string,
+  customScope: PropTypes.string,
 };
 
 Dashboard = withStyles(styles)(Dashboard);
+Dashboard = withSnackbar(Dashboard);
 
 export default Dashboard;

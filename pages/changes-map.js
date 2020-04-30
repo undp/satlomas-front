@@ -136,7 +136,8 @@ class SearchControl extends Component {
       scopeTypes,
       selectedScopeType,
       selectedScope,
-      periods,
+      firstDate,
+      lastDate,
       dateFrom,
       dateTo,
       onDateFromChange,
@@ -147,7 +148,6 @@ class SearchControl extends Component {
 
     const scopeTypeItems = Object.values(scopeTypes).sort(st => st.type);
     const scopeItems = scopeTypes[selectedScopeType].scopes.sort(sc => sc.name);
-    const { firstDate, lastDate } = periods;
 
     const selectedScopeTypeName = scopeTypes[selectedScopeType].name;
     const selectedScopeName = scopeTypes[selectedScopeType].scopes.find(s => s.pk === selectedScope).name;
@@ -216,7 +216,7 @@ class SearchControl extends Component {
 
 SearchControl = withStyles(styles)(SearchControl);
 
-let PlotsControl = ({ classes, dates, scope, custom_scope }) => (
+let PlotsControl = ({ classes, periods, scope, customScope }) => (
   <div className={classes.plotsControl}>
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -224,10 +224,9 @@ let PlotsControl = ({ classes, dates, scope, custom_scope }) => (
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Dashboard
-          dateFrom={dates.dashboardDateFrom}
-          dateTo={dates.dashboardDateTo}
+          periods={periods}
           scope={scope}
-          custom_scope={custom_scope}
+          customScope={customScope}
         />
       </ExpansionPanelDetails>
     </ExpansionPanel>
@@ -249,18 +248,12 @@ class ChangesMap extends Component {
     selectedScopeType: null,
     selectedScope: null,
     scopeGeomsByType: {},
-    periods: {},
+    periods: [],
     periodsLoaded: false,
+    firstDate: null,
+    lastDate: null,
     dateFrom: null,
     dateTo: null,
-    // dates: {
-    //   dashboardDateFrom: null,
-    //   dashboardDateTo: null,
-    //   availableDates: [],
-    //   allAvaibleDates: [],
-    //   initDate: null,
-    //   endDate: null,
-    // },
     customScope: null,
   };
 
@@ -301,18 +294,19 @@ class ChangesMap extends Component {
   fetchAndSetPeriods = async () => {
     try {
       const response = await axios.get(buildApiUrl("/vi-lomas/available-periods/"));
+
       const periodsRaw = response.data;
-      const periods = {
-        firstDate: new Date(periodsRaw.first_date),
-        lastDate: new Date(periodsRaw.last_date),
-        availables: periodsRaw.availables
-      };
-      // console.log("Periods:", periods);
-      this.setState({
+      const firstDate = new Date(periodsRaw.first_date);
+      const lastDate = new Date(periodsRaw.last_date);
+      const periods = periodsRaw.availables.map(p => ([new Date(p[0]), new Date(p[1])]));
+
+      await this.setState({
         periods,
-        dateFrom: periods.firstDate,
-        dateTo: periods.lastDate,
-        periodsLoaded: true
+        periodsLoaded: true,
+        firstDate,
+        lastDate,
+        dateFrom: firstDate,
+        dateTo: lastDate,
       });
     } catch (err) {
       console.error(err);
@@ -322,7 +316,7 @@ class ChangesMap extends Component {
     }
   };
 
-  fetchScopesGeometries = async (type) => {
+  fetchAndBuildScopesGeoJSON = async (type) => {
     // console.log("Fetch scopes geometries for:", type);
     const res = {
       "type": "FeatureCollection",
@@ -351,7 +345,7 @@ class ChangesMap extends Component {
     return res;
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {
     this.fetchAndSetScopeTypes();
     this.fetchAndSetPeriods();
   };
@@ -361,7 +355,7 @@ class ChangesMap extends Component {
     const { selectedScopeType, scopeGeomsByType } = this.state;
     if (selectedScopeType !== prevState.selectedScopeType) {
       if (!scopeGeomsByType[selectedScopeType]) {
-        const geomData = await this.fetchScopesGeometries(selectedScopeType);
+        const geomData = await this.fetchAndBuildScopesGeoJSON(selectedScopeType);
         this.setState({
           scopeGeomsByType: {
             ...prevState.scopeGeomsByType,
@@ -434,14 +428,18 @@ class ChangesMap extends Component {
       selectedScope,
       scopesLoaded,
       scopeGeomsByType,
+      customScope,
       periods,
       periodsLoaded,
+      firstDate,
+      lastDate,
       dateFrom,
       dateTo
     } = this.state;
 
     const loaded = scopesLoaded && periodsLoaded;
     const scopeGeomsData = scopeGeomsByType[selectedScopeType];
+    const filteredPeriods = periods.filter(p => (p[0] >= dateFrom && p[1] <= dateTo));
 
     return (
       <div className="index">
@@ -459,7 +457,8 @@ class ChangesMap extends Component {
             selectedScope={selectedScope}
             dateFrom={dateFrom}
             dateTo={dateTo}
-            periods={periods}
+            firstDate={firstDate}
+            lastDate={lastDate}
             onDateFromChange={this.handleDateFromChange}
             onDateToChange={this.handleDateToChange}
             onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
@@ -476,11 +475,11 @@ class ChangesMap extends Component {
         </div>
         {loaded && (
           <div className={classnames(classes.controlGroup, classes.topRight)}>
-            {/* <PlotsControl
-              dates={dates}
-              scope={scopes.scope}
-              custom_scope={customScope}
-            /> */}
+            <PlotsControl
+              periods={filteredPeriods}
+              scope={selectedScope}
+              customScope={customScope}
+            />
           </div>
         )}
         <Map
@@ -498,18 +497,6 @@ class ChangesMap extends Component {
           />}
           {/* <TileLayer type="raster" url="http://localhost:8080/{z}/{x}/{y}.png" maxZoom={13} /> */}
         </Map>
-        <style jsx>
-          {`
-            #map {
-              position: absolute;
-              top: 0;
-              left: 0;
-              height: 100vh;
-              width: 100vw;
-              z-index: -1;
-            }
-          `}
-        </style>
       </div >
     );
   }
