@@ -46,9 +46,9 @@ const handle = app.getRequestHandler();
     const { tab } = req.params;
     return app.render(req, res, "/admin", { section: "create_rule", tab });
   });
-  server.get("/admin/rules/:id", (req, res) => {
-    const { id } = req.params;
-    return app.render(req, res, "/admin", { section: "create_rule", id });
+  server.get("/admin/rules/:tab/:id", (req, res) => {
+    const { id, tab } = req.params;
+    return app.render(req, res, "/admin", { section: "create_rule", id, tab });
   });
 
   server.get("*", (req, res) => handle(req, res));

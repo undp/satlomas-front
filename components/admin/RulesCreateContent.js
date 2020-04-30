@@ -44,6 +44,16 @@ class ParameterRuleForm extends Component {
     const { token } = this.props;
     const response = await axios.get(buildApiUrl("/stations"), { headers: { Authorization: token } });
     this.setState({stations : response.data});
+    //Check if ID is in params
+    if (false){
+      const response = await axios.get(buildApiUrl("/parameter-rules/"+1), { headers: { Authorization: token } });
+      this.setState({
+        parameter: response.data["parameter"],
+        valid_max: response.data["valid_max"],
+        valid_min: response.data["valid_min"],
+        station: response.data["station"],
+      });
+    }
   }
 
   async handleSubmit() {
@@ -177,6 +187,17 @@ class ScopeRuleForm extends Component {
     const { token } = this.props;
     const response = await axios.get(buildApiUrl("/scopes"), { headers: { Authorization: token } });
     this.setState({scopes : response.data});
+    //Check if ID is in params
+    if (false){
+      const response = await axios.get(buildApiUrl("/scopes-rules/"+1), { headers: { Authorization: token } });
+      this.setState({
+        measurement_content_type: response.data['measurement_content_type'],
+        scope: response.data["scope"],
+        valid_max: response.data["valid_max"],
+        valid_min: response.data["valid_min"],
+        change_type: response.data["change_type"].charAt(0).toUpperCase(),
+      });
+    }
   }
   handleChange = (event) => {
     const { target } = event
@@ -471,10 +492,14 @@ const tabs = [
 class RulesCreateContent extends Component {
   state = {
     value: 0,
+    id: null,
   }
 
   componentDidMount() {
-    const { tab } = this.props;
+    const { tab, id } = this.props;
+    if (id !== 'undefined'){
+      this.setState({ id });
+    }
     this.setState({ value : parseInt(tab) });
   }
 
