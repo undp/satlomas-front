@@ -13,11 +13,7 @@ const styles = theme => ({
     display: "block",
   },
   fab: {
-    position: "fixed",
-    left: 10,
-    bottom: 10,
     margin: theme.spacing(1),
-    zIndex: 1000
   }
 });
 
