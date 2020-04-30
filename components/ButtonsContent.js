@@ -23,7 +23,7 @@ const styles = (theme) => ({
   menuItem: {
     minWidth: 150,
   },
-  MuiListItemIcon:{
+  listItemIcon:{
     minWidth: 0,
   },
   toolbarButtons: {
@@ -151,9 +151,9 @@ class ButtonsContent extends React.Component {
                 <MenuItem className={classes.menuItem} 
                 onClick={this.profileLogout} 
                 >
-                    Cerrar sesión
+                    {t("common:logout_btn")}
                   <ListItemSecondaryAction>
-                    <ListItemIcon edge="end" aria-label="logout" className={classes.MuiListItemIcon}>
+                    <ListItemIcon edge="end" aria-label="logout" className={classes.listItemIcon}>
                       <PowerSettingsNewRoundedIcon />
                     </ListItemIcon>
                   </ListItemSecondaryAction>
