@@ -26,7 +26,7 @@ class ShowUuidDialog extends React.Component{
           open={open}
         >
           <DialogTitle id="confirmation-dialog-title">{title}</DialogTitle>
-          <DialogContent dividers><Typography variant="body1">{content}</Typography></DialogContent>
+          <DialogContent dividers><Typography variant="body2">{content}</Typography></DialogContent>
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary">
               {t("confirmation.cancel")}

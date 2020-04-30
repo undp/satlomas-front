@@ -28,9 +28,16 @@ const styles = {
   },
 };
 
-const SearchField = ({ classes, placeholder, onMenuClick }) => (
+const SearchField = ({ classes, value, placeholder, onChange, onMenuClick }) => (
   <Paper className={classes.root} elevation={1}>
-    <InputBase className={classes.input} placeholder={placeholder} />
+    <IconButton
+      className={classes.iconButton}
+      aria-label="Menu"
+      onClick={onMenuClick}
+    >
+      <MenuIcon />
+    </IconButton>
+    <InputBase value={value} className={classes.input} placeholder={placeholder} onChange={onChange} />
     <IconButton className={classes.iconButton} aria-label="Search">
       <SearchIcon />
     </IconButton>
@@ -41,13 +48,17 @@ SearchField.propTypes = {
   classes: PropTypes.object.isRequired,
   items: PropTypes.array,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
   onMenuClick: PropTypes.func,
 };
 
 SearchField.defaultProps = {
   items: [],
   placeholder: "Buscar por...",
-  onMenuClick: () => {},
+  value: "",
+  onChange: () => { },
+  onMenuClick: () => { },
 };
 
 export default withStyles(styles)(SearchField);

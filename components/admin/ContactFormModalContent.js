@@ -109,13 +109,13 @@ class ContactFormModalContent extends React.Component {
       >
         <DialogTitle>{t("new.consult.title")}</DialogTitle>
         <DialogContent>
-          <Typography style={{ color: "red" }} variant="body1">
+          <Typography style={{ color: "red" }} variant="body2">
             {this.state.errorMsg}
           </Typography>
-          <Typography style={{ color: "green" }} variant="body1">
+          <Typography style={{ color: "green" }} variant="body2">
             {this.state.successMsg}
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body2">
             {t("new.consult.explanation")}
           </Typography>
           <TextField

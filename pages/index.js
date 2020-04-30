@@ -2,9 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
+import { withTranslation, i18n } from "../i18n";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
+import ButtonsContent from "../components/ButtonsContent";
 
 import {
   AppBar,
@@ -22,6 +24,9 @@ import {
 const styles = (theme) => ({
   appBar: {
     position: "relative",
+  },
+  menuItem: {
+    minWidth: 150,
   },
   icon: {
     marginRight: theme.spacing(2),
@@ -66,6 +71,9 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  toolbarButtons: {
+    marginLeft: 'auto',
+  },
 });
 
 const cards = [
@@ -103,120 +111,154 @@ const cards = [
   },
 ];
 
-const Index = ({ classes }) => (
-  <React.Fragment>
-    <Head>
-      <title>GeoLomas</title>
-    </Head>
-    <CssBaseline />
-    <AppBar position="static" className={classes.appBar}>
-      <Toolbar>
-        {/* <CameraIcon className={classes.icon} /> */}
-        <Typography variant="h6" color="inherit" noWrap>
-          GeoLomas
-        </Typography>
-      </Toolbar>
-    </AppBar>
-    <main>
-      {/* Hero unit */}
-      <div className={classes.heroUnit}>
-        <div className={classes.heroContent}>
-          <Typography
-            component="h1"
-            variant="h2"
-            align="center"
-            color="textPrimary"
-            gutterBottom
-          >
-            GeoLomas
-          </Typography>
-          <Typography
-            variant="h6"
-            align="center"
-            color="textSecondary"
-            paragraph
-          >
-            Something short and leading about the collection below—its contents,
-            the creator, etc. Make it short and sweet, but not too short so
-            folks don&apos;t simply skip over it entirely.
-          </Typography>
-          <div className={classes.heroButtons}>
-            <Grid container spacing={2} justify="center">
-              <Grid item>
-                <Button variant="contained" color="primary">
-                  Más información
-                </Button>
-              </Grid>
-              {/* <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
-                  </Button>
-                </Grid> */}
+class Index extends React.Component {
+  state = {
+    section: null,
+    beta: false,
+    contextualMenuOpen: null,
+    username: ""
+  }
+
+  static async getInitialProps({ query }) {
+    return {
+      namespacesRequired: ["me", "common"],
+      query: query,
+    };
+  }
+
+  constructor(props) {
+    super(props);
+
+    let { section } = props.query;
+
+    // Set current section based on path
+    if (section && sortedSections.includes(section)) {
+      this.state.section = section;
+    }
+  }
+
+  render() {
+    const { classes, t } = this.props;
+
+    return (
+      <React.Fragment>
+        <Head>
+          <title>GeoLomas</title>
+        </Head>
+        <CssBaseline />
+        <AppBar
+          position="static"
+          className={classes.appBar}
+        >
+          <Toolbar>
+            {/* <CameraIcon className={classes.icon} /> */}
+            <Typography variant="h6" color="inherit" noWrap>
+              GeoLomas
+            </Typography>
+            <ButtonsContent />
+          </Toolbar>
+        </AppBar>
+        <main>
+          {/* Hero unit */}
+          <div className={classes.heroUnit}>
+            <div className={classes.heroContent}>
+              <Typography
+                component="h1"
+                variant="h2"
+                align="center"
+                color="textPrimary"
+                gutterBottom
+              >
+                GeoLomas
+              </Typography>
+              <Typography
+                variant="h6"
+                align="center"
+                color="textSecondary"
+                paragraph
+              >
+                Something short and leading about the collection below—its contents,
+                the creator, etc. Make it short and sweet, but not too short so
+                folks don&apos;t simply skip over it entirely.
+              </Typography>
+              <div className={classes.heroButtons}>
+                <Grid container spacing={2} justify="center">
+                  <Grid item>
+                    <Button variant="contained" color="primary">
+                      Más información
+                    </Button>
+                  </Grid>
+                  {/* <Grid item>
+                      <Button variant="outlined" color="primary">
+                        Secondary action
+                      </Button>
+                    </Grid> */}
+                </Grid>
+              </div>
+            </div>
+          </div>
+          <div className={classNames(classes.layout, classes.cardGrid)}>
+            {/* End hero unit */}
+            <Grid container spacing={5}>
+              {cards.map((card) => (
+                <Grid item key={card.key} sm={6} md={4} lg={3}>
+                  <Card className={classes.card}>
+                    <Link href={card.buttons[0].href}>
+                      <CardMedia
+                        className={classes.cardMedia}
+                        image={card.image}
+                        title="Screenshot"
+                      >
+                        &nbsp;
+                      </CardMedia>
+                    </Link>
+                    <CardContent className={classes.cardContent}>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {card.title}
+                      </Typography>
+                      <Typography>{card.description}</Typography>
+                    </CardContent>
+                    <CardActions>
+                      {card.buttons.map(button => (<Button
+                        key={button.name}
+                        size="small"
+                        color="primary"
+                        onClick={() => Router.push(button.href)}
+                      >
+                        {button.name}
+                      </Button>))}
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
           </div>
-        </div>
-      </div>
-      <div className={classNames(classes.layout, classes.cardGrid)}>
-        {/* End hero unit */}
-        <Grid container spacing={5}>
-          {cards.map((card) => (
-            <Grid item key={card.key} sm={6} md={4} lg={3}>
-              <Card className={classes.card}>
-                <Link href={card.buttons[0].href}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={card.image}
-                    title="Screenshot"
-                  >
-                    &nbsp;
-                  </CardMedia>
-                </Link>
-                <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {card.title}
-                  </Typography>
-                  <Typography>{card.description}</Typography>
-                </CardContent>
-                <CardActions>
-                  {card.buttons.map(button => (<Button
-                    key={button.name}
-                    size="small"
-                    color="primary"
-                    onClick={() => Router.push(button.href)}
-                  >
-                    {button.name}
-                  </Button>))}
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
-    </main>
-    {/* Footer */}
-    <footer className={classes.footer}>
-      <Typography variant="h6" align="center" gutterBottom>
-        Footer
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        align="center"
-        color="textSecondary"
-        component="p"
-      >
-        Something here to give the footer a purpose!
-      </Typography>
-    </footer>
-    {/* End footer */}
-  </React.Fragment>
-);
+        </main>
+        {/* Footer */}
+        <footer className={classes.footer}>
+          <Typography variant="h6" align="center" gutterBottom>
+            Footer
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="textSecondary"
+            component="p"
+          >
+            Something here to give the footer a purpose!
+          </Typography>
+        </footer>
+        {/* End footer */}
+      </React.Fragment>
+    );
+  }
+}
 
-Index.getInitialProps = async () => ({
-  namespacesRequired: ["common"],
-});
 
 Index.propTypes = {
   classes: PropTypes.object.isRequired,
 };
+Index = withTranslation(["me", "common"])(Index);
+Index = withStyles(styles)(Index);
 
-export default withStyles(styles)(Index);
+export default Index;
