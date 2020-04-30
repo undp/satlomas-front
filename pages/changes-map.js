@@ -95,18 +95,39 @@ const styles = (theme) => ({
   },
 });
 
-const ScopePolygons = ({ type, data }) => (
-  <GeoJSON
-    key={type}
-    data={data}
-    style={{
+class ScopePolygons extends React.Component {
+  _style = feature => {
+    const { selectedScope } = this.props
+    const color = feature.properties.id === selectedScope ? "#fff700" : "#ff7b00";
+    return {
       fillColor: "#000000",
       fillOpacity: 0.0,
-      color: "#fcba03",
+      color: color,
       weight: 2
-    }}
-  />
-);
+    };
+  };
+
+  _onEachFeature = (feature, layer) => {
+    const { onClick } = this.props;
+    const { id } = feature.properties;
+    layer.on("click", () => {
+      if (onClick) onClick(id);
+    });
+  };
+
+  render() {
+    const { type, data } = this.props;
+
+    return (
+      <GeoJSON
+        key={type}
+        data={data}
+        style={this._style}
+        onEachFeature={this._onEachFeature}
+      />
+    );
+  }
+}
 
 class SearchControl extends Component {
   render() {
@@ -251,7 +272,7 @@ class ChangesMap extends Component {
     try {
       const response = await axios.get(buildApiUrl("/scopes/types/"), {});
       const scopeTypes = response.data;
-      console.log("ScopeTypes:", scopeTypes);
+      // console.log("ScopeTypes:", scopeTypes);
 
       const selectedScopeType = scopeTypes[0].type;
       const selectedScope = scopeTypes[0].scopes[0].pk;
@@ -286,7 +307,7 @@ class ChangesMap extends Component {
         lastDate: new Date(periodsRaw.last_date),
         availables: periodsRaw.availables
       };
-      console.log("Periods:", periods);
+      // console.log("Periods:", periods);
       this.setState({
         periods,
         dateFrom: periods.firstDate,
@@ -302,7 +323,7 @@ class ChangesMap extends Component {
   };
 
   fetchScopesGeometries = async (type) => {
-    console.log("Fetch scopes geometries for:", type);
+    // console.log("Fetch scopes geometries for:", type);
     const res = {
       "type": "FeatureCollection",
       "features": []
@@ -311,7 +332,7 @@ class ChangesMap extends Component {
     try {
       const response = await axios.get(buildApiUrl("/scopes/"), { params: { type } });
       const scopes = response.data;
-      console.log("Scopes", response);
+      // console.log("Scopes", response);
       res['features'] = scopes.map(scope => ({
         type: "Feature",
         geometry: scope.geom,
@@ -376,6 +397,10 @@ class ChangesMap extends Component {
 
     this.setState({ selectedScope: scope })
   };
+
+  handleScopePolygonClick = scope => {
+    this.setState({ selectedScope: scope })
+  }
 
   handleMapViewportChanged = (viewport) => {
     this.setState({ viewport });
@@ -465,7 +490,12 @@ class ChangesMap extends Component {
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
         >
-          {selectedScopeType && scopeGeomsData && <ScopePolygons type={selectedScopeType} data={scopeGeomsData} />}
+          {scopeGeomsData && <ScopePolygons
+            type={selectedScopeType}
+            selectedScope={selectedScope}
+            data={scopeGeomsData}
+            onClick={this.handleScopePolygonClick}
+          />}
           {/* <TileLayer type="raster" url="http://localhost:8080/{z}/{x}/{y}.png" maxZoom={13} /> */}
         </Map>
         <style jsx>
