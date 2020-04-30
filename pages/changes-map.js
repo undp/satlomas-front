@@ -39,8 +39,6 @@ const GeoJSON = dynamic(() => import("../components/GeoJSON"), {
   ssr: false
 });
 
-const someScopesData = require("../public/static/corredores.json");
-
 const styles = (theme) => ({
   controlGroup: {
     position: "fixed",
@@ -97,8 +95,9 @@ const styles = (theme) => ({
   },
 });
 
-const ScopePolygons = ({ data }) => (
+const ScopePolygons = ({ type, data }) => (
   <GeoJSON
+    key={type}
     data={data}
     style={{
       fillColor: "#000000",
@@ -165,7 +164,7 @@ class SearchControl extends Component {
                   variant="inline"
                   format="YYYY-MM-DD"
                   id="date-from"
-                  label="Date from"
+                  label="Desde"
                   minDate={firstDate}
                   maxDate={lastDate}
                   value={dateFrom}
@@ -179,7 +178,7 @@ class SearchControl extends Component {
                   variant="inline"
                   format="YYYY-MM-DD"
                   id="date-to"
-                  label="Date to"
+                  label="Hasta"
                   minDate={firstDate}
                   maxDate={lastDate}
                   value={dateTo}
@@ -228,6 +227,7 @@ class ChangesMap extends Component {
     scopeTypes: {},
     selectedScopeType: null,
     selectedScope: null,
+    scopeGeomsByType: {},
     periods: {},
     periodsLoaded: false,
     dateFrom: null,
@@ -247,7 +247,7 @@ class ChangesMap extends Component {
     namespacesRequired: ["common"],
   });
 
-  fetchScopeTypes = async () => {
+  fetchAndSetScopeTypes = async () => {
     try {
       const response = await axios.get(buildApiUrl("/scopes/types/"), {});
       const scopeTypes = response.data;
@@ -277,7 +277,7 @@ class ChangesMap extends Component {
     }
   };
 
-  fetchPeriods = async () => {
+  fetchAndSetPeriods = async () => {
     try {
       const response = await axios.get(buildApiUrl("/vi-lomas/available-periods/"));
       const periodsRaw = response.data;
@@ -301,50 +301,57 @@ class ChangesMap extends Component {
     }
   };
 
+  fetchScopesGeometries = async (type) => {
+    console.log("Fetch scopes geometries for:", type);
+    const res = {
+      "type": "FeatureCollection",
+      "features": []
+    };
+
+    try {
+      const response = await axios.get(buildApiUrl("/scopes/"), { params: { type } });
+      const scopes = response.data;
+      console.log("Scopes", response);
+      res['features'] = scopes.map(scope => ({
+        type: "Feature",
+        geometry: scope.geom,
+        properties: {
+          id: scope.id,
+          name: scope.name,
+        }
+      }));
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar(`Failed to get scopes from type '${type}'`, {
+        variant: "error",
+      });
+    }
+
+    return res;
+  }
+
   componentDidMount = async () => {
-    this.fetchScopeTypes();
-    this.fetchPeriods();
-
-    /*
-    // Get first day of the current month or the most recent date
-    let today = new Date();
-    today.setDate(1);
-    if (today > lastDate) {
-      today = new Date(lastDate);
-    }
-
-    // Get six months ago or the first available date, for the time series plot
-    let sixmonthago = new Date();
-    sixmonthago.setMonth(today.getMonth() - 6);
-    if (sixmonthago < firstDate) {
-      sixmonthago = new Date(firstDate);
-    }
-
-    // Build list of available dates
-    let availableDates = [];
-    let reference_date = new Date(sixmonthago);
-    while (reference_date < today) {
-      if (availables.includes(reference_date.toISOString().slice(0, 7))) {
-        availableDates.push(reference_date.toISOString().slice(0, 7));
-      }
-      reference_date.setMonth(reference_date.getMonth() + 1);
-    }
-    this.setState({
-      dates: {
-        dashboardDateFrom: sixmonthago,
-        dashboardDateTo: today,
-        initDate: firstDate,
-        endDate: lastDate,
-        availableDates: availableDates,
-        allAvaibleDates: availables,
-      },
-      mapDate: today,
-      selected_scope: 1,
-      custom_scope: null,
-      loadSearchDate: true,
-    });
-    */
+    this.fetchAndSetScopeTypes();
+    this.fetchAndSetPeriods();
   };
+
+  componentDidUpdate = async (_prevProps, prevState) => {
+    // If selectedScopeType changed, refresh geojson layer with scopes from scopetype
+    const { selectedScopeType, scopeGeomsByType } = this.state;
+    if (selectedScopeType !== prevState.selectedScopeType) {
+      if (!scopeGeomsByType[selectedScopeType]) {
+        const geomData = await this.fetchScopesGeometries(selectedScopeType);
+        this.setState({
+          scopeGeomsByType: {
+            ...prevState.scopeGeomsByType,
+            [selectedScopeType]: geomData
+          }
+        });
+      }
+    }
+
+    // TODO If selectedScope changed, highlight new scope and center map
+  }
 
   handleDateFromChange = (datetime) => {
     this.setState({ dateFrom: datetime });
@@ -353,11 +360,6 @@ class ChangesMap extends Component {
   handleDateToChange = (datetime) => {
     this.setState({ dateTo: datetime })
   };
-
-  // componentDidUpdate(_prevProps, prevState) {
-  //   // TODO If selectedScopeType changed, refresh geojson layer with scopes from scopetype
-  //   // TODO If selectedScope changed, highlight new scope and center map
-  // }
 
   handleScopeTypeSelectChange = (e) => {
     const { scopeTypes } = this.state
@@ -406,6 +408,7 @@ class ChangesMap extends Component {
       selectedScopeType,
       selectedScope,
       scopesLoaded,
+      scopeGeomsByType,
       periods,
       periodsLoaded,
       dateFrom,
@@ -413,6 +416,7 @@ class ChangesMap extends Component {
     } = this.state;
 
     const loaded = scopesLoaded && periodsLoaded;
+    const scopeGeomsData = scopeGeomsByType[selectedScopeType];
 
     return (
       <div className="index">
@@ -461,7 +465,7 @@ class ChangesMap extends Component {
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
         >
-          <ScopePolygons data={someScopesData} />
+          {selectedScopeType && scopeGeomsData && <ScopePolygons type={selectedScopeType} data={scopeGeomsData} />}
           {/* <TileLayer type="raster" url="http://localhost:8080/{z}/{x}/{y}.png" maxZoom={13} /> */}
         </Map>
         <style jsx>
