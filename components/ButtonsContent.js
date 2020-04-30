@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
+import { Typography, Button } from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -16,6 +16,11 @@ import Router from "next/router";
 import axios from "axios";
 import cookie from "js-cookie";
 import Snackbar from "@material-ui/core/Snackbar";
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import Badge from '@material-ui/core/Badge';
+import Moment from 'react-moment';
+
+const MAX_NOTIFICATIONS_FIRST = 5;
 
 const styles = (theme) => ({
 
@@ -29,6 +34,19 @@ const styles = (theme) => ({
   toolbarButtons: {
     marginLeft: 'auto',
   },
+
+  momentFont: {
+    fontSize: 9,
+    marginLeft: 'auto',
+  },
+
+  notificationText:{
+    marginRight: 20,
+
+  },
+  notifButton:{
+    justifyContent: 'center',
+  }
 });
 
 
@@ -58,7 +76,12 @@ class ButtonsContent extends React.Component {
     loading: true,
     beta: false,
     contextualMenuOpen: null,
-    username: undefined
+    username: undefined,
+    notificationsCount: 0,
+    notificationsFirst: [],
+    notificationsLast: [],
+    notificationsMenuOpen: null,
+    showLastNotifications: false
   }
 
   static async getInitialProps({ query }) {
@@ -70,6 +93,7 @@ class ButtonsContent extends React.Component {
 
   componentDidMount() {
     this.getUserName();
+    setInterval(() => {this.getNotifications();}, 1000);
   }
 
   async getUserName() {
@@ -91,6 +115,35 @@ class ButtonsContent extends React.Component {
     }
   }
 
+  async getNotifications() {
+    var notificationsFirst = [];
+    var notificationsLast = [];
+    var notificationsCount = 0;
+    const token = cookie.get("token");
+
+    try {
+      const response = await axios.get(buildApiUrl("/alerts/"), {
+        headers: {
+          "Accept-Language": i18n.language,
+          Authorization: token,
+        },
+        data: {
+            user: this.state.username
+        },
+      });
+      notificationsCount = response.data.length;
+      if (notificationsCount > MAX_NOTIFICATIONS_FIRST) {
+          notificationsFirst = response.data.slice(0, MAX_NOTIFICATIONS_FIRST);
+          notificationsLast = response.data.slice(MAX_NOTIFICATIONS_FIRST, response.data.length);
+      } else {
+        notificationsFirst = response.data;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    this.setState({notificationsFirst, notificationsLast, notificationsCount});
+   }
+
   handleContextualMenuClose = () => {
     this.setState({ contextualMenuOpen: null });
   }
@@ -106,13 +159,29 @@ class ButtonsContent extends React.Component {
   menuDashboardClick = () => {
     routerPush("/admin");
   }
+  handleNotifMenuClick = (event) => {
+    this.setState({ notificationsMenuOpen: event.currentTarget});
+  }
+
+  handleNotifMenuClose = () => {
+    this.setState({ notificationsMenuOpen: null, showLastNotifications: false });
+  }
+
+  handleMoreNotif = () => {
+    this.setState({ showLastNotifications: true});
+  }
 
   render(){
     const { classes, t } = this.props;
     const { 
         contextualMenuOpen, 
         username, 
-        loading } = this.state;
+        loading, 
+        notificationsFirst,
+        notificationsLast,
+        notificationsCount,
+        notificationsMenuOpen,
+        showLastNotifications  } = this.state;
 
     return(
      
@@ -120,6 +189,17 @@ class ButtonsContent extends React.Component {
             { username == undefined ?
             <div></div> 
             : username != "" ? 
+             <div><IconButton 
+             aria-label="account of current user"
+             aria-controls="menu-appbar"
+             aria-haspopup="true"
+             color="inherit"
+             onClick={this.handleNotifMenuClick}
+             >
+                <Badge badgeContent={notificationsCount} color="secondary">
+                <NotificationsIcon />
+                </Badge>
+            </IconButton>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -128,13 +208,38 @@ class ButtonsContent extends React.Component {
                 onClick={this.handleContextualMenuClick}
               >
                 <AccountCircle />
-              </IconButton>
+              </IconButton></div>
               :
               <Button variant="inherit"
               onClick={() => Router.push("/login")}>
                 Login
             </Button>
             }
+            <Menu anchorEl={notificationsMenuOpen}
+                keepMounted
+                open={Boolean(notificationsMenuOpen)}
+                onClose={this.handleNotifMenuClose}
+                >
+              <MenuItem>Alertas</MenuItem>
+              {notificationsFirst.map((not) => (
+                 <MenuItem>
+                    <Typography className={classes.notificationText}>Alerta {not.id}</Typography>  
+                    <Moment className={classes.momentFont} fromNow>{not.last_seen_at}</Moment>
+                 </MenuItem>
+              ))}{ showLastNotifications &&  notificationsLast.map((not) => (
+                <MenuItem>
+                <Typography className={classes.notificationText}>Alerta {not.id}</Typography>  
+                <Moment className={classes.momentFont} fromNow>{not.last_seen_at}</Moment>
+             </MenuItem>
+              ))
+              }
+              { !showLastNotifications &&
+              <MenuItem className={classes.notifButton}>
+              <Button onClick={this.handleMoreNotif}>
+                Ver más...
+            </Button></MenuItem>
+            }
+            </Menu>
               <Menu
                 anchorEl={contextualMenuOpen}
                 keepMounted
@@ -160,7 +265,7 @@ class ButtonsContent extends React.Component {
                 </MenuItem>
               </Menu>
               <LoadingSnackbar open={loading} />
-            </div>
+            </div>         
         
     );
   }
