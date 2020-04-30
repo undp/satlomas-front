@@ -93,7 +93,7 @@ class ButtonsContent extends React.Component {
 
   componentDidMount() {
     this.getUserName();
-    setInterval(() => {this.getNotifications() }, 1000);
+    setInterval(() => { this.getNotifications() }, 3000);
   }
 
   async getUserName() {
