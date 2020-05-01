@@ -32,8 +32,6 @@ class Dashboard extends React.Component {
 
     const dateFrom = Math.min(...periods.map(p => Math.min(p[0], p[1])));
     const dateTo = Math.max(...periods.map(p => Math.max(p[0], p[1])));
-    console.log("min date on periods:", dateFrom);
-    console.log("max date on periods:", dateTo);
 
     if (scope) {
       const body = {
@@ -41,10 +39,8 @@ class Dashboard extends React.Component {
         from_date: moment(dateFrom).format("YYYY-MM-DD"),
         end_date: moment(dateTo).format("YYYY-MM-DD"),
       };
-      console.log(body);
       try {
         const response = await axios.post(buildApiUrl("/vi-lomas/coverage/"), body);
-        console.log(response.data);
         this.setState({
           data: response.data.values,
           dataAvailable: true,
