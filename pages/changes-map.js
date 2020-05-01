@@ -22,7 +22,9 @@ import LoadingProgress from "../components/LoadingProgress";
 import Dashboard from "../components/Dashboard";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
+import PeriodSlider from "../components/PeriodSlider";
 import { KeyboardDatePicker } from "@material-ui/pickers"
+import moment from "moment";
 
 const mapboxStyle = "mapbox.streets";
 
@@ -255,6 +257,7 @@ class ChangesMap extends Component {
     dateFrom: null,
     dateTo: null,
     customScope: null,
+    selectedPeriodId: null,
   };
 
   static getInitialProps = async () => ({
@@ -418,6 +421,10 @@ class ChangesMap extends Component {
     }))
   }
 
+  handlePeriodSliderChangeCommitted = (_event, value) => {
+    this.setState({ selectedPeriodId: value })
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -440,6 +447,10 @@ class ChangesMap extends Component {
     const loaded = scopesLoaded && periodsLoaded;
     const scopeGeomsData = scopeGeomsByType[selectedScopeType];
     const filteredPeriods = periods.filter(p => (p[0] >= dateFrom && p[1] <= dateTo));
+    const periodLabels = filteredPeriods.map(([from, to]) => [
+      moment(from).format("YYYY-MM-DD"),
+      moment(to).format("YYYY-MM-DD")
+    ]);
 
     return (
       <div className="index">
@@ -472,6 +483,11 @@ class ChangesMap extends Component {
           <LayersControl
             layers={[]}
             activeLayers={[]} />
+          {filteredPeriods.length > 0 && <PeriodSlider
+            periods={filteredPeriods}
+            periodLabels={periodLabels}
+            onChangeCommitted={this.handlePeriodSliderChangeCommitted}
+          />}
         </div>
         {loaded && (
           <div className={classnames(classes.controlGroup, classes.topRight)}>
