@@ -116,7 +116,8 @@ const styles = (theme) => ({
   },
 });
 
-const sortedSections = ["rules", "alerts", "profile", "create_rule"];
+const allSections = ["alerts", "rules", "profile", "create_rule"];
+const sidebarSections = ["alerts", "rules"]
 
 const sections = {
   rules: {
@@ -165,7 +166,7 @@ class Admin extends React.Component {
     let { section } = props.query;
 
     // Set current section based on path
-    if (section && sortedSections.includes(section)) {
+    if (section && allSections.includes(section)) {
       this.state.section = section;
     }
   }
@@ -185,8 +186,6 @@ class Admin extends React.Component {
   render() {
     const { t, classes, token, query } = this.props;
     const { section, open } = this.state;
-
-    const sectionList = sortedSections;
 
     const originalContent = section && sections[section].content;
     const content =
@@ -251,7 +250,7 @@ class Admin extends React.Component {
           </div>
           <Divider />
           <List>
-            {sectionList.map((key) => (
+            {sidebarSections.map((key) => (
               <Link
                 key={key}
                 href={`/admin?section=${key}`}
@@ -269,21 +268,21 @@ class Admin extends React.Component {
             ))}
           </List>
           <Divider />
-          {/* <List>
+          <List>
             <Link
-              href={`/admin?section=requests`}
-              as={`/admin${sections["requests"].path}`}
+              href={`/admin?section=profile`}
+              as={`/admin${sections["profile"].path}`}
             >
               <ListItem
                 button
-                onClick={() => this.handleSectionChange("requests")}
-                selected={section === "requests"}
+                onClick={() => this.handleSectionChange("profile")}
+                selected={section === "profile"}
               >
-                <ListItemIcon>{sections["requests"].icon}</ListItemIcon>
-                <ListItemText primary={t(`sidebar.requests`)} />
+                <ListItemIcon>{sections["profile"].icon}</ListItemIcon>
+                <ListItemText primary={t(`sidebar.profile`)} />
               </ListItem>
             </Link>
-          </List> */}
+          </List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
