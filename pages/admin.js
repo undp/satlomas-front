@@ -268,7 +268,7 @@ class Admin extends React.Component {
               noWrap
               className={classes.title}
             >
-              GeoLomas Platform
+              GeoLomas - Administración
             </Typography>
             {/* <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
