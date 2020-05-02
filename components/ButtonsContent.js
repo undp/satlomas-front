@@ -22,13 +22,11 @@ import Moment from 'react-moment';
 
 const MAX_NOTIFICATIONS_FIRST = 5;
 
-const styles = (theme) => ({
-
-
+const styles = (_theme) => ({
   menuItem: {
     minWidth: 150,
   },
-  listItemIcon:{
+  listItemIcon: {
     minWidth: 0,
   },
   toolbarButtons: {
@@ -40,35 +38,34 @@ const styles = (theme) => ({
     marginLeft: 'auto',
   },
 
-  notificationText:{
+  notificationText: {
     marginRight: 20,
 
   },
-  notifButton:{
+  notifButton: {
     justifyContent: 'center',
   }
 });
 
-
 class LoadingSnackbar extends React.Component {
-render() {
+  render() {
     const { open } = this.props;
     return (
-    <Snackbar
+      <Snackbar
         anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left"
+          vertical: "bottom",
+          horizontal: "left"
         }}
         open={open}
         ContentProps={{
-        "aria-describedby": "message-id"
+          "aria-describedby": "message-id"
         }}
         message={<span id="message-id">Loading...</span>}
-    />
+      />
     );
+  }
 }
-}
-  
+
 LoadingSnackbar = withStyles(styles)(LoadingSnackbar);
 
 class ButtonsContent extends React.Component {
@@ -110,8 +107,8 @@ class ButtonsContent extends React.Component {
       } = response.data;
       this.setState({ username, loading: false });
     } catch (error) {
-      this.setState({ username: "", loading: false})
       console.error(error);
+      this.setState({ username: "", loading: false })
     }
   }
 
@@ -128,21 +125,21 @@ class ButtonsContent extends React.Component {
           Authorization: token,
         },
         data: {
-            user: this.state.username
+          user: this.state.username
         },
       });
       notificationsCount = response.data.length;
       if (notificationsCount > MAX_NOTIFICATIONS_FIRST) {
-          notificationsFirst = response.data.slice(0, MAX_NOTIFICATIONS_FIRST);
-          notificationsLast = response.data.slice(MAX_NOTIFICATIONS_FIRST, response.data.length);
+        notificationsFirst = response.data.slice(0, MAX_NOTIFICATIONS_FIRST);
+        notificationsLast = response.data.slice(MAX_NOTIFICATIONS_FIRST, response.data.length);
       } else {
         notificationsFirst = response.data;
       }
     } catch (error) {
       console.error(error);
     }
-    this.setState({notificationsFirst, notificationsLast, notificationsCount});
-   }
+    this.setState({ notificationsFirst, notificationsLast, notificationsCount });
+  }
 
   handleContextualMenuClose = () => {
     this.setState({ contextualMenuOpen: null });
@@ -159,8 +156,9 @@ class ButtonsContent extends React.Component {
   menuDashboardClick = () => {
     routerPush("/admin");
   }
+
   handleNotifMenuClick = (event) => {
-    this.setState({ notificationsMenuOpen: event.currentTarget});
+    this.setState({ notificationsMenuOpen: event.currentTarget });
   }
 
   handleNotifMenuClose = () => {
@@ -168,37 +166,37 @@ class ButtonsContent extends React.Component {
   }
 
   handleMoreNotif = () => {
-    this.setState({ showLastNotifications: true});
+    this.setState({ showLastNotifications: true });
   }
 
-  render(){
+  render() {
     const { classes, t } = this.props;
-    const { 
-        contextualMenuOpen, 
-        username, 
-        loading, 
-        notificationsFirst,
-        notificationsLast,
-        notificationsCount,
-        notificationsMenuOpen,
-        showLastNotifications  } = this.state;
+    const {
+      contextualMenuOpen,
+      username,
+      loading,
+      notificationsFirst,
+      notificationsLast,
+      notificationsCount,
+      notificationsMenuOpen,
+      showLastNotifications
+    } = this.state;
 
-    return(
-     
-            <div className={classes.toolbarButtons}>
-            { username == undefined ?
-            <div></div> 
-            : username != "" ? 
-             <div><IconButton 
-             aria-label="account of current user"
-             aria-controls="menu-appbar"
-             aria-haspopup="true"
-             color="inherit"
-             onClick={this.handleNotifMenuClick}
-             >
-                <Badge badgeContent={notificationsCount} color="secondary">
+    return (
+      <div className={classes.toolbarButtons}>
+        {username == undefined ?
+          <div></div>
+          : username != "" ?
+            <div><IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+              onClick={this.handleNotifMenuClick}
+            >
+              <Badge badgeContent={notificationsCount} color="secondary">
                 <NotificationsIcon />
-                </Badge>
+              </Badge>
             </IconButton>
               <IconButton
                 aria-label="account of current user"
@@ -209,68 +207,66 @@ class ButtonsContent extends React.Component {
               >
                 <AccountCircle />
               </IconButton></div>
-              :
-              <Button variant="inherit"
+            :
+            <Button variant="inherit"
               onClick={() => Router.push("/login")}>
-                Login
+              Iniciar sesión
             </Button>
-            }
-            <Menu anchorEl={notificationsMenuOpen}
-                keepMounted
-                open={Boolean(notificationsMenuOpen)}
-                onClose={this.handleNotifMenuClose}
-                >
-              <MenuItem>Alertas</MenuItem>
-              {notificationsFirst.map((not) => (
-                 <MenuItem>
-                    <Typography className={classes.notificationText}>Alerta {not.id}</Typography>  
-                    <Moment className={classes.momentFont} fromNow>{not.last_seen_at}</Moment>
-                 </MenuItem>
-              ))}{ showLastNotifications &&  notificationsLast.map((not) => (
-                <MenuItem>
-                <Typography className={classes.notificationText}>Alerta {not.id}</Typography>  
-                <Moment className={classes.momentFont} fromNow>{not.last_seen_at}</Moment>
-             </MenuItem>
-              ))
-              }
-              { !showLastNotifications &&
-              <MenuItem className={classes.notifButton}>
+        }
+        <Menu anchorEl={notificationsMenuOpen}
+          keepMounted
+          open={Boolean(notificationsMenuOpen)}
+          onClose={this.handleNotifMenuClose}
+        >
+          <MenuItem>Alertas</MenuItem>
+          {notificationsFirst.map((not) => (
+            <MenuItem>
+              <Typography className={classes.notificationText}>Alerta {not.id}</Typography>
+              <Moment className={classes.momentFont} fromNow>{not.last_seen_at}</Moment>
+            </MenuItem>
+          ))}{showLastNotifications && notificationsLast.map((not) => (
+            <MenuItem>
+              <Typography className={classes.notificationText}>Alerta {not.id}</Typography>
+              <Moment className={classes.momentFont} fromNow>{not.last_seen_at}</Moment>
+            </MenuItem>
+          ))
+          }
+          {!showLastNotifications &&
+            <MenuItem className={classes.notifButton}>
               <Button onClick={this.handleMoreNotif}>
                 Ver más...
             </Button></MenuItem>
-            }
-            </Menu>
-              <Menu
-                anchorEl={contextualMenuOpen}
-                keepMounted
-                open={Boolean(contextualMenuOpen)}
-                onClose={this.handleContextualMenuClose}
-              >
-                <MenuItem className={classes.menuItem}>
-                  {username}
-                </MenuItem>
-                <MenuItem className={classes.menuItem}
-                onClick={() => Router.push("/admin")}>
-                Admin
-                </MenuItem>
-                <MenuItem className={classes.menuItem} 
-                onClick={this.profileLogout} 
-                >
-                    {t("common:logout_btn")}
-                  <ListItemSecondaryAction>
-                    <ListItemIcon edge="end" aria-label="logout" className={classes.listItemIcon}>
-                      <PowerSettingsNewRoundedIcon />
-                    </ListItemIcon>
-                  </ListItemSecondaryAction>
-                </MenuItem>
-              </Menu>
-              <LoadingSnackbar open={loading} />
-            </div>         
-        
+          }
+        </Menu>
+        <Menu
+          anchorEl={contextualMenuOpen}
+          keepMounted
+          open={Boolean(contextualMenuOpen)}
+          onClose={this.handleContextualMenuClose}
+        >
+          <MenuItem className={classes.menuItem}>
+            {username}
+          </MenuItem>
+          <MenuItem className={classes.menuItem}
+            onClick={() => Router.push("/admin")}>
+            Administrador
+          </MenuItem>
+          <MenuItem className={classes.menuItem}
+            onClick={this.profileLogout}
+          >
+            {t("common:logout_btn")}
+            <ListItemSecondaryAction>
+              <ListItemIcon edge="end" aria-label="logout" className={classes.listItemIcon}>
+                <PowerSettingsNewRoundedIcon />
+              </ListItemIcon>
+            </ListItemSecondaryAction>
+          </MenuItem>
+        </Menu>
+        <LoadingSnackbar open={loading} />
+      </div>
     );
   }
 }
-
 
 ButtonsContent.propTypes = {
   classes: PropTypes.object.isRequired,
