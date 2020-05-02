@@ -74,14 +74,9 @@
     "title": "Your requests"
   },
   "sidebar": {
-    "dashboard": "Dashboard",
-    "files": "Files",
-    "home": "Home",
-    "keys": "API Keys",
-    "layers": "Layers",
-    "maps": "Maps",
-    "stations": "Stations",
-    "stations_map": "Stations Map"
+    "alerts": "Alerts",
+    "profile": "Profile",
+    "rules": "Rules"
   },
   "view": "View"
 }

@@ -74,14 +74,9 @@
     "title": "Tus pedidos"
   },
   "sidebar": {
-    "dashboard": "Dashboard",
-    "files": "Archivos",
-    "home": "Inicio",
-    "keys": "API Keys",
-    "layers": "Capas",
-    "maps": "Mapas",
-    "stations": "Estaciones",
-    "stations_map": "Mapa de Estaciones"
+    "alerts": "Alertas",
+    "profile": "Perfil",
+    "rules": "Reglas"
   },
   "view": "Ver"
 }
