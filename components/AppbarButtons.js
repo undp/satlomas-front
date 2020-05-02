@@ -68,7 +68,7 @@ class LoadingSnackbar extends React.Component {
 
 LoadingSnackbar = withStyles(styles)(LoadingSnackbar);
 
-class ButtonsContent extends React.Component {
+class AppbarButtons extends React.Component {
   state = {
     loading: true,
     beta: false,
@@ -268,11 +268,11 @@ class ButtonsContent extends React.Component {
   }
 }
 
-ButtonsContent.propTypes = {
+AppbarButtons.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-ButtonsContent = withTranslation(["me", "common"])(ButtonsContent);
-ButtonsContent = withStyles(styles)(ButtonsContent);
+AppbarButtons = withTranslation(["me", "common"])(AppbarButtons);
+AppbarButtons = withStyles(styles)(AppbarButtons);
 
-export default ButtonsContent;
+export default AppbarButtons;

@@ -6,7 +6,7 @@ import { withTranslation, i18n } from "../i18n";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
-import ButtonsContent from "../components/ButtonsContent";
+import AppbarButtons from "../components/AppbarButtons";
 
 import {
   AppBar,
@@ -155,7 +155,7 @@ class Index extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               GeoLomas
             </Typography>
-            <ButtonsContent />
+            <AppbarButtons />
           </Toolbar>
         </AppBar>
         <main>

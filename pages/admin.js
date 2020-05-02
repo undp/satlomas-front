@@ -14,7 +14,7 @@ import { Link, withTranslation, i18n } from "../i18n";
 import { withAuthSync } from "../utils/auth";
 import RulesListContent from "../components/admin/RulesListContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
-import ButtonsContent from "../components/ButtonsContent";
+import AppbarButtons from "../components/AppbarButtons";
 
 import {
   AppBar,
@@ -230,7 +230,7 @@ class Admin extends React.Component {
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
-            <ButtonsContent />
+            <AppbarButtons />
           </Toolbar>
         </AppBar>
         <Drawer
