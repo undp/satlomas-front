@@ -32,6 +32,7 @@ import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
 import { isDate } from "../../utils/date";
 import config from "../../config";
+import AppbarButtons from "../../components/AppbarButtons";
 
 const { stationParameters } = config;
 
@@ -395,6 +396,7 @@ class StationsDashboard extends React.Component {
                 }
               />
             </div>
+            <AppbarButtons />
           </Toolbar>
         </AppBar>
         <main>

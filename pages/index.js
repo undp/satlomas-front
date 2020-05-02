@@ -25,6 +25,18 @@ const styles = (theme) => ({
   appBar: {
     position: "relative",
   },
+  grow: {
+    flexGrow: 1,
+  },
+  rightButtons: {
+    position: "relative",
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
   menuItem: {
     minWidth: 150,
   },
@@ -155,7 +167,10 @@ class Index extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               GeoLomas
             </Typography>
-            <AppbarButtons />
+            <div className={classes.grow} />
+            <div className={classes.rightButtons}>
+              <AppbarButtons />
+            </div>
           </Toolbar>
         </AppBar>
         <main>

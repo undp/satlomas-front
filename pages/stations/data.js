@@ -25,6 +25,7 @@ import TimeRangeFilterButton, {
   groupingIntervalItems
 } from "../../components/TimeRangeFilterButton";
 import StationTable from "../../components/StationTable";
+import AppbarButtons from "../../components/AppbarButtons";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import { withRouter } from "next/router";
@@ -485,6 +486,7 @@ class StationsData extends React.Component {
                 }
               />
             </div>
+            <AppbarButtons />
           </Toolbar>
         </AppBar>
         <main>
