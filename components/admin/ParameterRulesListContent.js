@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withSnackbar } from "notistack";
 import {
-  Typography,
-  Button,
   Paper,
   Table,
   TableBody,
@@ -15,13 +12,11 @@ import {
   TableCell,
   IconButton,
 } from '@material-ui/core';
-import axios from "axios";
 import { i18n, withTranslation } from "../../i18n";
 import Moment from "react-moment";
-import { buildApiUrl } from "../../utils/api";
-import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import { routerPush } from "../../utils/router";
+import RulesListContent from "./RulesListContent";
 
 const styles = theme => ({
   root: {
@@ -87,60 +82,12 @@ ParameterRulesTable.propTypes = {
 ParameterRulesTable = withStyles(styles)(ParameterRulesTable);
 ParameterRulesTable = withTranslation(["me", "common"])(ParameterRulesTable);
 
-class ParameterRulesListContent extends React.Component {
-  state = {
-    rows: [],
-    loaded: false,
-  };
-
-  async componentDidMount() {
-    this.fetchData();
-  }
-
-  async fetchData() {
-    const { token } = this.props;
-
-    try {
-      const response = await axios.get(buildApiUrl("/alerts/parameter-rules"), {
-        headers: { Authorization: token }
-      })
-      this.setState({ rows: response.data });
-    } catch (err) {
-      console.error(err);
-      this.props.enqueueSnackbar('Failed to get parameter rules', { variant: "error" })
-      this.setState({ rows: [] });
-    }
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { rows } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <Typography
-          variant="h6"
-          className={classes.title}
-          gutterBottom
-        >
-          Reglas de parámetro
-          <Button
-            onClick={() => routerPush("/admin/parameter-rules/new")}
-            className={classes.newButton}
-            startIcon={<AddIcon />}
-          >Nueva regla</Button>
-        </Typography>
-        <ParameterRulesTable rows={rows} />
-      </div >
-    );
-  }
-}
-
-ParameterRulesListContent.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-ParameterRulesListContent = withStyles(styles)(ParameterRulesListContent);
-ParameterRulesListContent = withSnackbar(ParameterRulesListContent);
+const ParameterRulesListContent = ({ token }) => (
+  <RulesListContent
+    token={token}
+    ruleType="parameter"
+    title="Reglas por Parámetro"
+    tableComponent={<ParameterRulesTable />} />
+);
 
 export default ParameterRulesListContent;
