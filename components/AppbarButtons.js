@@ -159,7 +159,7 @@ class ProfileMenuButton extends React.Component {
           open={Boolean(anchorEl)}
           onClose={() => this.setState({ anchorEl: null })}
         >
-          <MenuItem className={classes.menuItem}>
+          <MenuItem className={classes.menuItem} onClick={() => Router.push("/admin/profile")}>
             {username}
           </MenuItem>
           <MenuItem className={classes.menuItem} onClick={() => Router.push("/admin")}>
