@@ -12,11 +12,11 @@ import HomeContent from "../components/admin/HomeContent";
 import { Link, withTranslation } from "../i18n";
 import { withAuthSync } from "../utils/auth";
 import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
+import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
 // import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
-// import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
 import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
-// import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
 // import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
+// import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
 import AppbarButtons from "../components/AppbarButtons";
 
@@ -135,7 +135,7 @@ const allSections = [
 const sidebarSections = [
   "alerts",
   "parameter-rules",
-  // "scope-type-rules",
+  "scope-type-rules",
   // "scope-rules"
 ];
 
@@ -152,32 +152,32 @@ const sections = {
     icon: <DashboardIcon />,
     content: <ParameterRulesListContent />,
   },
+  'scope-type-rules': {
+    key: "scope-type-rules",
+    path: "/scope-type-rules",
+    icon: <DashboardIcon />,
+    content: <ScopeTypeRulesListContent />,
+  },
   // 'scope-rules': {
   //   key: "scope-rules",
   //   path: "/scope-rules",
   //   icon: <DashboardIcon />,
   //   content: <ScopeRulesListContent />,
   // },
-  // 'scope-type-rules': {
-  //   key: "scope-type-rules",
-  //   path: "/scope-type-rules",
-  //   icon: <DashboardIcon />,
-  //   content: <ScopeTypeRulesListContent />,
-  // },
   'create-parameter-rule': {
     key: "create-parameter-rule",
     path: "/parameter-rules/new",
     content: <CreateParameterRuleContent />,
   },
-  // 'create-scope-rule': {
-  //   key: "create-scope-rule",
-  //   path: "/scope-rules/new",
-  //   content: <CreateScopeRuleContent />,
-  // },
   // 'create-scope-type-rule': {
   //   key: "create-scope-type-rule",
   //   path: "/scope-type-rules/new",
   //   content: <CreateScopeTypeRuleContent />,
+  // },
+  // 'create-scope-rule': {
+  //   key: "create-scope-rule",
+  //   path: "/scope-rules/new",
+  //   content: <CreateScopeRuleContent />,
   // },
   profile: {
     key: "profile",
