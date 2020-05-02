@@ -192,7 +192,7 @@ class Admin extends React.Component {
       originalContent &&
       React.cloneElement(originalContent, {
         ...query,
-        token: token,
+        token,
       });
 
     return (
