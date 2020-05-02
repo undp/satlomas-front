@@ -3,14 +3,16 @@ import axios from "axios";
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, TableCell, TableSortLabel } from '@material-ui/core';
+import { Typography, Paper, TableCell, TableSortLabel } from '@material-ui/core';
 import { buildApiUrl } from "../../utils/api";
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import _ from 'lodash';
 import { withSnackbar } from 'notistack';
-import strftime from '../../utils/strftime';
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
   table: {
     fontFamily: theme.typography.fontFamily,
   },
@@ -160,16 +162,16 @@ MuiVirtualizedTable.defaultProps = {
 
 const WrappedVirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
-  
+
 class AlertsTable extends React.Component {
   state = {
     loading: true,
     rows: [],
     columns: [
-        {width: 120,flexGrow: 1.0, label: "Fecha y hora", dataKey: "created_at"},
-        {width: 120,flexGrow: 1.0, label: "Tipo de regla", dataKey: "rule_content_type"},
-        {width: 120,flexGrow: 1.0, label: "Regla", dataKey: "rule_id"},
-        {width: 120,flexGrow: 1.0, label: "Tipo de medida", dataKey: "measurement_content_type"},
+      { width: 120, flexGrow: 1.0, label: "Fecha y hora", dataKey: "created_at" },
+      { width: 120, flexGrow: 1.0, label: "Tipo de regla", dataKey: "rule_content_type" },
+      { width: 120, flexGrow: 1.0, label: "Regla", dataKey: "rule_id" },
+      { width: 120, flexGrow: 1.0, label: "Tipo de medida", dataKey: "measurement_content_type" },
     ],
   }
 
@@ -177,33 +179,40 @@ class AlertsTable extends React.Component {
     await this.fetchData();
   }
 
-  prepareRows(data){
-      let rows = [];
-      for (let i = 0; i < data.length; i++) {
-        rows.push(data[i])
-      }
-      return rows
+  prepareRows(data) {
+    let rows = [];
+    for (let i = 0; i < data.length; i++) {
+      rows.push(data[i])
+    }
+    return rows
   }
 
   async fetchData() {
     const { token } = this.props;
     const response = await axios.get(buildApiUrl("/alerts"), { headers: { Authorization: token } });
     console.log(response);
-    if (response.data.length > 0){
-        this.setState({loading: false, rows: this.prepareRows(response.data)});
+    if (response.data.length > 0) {
+      this.setState({ loading: false, rows: this.prepareRows(response.data) });
     }
     else {
-        this.setState({loading: false, rows: []});
+      this.setState({ loading: false, rows: [] });
     }
   }
 
-
   render() {
+    const { classes } = this.props;
     const { loading, rows, columns } = this.state;
 
     return (
-      <>
-        <Paper style={{ height: '80vh', width: '100%' }}>
+      <div className={classes.root}>
+        <Typography
+          variant="h6"
+          className={classes.title}
+          gutterBottom
+        >
+          Alertas
+        </Typography>
+        <Paper>
           {!loading && (
             <WrappedVirtualizedTable
               rowCount={rows.length}
@@ -212,11 +221,12 @@ class AlertsTable extends React.Component {
             />
           )}
         </Paper>
-      </>
+      </div>
     );
   }
 }
 
 AlertsTable = withSnackbar(AlertsTable);
+AlertsTable = withStyles(styles)(AlertsTable);
 
 export default AlertsTable
