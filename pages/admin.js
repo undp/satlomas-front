@@ -14,7 +14,7 @@ import { withAuthSync } from "../utils/auth";
 import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
 // import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
 // import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
-// import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
+import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
 // import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
 // import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
@@ -164,11 +164,11 @@ const sections = {
   //   icon: <DashboardIcon />,
   //   content: <ScopeTypeRulesListContent />,
   // },
-  // 'create-parameter-rule': {
-  //   key: "create-parameter-rule",
-  //   path: "/parameter-rules/new",
-  //   content: <CreateParameterRuleContent />,
-  // },
+  'create-parameter-rule': {
+    key: "create-parameter-rule",
+    path: "/parameter-rules/new",
+    content: <CreateParameterRuleContent />,
+  },
   // 'create-scope-rule': {
   //   key: "create-scope-rule",
   //   path: "/scope-rules/new",

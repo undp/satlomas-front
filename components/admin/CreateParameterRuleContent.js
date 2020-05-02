@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { withSnackbar } from "notistack";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Paper from "@material-ui/core/Paper";
@@ -24,518 +19,237 @@ import config from "../../config";
 
 const { stationParameters } = config;
 
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    padding: theme.spacing(2)
+  },
+  button: {
+    marginRight: theme.spacing(1)
+  }
+});
+
 class ParameterRuleForm extends Component {
   state = {
-    station: null,
-    parameter: null,
-    is_absolute: false,
-    valid_min: "",
-    valid_max: "",
+    fields: {
+      station: null,
+      parameter: null,
+      is_absolute: false,
+      valid_min: "",
+      valid_max: "",
+    },
     stations: [],
+    loaded: false,
   }
-
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
 
   async componentDidMount() {
-    const { token } = this.props;
-    const response = await axios.get(buildApiUrl("/stations/stations"), { headers: { Authorization: token } });
-    this.setState({ stations: response.data });
-    //Check if ID is in params
-    if (false) {
-      const response = await axios.get(buildApiUrl("/alerts/parameter-rules/" + 1), { headers: { Authorization: token } });
-      this.setState({
-        parameter: response.data["parameter"],
-        valid_max: response.data["valid_max"],
-        valid_min: response.data["valid_min"],
-        station: response.data["station"],
-      });
+    await this.fetchStations();
+
+    const { id } = this.props;
+    if (id) {
+      await this.fetchRule(id);
+    }
+
+    this.setState({ loaded: true });
+  }
+
+  async fetchStations() {
+    try {
+      const response = await axios.get(buildApiUrl("/stations/stations"));
+      this.setState({ stations: response.data });
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to get stations", { variant: 'error' });
     }
   }
 
-  async handleSubmit() {
-    event.preventDefault();
-    const data = this.state;
+  async fetchRule(id) {
     const { token } = this.props;
-    await axios.
-      post(buildApiUrl("/alerts/parameter-rules/"),
-        data,
-        { headers: { Authorization: token } }
-      ).then(response => {
-        routerPush("/admin/rules");
-      })
-      .catch(error => {
-        //TODO: Informar errores
-        console.error(error);
+
+    try {
+      const response = await axios.get(buildApiUrl(`/alerts/parameter-rules/${id}/`), {
+        headers: { Authorization: token }
       });
+
+      const { parameter, is_absolute, valid_min, valid_max, station } = response.data;
+      this.setState({
+        fields: {
+          parameter,
+          is_absolute,
+          valid_max,
+          valid_min,
+          station,
+        }
+      });
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to get rule attributes", { variant: 'error' });
+    }
+  }
+
+  handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const { id } = this.props;
+    if (id) {
+      this.patchRule(id);
+    } else {
+      this.createRule();
+    }
+  }
+
+  async createRule() {
+    const { token } = this.props;
+    const { fields } = this.state;
+
+    try {
+      await axios.post(buildApiUrl("/alerts/parameter-rules/"),
+        fields,
+        { headers: { Authorization: token } }
+      );
+
+      routerPush("/admin/rules");
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to create new rule", { variant: 'error' });
+    }
+  }
+
+  async patchRule(id) {
+    const { token } = this.props;
+    const { fields } = this.state;
+
+    try {
+      await axios.put(buildApiUrl(`/alerts/parameter-rules/${id}/`),
+        fields,
+        { headers: { Authorization: token } }
+      );
+
+      routerPush("/admin/parameter-rules");
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to update rule", { variant: 'error' });
+    }
   }
 
   handleChange = (event) => {
-    const { target } = event
-    this.setState({ [target.name]: target.value });
+    const { target } = event;
+
+    this.setState(prevState => ({
+      fields: {
+        ...prevState.fields,
+        [target.name]: target.value
+      }
+    }));
+  }
+
+  handleIsAbsoluteChange = () => {
+    this.setState(prevState => ({
+      fields: {
+        ...prevState.fields,
+        is_absolute: !prevState.fields.is_absolute
+      }
+    }));
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, id } = this.props;
+    const { stations, fields, loaded } = this.state;
+
     return (<Paper className={classes.root}>
       <form
         className={classes.form}
         method="post"
         onSubmit={this.handleSubmit}
       >
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="station">Station</InputLabel>
+        <FormControl className={classes.formControl} fullWidth>
+          <InputLabel htmlFor="station">Estación</InputLabel>
           <Select
-            value={this.state.station}
+            value={fields.station || '---'}
             onChange={this.handleChange}
             inputProps={{
               name: 'station',
               id: 'station',
             }}
+            disabled={!loaded}
           >
-            {this.state.stations.map(station =>
+            <MenuItem value="---">Cualquiera</MenuItem>
+            {stations.map(station =>
               (<MenuItem key={station.id} value={station.id}>{station.name}</MenuItem>)
             )}
           </Select>
         </FormControl>
-
         <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="station">Parameter</InputLabel>
+          <InputLabel htmlFor="parameter">Parámetro</InputLabel>
           <Select
-            value={this.state.parameter}
+            value={fields.parameter || ""}
             onChange={this.handleChange}
             inputProps={{
               name: 'parameter',
               id: 'parameter',
             }}
             className={classes.selectEmpty}
+            disabled={!loaded}
           >
             {stationParameters.map(parameter =>
               (<MenuItem key={parameter.id} value={parameter.id}>{parameter.name}</MenuItem>)
             )}
           </Select>
         </FormControl>
-
         <FormControl margin="normal" required fullWidth>
           <InputLabel htmlFor="valid_min">
-            Valor minimo
+            Valor mínimo
           </InputLabel>
           <Input
             id="valid_min"
             name="valid_min"
             autoFocus
             onChange={this.handleChange}
-            value={this.state.valid_min}
+            value={fields.valid_min}
+            disabled={!loaded}
           />
         </FormControl>
-
         <FormControl margin="normal" required fullWidth>
           <InputLabel htmlFor="valid_max">
-            Valor maximo
+            Valor máximo
           </InputLabel>
           <Input
             id="valid_max"
             name="valid_max"
             autoFocus
             onChange={this.handleChange}
-            value={this.state.valid_max}
+            value={fields.valid_max}
+            disabled={!loaded}
           />
         </FormControl>
-
-        <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Absoluta</FormLabel>
+        <FormControl component="fieldset" className={classes.formControl} fullWidth>
+          <FormLabel component="legend">¿Es absoluto?</FormLabel>
           <FormGroup>
             <FormControlLabel
               control={
-                <Checkbox checked={this.state.is_absolute} onChange={() => this.setState({ is_absolute: !this.state.is_absolute })} />
+                <Checkbox
+                  checked={fields.is_absolute}
+                  onChange={this.handleIsAbsoluteChange}
+                  disabled={!loaded}
+                />
               }
             />
           </FormGroup>
         </FormControl>
-        <Button variant="contained" color="primary" type="submit" className={classes.button}>
-          Crear
+        <Button variant="contained" value="create" color="primary" type="submit" className={classes.button} disabled={!loaded}>
+          {id ? 'Guardar' : 'Crear'}
         </Button>
+        {id && <Button variant="contained" disabled value="delete" color="secondary" type="submit" className={classes.button}>
+          Eliminar
+        </Button>}
       </form></Paper>
     )
   }
 }
 
-const COVERAGE_MEASUREMENT_MODELS = [
-  { id: 'lomas_change', name: 'Lomas' },
-  { id: 'vi_lomas_change', name: 'Vegetacion' }
-]
+ParameterRuleForm = withStyles(styles)(ParameterRuleForm);
+ParameterRuleForm = withSnackbar(ParameterRuleForm);
 
-class ScopeRuleForm extends Component {
-  state = {
-    scopes: [],
-    scope: null,
-    measurement_content_type: null,
-    change_type: null,
-    valid_max: "",
-    valid_min: "",
-  }
+const CreateParameterRuleContent = (props) => <ParameterRuleForm {...props} />;
 
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  async componentDidMount() {
-    const { token } = this.props;
-    const response = await axios.get(buildApiUrl("/scopes"), { headers: { Authorization: token } });
-    this.setState({ scopes: response.data });
-    //Check if ID is in params
-    if (false) {
-      const response = await axios.get(buildApiUrl("/alerts/scope-rules/" + 1), { headers: { Authorization: token } });
-      this.setState({
-        measurement_content_type: response.data['measurement_content_type'],
-        scope: response.data["scope"],
-        valid_max: response.data["valid_max"],
-        valid_min: response.data["valid_min"],
-        change_type: response.data["change_type"].charAt(0).toUpperCase(),
-      });
-    }
-  }
-  handleChange = (event) => {
-    const { target } = event
-    this.setState({ [target.name]: target.value });
-  }
-
-  async handleSubmit() {
-    event.preventDefault();
-    const data = this.state;
-    const { token } = this.props;
-    console.log(data);
-    //Error: "Request failed with status code 400"
-    //api_1_ec142b081fd2 | Bad Request: /scopes-rules/
-    //api_1_ec142b081fd2 | [29/Apr/2020 19:20:44] "POST /scopes-rules/ HTTP/1.1" 400 142
-    await axios.
-      post(buildApiUrl("/alerts/scopes-rules/"),
-        data,
-        { headers: { Authorization: token } }
-      ).then(response => {
-        routerPush("/admin/rules");
-      })
-      .catch(error => {
-        //TODO: Informar errores
-        console.error(error);
-      });
-  }
-
-
-  render() {
-    const { classes } = this.props;
-    return (<Paper className={classes.root}>
-      <form
-        className={classes.form}
-        method="post"
-        onSubmit={this.handleSubmit}
-      >
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="scope">Ambito</InputLabel>
-          <Select
-            value={this.state.scope}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'scope',
-              id: 'scope',
-            }}
-          >
-            {this.state.scopes.map(scope =>
-              (<MenuItem key={scope.id} value={scope.id}>{scope.name}</MenuItem>)
-            )}
-          </Select>
-        </FormControl>
-
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="measurement_content_type">Medida</InputLabel>
-          <Select
-            value={this.state.measurement_content_type}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'measurement_content_type',
-              id: 'measurement_content_type',
-            }}
-            className={classes.selectEmpty}
-          >
-            {COVERAGE_MEASUREMENT_MODELS.map(coverage =>
-              (<MenuItem key={coverage.id} value={coverage.id}>{coverage.name}</MenuItem>)
-            )}
-          </Select>
-        </FormControl>
-
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="change_type">Tipo de medida</InputLabel>
-          <Select
-            value={this.state.change_type}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'change_type',
-              id: 'change_type',
-            }}
-            className={classes.selectEmpty}
-          >
-            <MenuItem value={"A"}>{"Area"}</MenuItem>)
-            <MenuItem value={"P"}>{"Porcentaje"}</MenuItem>)
-          </Select>
-        </FormControl>
-
-        <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="valid_min">
-            Valor minimo
-          </InputLabel>
-          <Input
-            id="valid_min"
-            name="valid_min"
-            autoFocus
-            onChange={this.handleChange}
-            value={this.state.valid_min}
-          />
-        </FormControl>
-
-        <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="valid_max">
-            Valor maximo
-          </InputLabel>
-          <Input
-            id="valid_max"
-            name="valid_max"
-            autoFocus
-            onChange={this.handleChange}
-            value={this.state.valid_max}
-          />
-        </FormControl>
-        <Button variant="contained" color="primary" type="submit" className={classes.button}>
-          Crear
-        </Button>
-      </form></Paper>
-    )
-  }
-}
-
-
-const SCOPE_TYPES = [
-  { id: 'CE', name: 'Corredores Ecologicos' },
-  { id: 'AC', name: 'ACR' },
-  { id: 'DI', name: 'Distritos' },
-  { id: 'EF', name: 'Ecosistemas fragiles' },
-  { id: 'SA', name: 'Sitios arqueologicos' },
-]
-
-
-class ScopeTypeRuleForm extends Component {
-  state = {
-    scope_type: null,
-    measurement_content_type: null,
-    change_type: null,
-    valid_max: "",
-    valid_min: "",
-  }
-
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange = (event) => {
-    const { target } = event
-    this.setState({ [target.name]: target.value });
-  }
-
-  async handleSubmit() {
-    event.preventDefault();
-    const data = this.state;
-    const { token } = this.props;
-    console.log(data);
-    await axios.
-      post(buildApiUrl("/alerts/scope-type-rules/"),
-        data,
-        { headers: { Authorization: token } }
-      ).then(response => {
-        routerPush("/admin/rules");
-      })
-      .catch(error => {
-        //TODO: Informar errores
-        console.error(error);
-      });
-  }
-
-
-  render() {
-    const { classes } = this.props;
-    return (<Paper className={classes.root}>
-      <form
-        className={classes.form}
-        method="post"
-        onSubmit={this.handleSubmit}
-      >
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="scope_type">Tipo de Ambito</InputLabel>
-          <Select
-            value={this.state.scope_type}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'scope_type',
-              id: 'scope_type',
-            }}
-          >
-            {SCOPE_TYPES.map(scope =>
-              (<MenuItem key={scope.id} value={scope.id}>{scope.name}</MenuItem>)
-            )}
-          </Select>
-        </FormControl>
-
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="measurement_content_type">Medida</InputLabel>
-          <Select
-            value={this.state.measurement_content_type}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'measurement_content_type',
-              id: 'measurement_content_type',
-            }}
-            className={classes.selectEmpty}
-          >
-            {COVERAGE_MEASUREMENT_MODELS.map(coverage =>
-              (<MenuItem key={coverage.id} value={coverage.id}>{coverage.name}</MenuItem>)
-            )}
-          </Select>
-        </FormControl>
-
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="change_type">Tipo de medida</InputLabel>
-          <Select
-            value={this.state.change_type}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'change_type',
-              id: 'change_type',
-            }}
-            className={classes.selectEmpty}
-          >
-            <MenuItem value={"A"}>{"Area"}</MenuItem>)
-            <MenuItem value={"P"}>{"Porcentaje"}</MenuItem>)
-          </Select>
-        </FormControl>
-
-        <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="valid_min">
-            Valor minimo
-          </InputLabel>
-          <Input
-            id="valid_min"
-            name="valid_min"
-            autoFocus
-            onChange={this.handleChange}
-            value={this.state.valid_min}
-          />
-        </FormControl>
-
-        <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="valid_max">
-            Valor maximo
-          </InputLabel>
-          <Input
-            id="valid_max"
-            name="valid_max"
-            autoFocus
-            onChange={this.handleChange}
-            value={this.state.valid_max}
-          />
-        </FormControl>
-        <Button variant="contained" color="primary" type="submit" className={classes.button}>
-          Crear
-        </Button>
-      </form></Paper>
-    )
-  }
-}
-
-function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
-
-TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-});
-
-const tabs = [
-  {
-    'title': "Crear regla de parametros",
-    'content': <ParameterRuleForm />
-  },
-  {
-    'title': "Crear reglas por ambito",
-    'content': <ScopeRuleForm />
-  },
-  {
-    'title': "Crar regla por tipo de ambito",
-    'content': <ScopeTypeRuleForm />
-  }
-
-]
-
-class RulesCreateContent extends Component {
-  state = {
-    value: 0,
-    id: null,
-  }
-
-  componentDidMount() {
-    const { tab, id } = this.props;
-    if (id !== 'undefined') {
-      this.setState({ id });
-    }
-    this.setState({ value: parseInt(tab) });
-  }
-
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  createTabs = () => {
-    let arr = [];
-    tabs.forEach(function (value, i) {
-      arr.push(<Tab key={i} label={value.title} />);
-    });
-    return arr;
-  }
-
-  render() {
-    const { classes, token } = this.props;
-    const { value } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
-            {this.createTabs()}
-          </Tabs>
-        </AppBar>
-        {React.cloneElement(tabs[value].content, { classes, token })}
-      </div>
-
-    );
-  }
-}
-
-RulesCreateContent.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(RulesCreateContent);
+export default CreateParameterRuleContent;
