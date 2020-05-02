@@ -15,7 +15,7 @@ import ParameterRulesListContent from "../components/admin/ParameterRulesListCon
 import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
 // import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
 import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
-// import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
+import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
 // import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
 import AppbarButtons from "../components/AppbarButtons";
@@ -169,11 +169,11 @@ const sections = {
     path: "/parameter-rules/new",
     content: <CreateParameterRuleContent />,
   },
-  // 'create-scope-type-rule': {
-  //   key: "create-scope-type-rule",
-  //   path: "/scope-type-rules/new",
-  //   content: <CreateScopeTypeRuleContent />,
-  // },
+  'create-scope-type-rule': {
+    key: "create-scope-type-rule",
+    path: "/scope-type-rules/new",
+    content: <CreateScopeTypeRuleContent />,
+  },
   // 'create-scope-rule': {
   //   key: "create-scope-rule",
   //   path: "/scope-rules/new",
