@@ -139,7 +139,9 @@ case_study__agri,crop_lots_type_S2,Soja tardía,Soybean (late)
 case_study__agri,crop_lots_type_M,Maíz temprano,Maize (early)
 case_study__agri,crop_lots_type_MT,Maíz tardío,Maize (late)
 case_study__agri,crop_lots_type_G1,Girasol 1°,Sunflower 1st
-me,sidebar.rules,Reglas,Rules
+me,sidebar.parameter-rules,Reglas de Parámetros,Parameter Rules
+me,sidebar.scope-rules,Reglas de Ámbitos,Scope Rules
+me,sidebar.scope-type-rules,Reglas de Tipos de Ámbitos,Scope Type Rules
 me,sidebar.alerts,Alertas,Alerts
 me,sidebar.profile,Perfil,Profile
 me,download,Descargar,Download
@@ -199,6 +201,13 @@ me,home.api_descrip1,Genera tu API Key desde este,Generate your API Key from thi
 me,home.api_descrip2,y podras integrar nuestra api a tu código python. Para mas información puedes acceder a la Documentación,and you can integrate our api to your python code. For more information you can access the Documentation
 me,home.project_title,Proyectos,Project
 me,home.project_descrip,El identificador del proyecto te será de utilidad para utilizar nuestra API ,The project identifier will be useful to use our API
+me,parameters.temperature,Temperatura de Ambiente (°C),Temperature (°C)
+me,parameters.humidity,Humedad Relativa (%),Relative Humidity (%)
+me,parameters.wind_speed,Velocidad del Viento (m/s),Wind Speed (m/s)
+me,parameters.wind_direction,Dirección del Viento (grados),Wind Direction (degrees)
+me,parameters.pressure,Presión Atmosférica (mbar),Atmospheric Pressure (mbar)
+me,parameters.precipitation,Precipitaciones (niebla),Precipitations (fog)
+me,parameters.pm25,Material Particulado (PM2.5),Particulate Matter (PM2.5)
 image_upload_dialog,upload_progress.title,Subiendo...,Uploading...
 image_upload_dialog,upload_btn,Subir imágenes,Upload images
 image_upload_dialog,cancel_btn,Cancelar,Cancel

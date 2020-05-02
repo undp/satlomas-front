@@ -66,6 +66,15 @@
       "OD": "Object Detection"
     }
   },
+  "parameters": {
+    "humidity": "Relative Humidity (%)",
+    "pm25": "Particulate Matter (PM2.5)",
+    "precipitation": "Precipitations (fog)",
+    "pressure": "Atmospheric Pressure (mbar)",
+    "temperature": "Temperature (\u00b0C)",
+    "wind_direction": "Wind Direction (degrees)",
+    "wind_speed": "Wind Speed (m/s)"
+  },
   "requests": {
     "area_km2": "Area (km\u00b2)",
     "created_at": "Date",
@@ -75,8 +84,10 @@
   },
   "sidebar": {
     "alerts": "Alerts",
+    "parameter-rules": "Parameter Rules",
     "profile": "Profile",
-    "rules": "Rules"
+    "scope-rules": "Scope Rules",
+    "scope-type-rules": "Scope Type Rules"
   },
   "view": "View"
 }

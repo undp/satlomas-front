@@ -8,19 +8,19 @@ import {
   Paper,
   Table,
   TableBody,
+  Tooltip,
   TableHead,
   TableRow,
   TableContainer,
   TableCell,
-  Toolbar,
-  Tooltip,
+  IconButton,
 } from '@material-ui/core';
 import axios from "axios";
-import { i18n } from "../../i18n";
+import { i18n, withTranslation } from "../../i18n";
 import Moment from "react-moment";
 import { buildApiUrl } from "../../utils/api";
 import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import { routerPush } from "../../utils/router";
 
 const styles = theme => ({
@@ -28,28 +28,14 @@ const styles = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-  button: {
+  newButton: {
     marginLeft: theme.spacing(2)
   }
 });
 
 let ParameterRulesTable = (props) => {
-  const { classes, rows, columns } = props;
-
-  function createRow(elem) {
-    const locale = i18n.language;
-    let row = [];
-    let dates_set = new Set().add("created_at").add("updated_at")
-    for (var key in elem) {
-      if (dates_set.has(key)) {
-        row.push(<TableCell key={key}><Moment locale={locale}>{elem[key]}</Moment></TableCell>)
-      }
-      else {
-        row.push(<TableCell key={key}>{elem[key].toString()}</TableCell>)
-      }
-    }
-    return row;
-  }
+  const { t, classes, rows } = props;
+  const locale = i18n.language;
 
   return (
     <Paper className={classes.root}>
@@ -57,13 +43,34 @@ let ParameterRulesTable = (props) => {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              {columns.map(column => <TableCell key={column}>{column}</TableCell>)}
+              <TableCell>Id</TableCell>
+              <TableCell>Estación</TableCell>
+              <TableCell>Parámetro</TableCell>
+              <TableCell>Rango</TableCell>
+              <TableCell>Fecha de creación</TableCell>
+              <TableCell>Fecha de modificación</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map(row => (
               <TableRow key={row.id}>
-                {createRow(row)}
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.station ? row.station.name : 'Cualquiera'}</TableCell>
+                <TableCell>{t(`parameters.${row.parameter}`)}</TableCell>
+                <TableCell>{row.valid_min} - {row.valid_max}{row.is_absolute ? ` (absoluto)` : ''}</TableCell>
+                <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
+                <TableCell><Moment locale={locale} fromNow>{row.updated_at}</Moment></TableCell>
+                <TableCell align="right">
+                  <Tooltip title="Editar">
+                    <IconButton
+                      onClick={() => routerPush(`/admin/parameter-rules/${row.id}`)}
+                      aria-label="Editar regla"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -77,9 +84,11 @@ ParameterRulesTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+ParameterRulesTable = withStyles(styles)(ParameterRulesTable);
+ParameterRulesTable = withTranslation(["me", "common"])(ParameterRulesTable);
+
 class ParameterRulesListContent extends React.Component {
   state = {
-    cols: [],
     rows: [],
     loaded: false,
   };
@@ -95,23 +104,17 @@ class ParameterRulesListContent extends React.Component {
       const response = await axios.get(buildApiUrl("/alerts/parameter-rules"), {
         headers: { Authorization: token }
       })
-
-      if (response.data.length > 0) {
-        const cols = Object.keys(response.data[0]);
-        this.setState({ rows: response.data, cols });
-      } else {
-        this.setState({ rows: [], cols: [] });
-      }
+      this.setState({ rows: response.data });
     } catch (err) {
       console.error(err);
       this.props.enqueueSnackbar('Failed to get parameter rules', { variant: "error" })
-      this.setState({ rows: [], cols: [] });
+      this.setState({ rows: [] });
     }
   }
 
   render() {
     const { classes } = this.props;
-    const { rows, cols } = this.state;
+    const { rows } = this.state;
 
     return (
       <div className={classes.root}>
@@ -123,11 +126,11 @@ class ParameterRulesListContent extends React.Component {
           Reglas de parámetro
           <Button
             onClick={() => routerPush("/admin/parameter-rules/new")}
-            className={classes.button}
+            className={classes.newButton}
             startIcon={<AddIcon />}
           >Nueva regla</Button>
         </Typography>
-        <ParameterRulesTable classes={classes} rows={rows} columns={cols} />
+        <ParameterRulesTable rows={rows} />
       </div >
     );
   }
