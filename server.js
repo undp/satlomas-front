@@ -20,18 +20,23 @@ const handle = app.getRequestHandler();
     app.render(req, res, actualPage, queryParams);
   });
 
+  const ruleTypes = ["parameter", "scope-type", "scope"];
+  for (let i = 0; i < ruleTypes.length; i++) {
+    const ruleType = ruleTypes[i];
+
+    server.get(`/admin/${ruleType}-rules/new`, (req, res) => {
+      return app.render(req, res, "/admin", { section: `create-${ruleType}-rule` });
+    });
+
+    server.get(`/admin/${ruleType}-rules/:id`, (req, res) => {
+      const { id } = req.params;
+      return app.render(req, res, "/admin", { section: `create-${ruleType}-rule`, id });
+    });
+  }
+
   server.get("/admin/:section", (req, res) => {
     const { section } = req.params;
     return app.render(req, res, "/admin", { section: section });
-  });
-
-  server.get("/admin/rules/new", (req, res) => {
-    return app.render(req, res, "/admin", { section: "create_rule" });
-  });
-
-  server.get("/admin/rules/:id", (req, res) => {
-    const { id } = req.params;
-    return app.render(req, res, "/admin", { section: "create_rule", id });
   });
 
   server.get("*", (req, res) => handle(req, res));

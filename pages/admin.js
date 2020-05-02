@@ -9,10 +9,14 @@ import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
 import HomeContent from "../components/admin/HomeContent";
-import RulesCreate from "../components/admin/RulesCreateContent";
-import { Link, withTranslation, i18n } from "../i18n";
+import { Link, withTranslation } from "../i18n";
 import { withAuthSync } from "../utils/auth";
-import RulesListContent from "../components/admin/RulesListContent";
+import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
+// import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
+// import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
+// import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
+// import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
+// import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
 import AppbarButtons from "../components/AppbarButtons";
 
@@ -116,33 +120,71 @@ const styles = (theme) => ({
   },
 });
 
-const allSections = ["alerts", "rules", "profile", "create_rule"];
-const sidebarSections = ["alerts", "rules"]
+const allSections = [
+  "alerts",
+  "rules",
+  "profile",
+  "parameter-rules",
+  "scope-type-rules",
+  "scope-rules",
+  "create-parameter-rule",
+  "create-scope-type-rule",
+  "create-scope-rule",
+];
+
+const sidebarSections = [
+  "alerts",
+  "parameter-rules",
+  // "scope-type-rules",
+  // "scope-rules"
+];
 
 const sections = {
-  rules: {
-    path: "/rules",
-    icon: <DashboardIcon />,
-    content: <RulesListContent />,
-  },
   alerts: {
     key: "alerts",
     path: "/alerts",
     icon: <LayersIcon />,
     content: <AlertsTableContent />,
   },
+  'parameter-rules': {
+    key: "parameter-rules",
+    path: "/parameter-rules",
+    icon: <DashboardIcon />,
+    content: <ParameterRulesListContent />,
+  },
+  // 'scope-rules': {
+  //   key: "scope-rules",
+  //   path: "/scope-rules",
+  //   icon: <DashboardIcon />,
+  //   content: <ScopeRulesListContent />,
+  // },
+  // 'scope-type-rules': {
+  //   key: "scope-type-rules",
+  //   path: "/scope-type-rules",
+  //   icon: <DashboardIcon />,
+  //   content: <ScopeTypeRulesListContent />,
+  // },
+  // 'create-parameter-rule': {
+  //   key: "create-parameter-rule",
+  //   path: "/parameter-rules/new",
+  //   content: <CreateParameterRuleContent />,
+  // },
+  // 'create-scope-rule': {
+  //   key: "create-scope-rule",
+  //   path: "/scope-rules/new",
+  //   content: <CreateScopeRuleContent />,
+  // },
+  // 'create-scope-type-rule': {
+  //   key: "create-scope-type-rule",
+  //   path: "/scope-type-rules/new",
+  //   content: <CreateScopeTypeRuleContent />,
+  // },
   profile: {
     key: "profile",
     path: "/profile",
     icon: <MapIcon />,
     content: null,
   },
-  create_rule: {
-    key: "create_rule",
-    path: "/rules/new",
-    icon: <MapIcon />,
-    content: <RulesCreate />,
-  }
 };
 
 class Admin extends React.Component {
@@ -156,17 +198,19 @@ class Admin extends React.Component {
   static async getInitialProps({ query }) {
     return {
       namespacesRequired: ["me", "common"],
-      query: query,
+      query,
     };
   }
 
   constructor(props) {
     super(props);
 
+    console.log("Query param", props.query);
     let { section } = props.query;
 
     // Set current section based on path
     if (section && allSections.includes(section)) {
+      console.log("Set section from query param:", section)
       this.state.section = section;
     }
   }
@@ -187,6 +231,7 @@ class Admin extends React.Component {
     const { t, classes, token, query } = this.props;
     const { section, open } = this.state;
 
+    console.log("Rendering content of:", section);
     const originalContent = section && sections[section].content;
     const content =
       originalContent &&
