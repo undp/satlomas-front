@@ -29,6 +29,50 @@ const styles = theme => ({
   }
 });
 
+let StationsSelectControl = ({ classes, items, value, disabled, onChange }) => (
+  <FormControl className={classes.formControl} fullWidth>
+    <InputLabel htmlFor="station">Estación</InputLabel>
+    <Select
+      value={value || '---'}
+      onChange={onChange}
+      inputProps={{
+        name: 'station',
+        id: 'station',
+      }}
+      disabled={disabled}
+    >
+      <MenuItem value="---">Cualquiera</MenuItem>
+      {items.map(item =>
+        (<MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)
+      )}
+    </Select>
+  </FormControl>
+)
+
+StationsSelectControl = withStyles(styles)(StationsSelectControl);
+
+let ParametersSelectControl = ({ classes, value, disabled, onChange }) => (
+  <FormControl required className={classes.formControl} fullWidth>
+    <InputLabel htmlFor="parameter">Parámetro</InputLabel>
+    <Select
+      value={value || ""}
+      onChange={onChange}
+      inputProps={{
+        name: 'parameter',
+        id: 'parameter',
+      }}
+      className={classes.selectEmpty}
+      disabled={disabled}
+    >
+      {stationParameters.map(parameter =>
+        (<MenuItem key={parameter.id} value={parameter.id}>{parameter.name}</MenuItem>)
+      )}
+    </Select>
+  </FormControl>
+)
+
+ParametersSelectControl = withStyles(styles)(ParametersSelectControl);
+
 class ParameterRuleForm extends Component {
   state = {
     fields: {
@@ -78,7 +122,7 @@ class ParameterRuleForm extends Component {
           is_absolute,
           valid_max,
           valid_min,
-          station,
+          station: station && station.id,
         }
       });
     } catch (err) {
@@ -116,7 +160,7 @@ class ParameterRuleForm extends Component {
   }
 
   async patchRule(id) {
-    const { token } = this.props;
+    const { token, enqueueSnackbar } = this.props;
     const { fields } = this.state;
 
     try {
@@ -124,11 +168,11 @@ class ParameterRuleForm extends Component {
         fields,
         { headers: { Authorization: token } }
       );
-
-      routerPush("/admin/parameter-rules");
+      enqueueSnackbar("Rule updated", { variant: 'success' })
+      // routerPush("/admin/parameter-rules");
     } catch (err) {
       console.error(err);
-      this.props.enqueueSnackbar("Failed to update rule", { variant: 'error' });
+      enqueueSnackbar("Failed to update rule", { variant: 'error' });
     }
   }
 
@@ -162,40 +206,17 @@ class ParameterRuleForm extends Component {
         method="post"
         onSubmit={this.handleSubmit}
       >
-        <FormControl className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="station">Estación</InputLabel>
-          <Select
-            value={fields.station || '---'}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'station',
-              id: 'station',
-            }}
-            disabled={!loaded}
-          >
-            <MenuItem value="---">Cualquiera</MenuItem>
-            {stations.map(station =>
-              (<MenuItem key={station.id} value={station.id}>{station.name}</MenuItem>)
-            )}
-          </Select>
-        </FormControl>
-        <FormControl required className={classes.formControl} fullWidth>
-          <InputLabel htmlFor="parameter">Parámetro</InputLabel>
-          <Select
-            value={fields.parameter || ""}
-            onChange={this.handleChange}
-            inputProps={{
-              name: 'parameter',
-              id: 'parameter',
-            }}
-            className={classes.selectEmpty}
-            disabled={!loaded}
-          >
-            {stationParameters.map(parameter =>
-              (<MenuItem key={parameter.id} value={parameter.id}>{parameter.name}</MenuItem>)
-            )}
-          </Select>
-        </FormControl>
+        <StationsSelectControl
+          items={stations}
+          value={fields.station}
+          disabled={!loaded}
+          onChange={this.handleChange}
+        />
+        <ParametersSelectControl
+          value={fields.parameter}
+          disabled={!loaded}
+          onChange={this.handleChange}
+        />
         <FormControl margin="normal" required fullWidth>
           <InputLabel htmlFor="valid_min">
             Valor mínimo
