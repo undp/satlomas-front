@@ -270,11 +270,6 @@ class Admin extends React.Component {
             >
               GeoLomas - Administración
             </Typography>
-            {/* <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
             <AppbarButtons />
           </Toolbar>
         </AppBar>
