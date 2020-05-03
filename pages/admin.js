@@ -13,10 +13,10 @@ import { Link, withTranslation } from "../i18n";
 import { withAuthSync } from "../utils/auth";
 import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
 import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
-// import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
+import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
 import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
 import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
-// import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
+import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
 import AppbarButtons from "../components/AppbarButtons";
 
@@ -136,7 +136,7 @@ const sidebarSections = [
   "alerts",
   "parameter-rules",
   "scope-type-rules",
-  // "scope-rules"
+  "scope-rules"
 ];
 
 const sections = {
@@ -158,12 +158,12 @@ const sections = {
     icon: <DashboardIcon />,
     content: <ScopeTypeRulesListContent />,
   },
-  // 'scope-rules': {
-  //   key: "scope-rules",
-  //   path: "/scope-rules",
-  //   icon: <DashboardIcon />,
-  //   content: <ScopeRulesListContent />,
-  // },
+  'scope-rules': {
+    key: "scope-rules",
+    path: "/scope-rules",
+    icon: <DashboardIcon />,
+    content: <ScopeRulesListContent />,
+  },
   'create-parameter-rule': {
     key: "create-parameter-rule",
     path: "/parameter-rules/new",
@@ -174,11 +174,11 @@ const sections = {
     path: "/scope-type-rules/new",
     content: <CreateScopeTypeRuleContent />,
   },
-  // 'create-scope-rule': {
-  //   key: "create-scope-rule",
-  //   path: "/scope-rules/new",
-  //   content: <CreateScopeRuleContent />,
-  // },
+  'create-scope-rule': {
+    key: "create-scope-rule",
+    path: "/scope-rules/new",
+    content: <CreateScopeRuleContent />,
+  },
   profile: {
     key: "profile",
     path: "/profile",
