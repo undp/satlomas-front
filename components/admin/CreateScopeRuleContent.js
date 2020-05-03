@@ -16,11 +16,9 @@ import InputControl from './forms/InputControl';
 import SubmitButton from './forms/SubmitButton';
 import DestroyButton from './forms/DestroyButton';
 import { routerPush } from "../../utils/router";
+import config from "../../config";
 
-const measurementContentTypes = [
-  { id: "vi_lomas_changes", name: "Vegetación de Lomas" },
-  { id: "lomas_changes", name: "Pérdida de Lomas" },
-]
+const { measurementContentTypes } = config;
 
 const styles = theme => ({
   root: {

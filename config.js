@@ -29,4 +29,8 @@ export default {
       name: "Material Particulado (PM2.5)",
     },
   ],
+  measurementContentTypes: [
+    { id: "vi_lomas_changes", name: "Vegetación de Lomas" },
+    { id: "lomas_changes", name: "Pérdida de Lomas" },
+  ],
 };
