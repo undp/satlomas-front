@@ -12,7 +12,7 @@ import {
   TableCell,
   IconButton,
 } from '@material-ui/core';
-import { i18n } from "../../i18n";
+import { i18n, withTranslation } from "../../i18n";
 import Moment from "react-moment";
 import EditIcon from '@material-ui/icons/Edit';
 import { routerPush } from "../../utils/router";
@@ -20,7 +20,6 @@ import RulesListContent from "./RulesListContent";
 import { withSnackbar } from 'notistack';
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
-import config from "../../config";
 
 const styles = theme => ({
   root: {
@@ -41,7 +40,7 @@ const getScopeName = (scopes, id) => {
 }
 
 let ScopeRulesTable = (props) => {
-  const { scopes, classes, rows } = props;
+  const { t, classes, scopes, rows } = props;
   const locale = i18n.language;
 
   return (
@@ -93,6 +92,7 @@ ScopeRulesTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+ScopeRulesTable = withTranslation(["me", "common"])(ScopeRulesTable);
 ScopeRulesTable = withStyles(styles)(ScopeRulesTable);
 
 class ScopeRulesListContent extends React.Component {
@@ -135,6 +135,6 @@ class ScopeRulesListContent extends React.Component {
   }
 }
 
-ScopeRulesListContent = withSnackbar(ScopeRulesListContent)
+ScopeRulesListContent = withSnackbar(ScopeRulesListContent);
 
 export default ScopeRulesListContent;

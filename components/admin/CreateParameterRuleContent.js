@@ -103,7 +103,7 @@ class ParameterRuleForm extends React.Component {
         { headers: { Authorization: token } }
       );
 
-      routerPush("/admin/rules");
+      routerPush("/admin/parameter-rules");
     } catch (err) {
       console.error(err);
       this.props.enqueueSnackbar("Failed to create new rule", { variant: 'error' });

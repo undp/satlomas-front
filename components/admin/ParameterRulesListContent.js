@@ -17,6 +17,9 @@ import Moment from "react-moment";
 import EditIcon from '@material-ui/icons/Edit';
 import { routerPush } from "../../utils/router";
 import RulesListContent from "./RulesListContent";
+import { withSnackbar } from 'notistack';
+import axios from "axios";
+import { buildApiUrl } from "../../utils/api";
 
 const styles = theme => ({
   root: {
@@ -28,8 +31,16 @@ const styles = theme => ({
   }
 });
 
+const getStationName = (stations, id) => {
+  if (!id) return 'Cualquiera';
+  if (!stations) return '';
+  const station = stations[id];
+  if (!station) return '';
+  return station.name;
+}
+
 let ParameterRulesTable = (props) => {
-  const { t, classes, rows } = props;
+  const { t, classes, stations, rows } = props;
   const locale = i18n.language;
 
   return (
@@ -51,7 +62,7 @@ let ParameterRulesTable = (props) => {
             {rows.map(row => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.station ? row.station.name : 'Cualquiera'}</TableCell>
+                <TableCell>{getStationName(row.station)}</TableCell>
                 <TableCell>{t(`parameters.${row.parameter}`)}</TableCell>
                 <TableCell>{row.valid_min} - {row.valid_max}{row.is_absolute ? ` (absoluto)` : ''}</TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
@@ -82,12 +93,45 @@ ParameterRulesTable.propTypes = {
 ParameterRulesTable = withStyles(styles)(ParameterRulesTable);
 ParameterRulesTable = withTranslation(["me", "common"])(ParameterRulesTable);
 
-const ParameterRulesListContent = ({ token }) => (
-  <RulesListContent
-    token={token}
-    ruleType="parameter"
-    title="Reglas por Parámetro"
-    tableComponent={<ParameterRulesTable />} />
-);
+class ParameterRulesListContent extends React.Component {
+  state = {
+    stations: {}
+  }
+
+  componentDidMount() {
+    this.fetchStations()
+  }
+
+  async fetchStations() {
+    try {
+      const response = await axios.get(buildApiUrl("/stations/stations"));
+      const stationsArray = response.data;
+      let stations = {};
+      for (let i = 0; i < stationsArray.length; i++) {
+        const station = stationsArray[i];
+        stations[station.id] = station;
+      }
+      this.setState({ stations });
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to get stations", { variant: 'error' });
+    }
+  }
+
+  render() {
+    const { token } = this.props;
+    const { stations } = this.state;
+
+    return (
+      <RulesListContent
+        token={token}
+        ruleType="parameter"
+        title="Reglas por Parámetro"
+        tableComponent={<ParameterRulesTable stations={stations} />} />
+    )
+  }
+}
+
+ParameterRulesListContent = withSnackbar(ParameterRulesListContent);
 
 export default ParameterRulesListContent;

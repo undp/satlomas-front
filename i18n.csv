@@ -208,6 +208,10 @@ me,parameters.wind_direction,Dirección del Viento (grados),Wind Direction (degr
 me,parameters.pressure,Presión Atmosférica (mbar),Atmospheric Pressure (mbar)
 me,parameters.precipitation,Precipitaciones (niebla),Precipitations (fog)
 me,parameters.pm25,Material Particulado (PM2.5),Particulate Matter (PM2.5)
+me,measurement_content_type.vi_lomas_changes,Vegetación de Lomas,Lomas Vegetation
+me,measurement_content_type.lomas_changes,Pérdida de Lomas,Loss of Lomas
+me,change_type.P,Porcentaje,Percentage
+me,change_type.A,Área,Area
 image_upload_dialog,upload_progress.title,Subiendo...,Uploading...
 image_upload_dialog,upload_btn,Subir imágenes,Upload images
 image_upload_dialog,cancel_btn,Cancelar,Cancel

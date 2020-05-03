@@ -47,7 +47,7 @@ class RulesListContent extends React.Component {
   }
 
   render() {
-    const { classes, title, tableComponent } = this.props;
+    const { classes, title, tableComponent, ruleType } = this.props;
     const { rows } = this.state;
 
     return (

@@ -53,8 +53,8 @@ let ScopeTypeRulesTable = (props) => {
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell>{row.scope_type ? row.scope_type : 'Cualquiera'}</TableCell>
-                <TableCell>{row.measurement_content_type}</TableCell>
-                <TableCell>{row.change_type}</TableCell>
+                <TableCell>{t(`measurement_content_type.${row.measurement_content_type}`)}</TableCell>
+                <TableCell>{t(`change_type.${row.change_type}`)}</TableCell>
                 <TableCell>{row.valid_min} - {row.valid_max}</TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.updated_at}</Moment></TableCell>

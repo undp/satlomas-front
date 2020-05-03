@@ -1,4 +1,8 @@
 {
+  "change_type": {
+    "A": "Area",
+    "P": "Percentage"
+  },
   "download": "Download",
   "files": {
     "created_at": "Upload date",
@@ -51,6 +55,10 @@
     "description": "Description",
     "name": "Name",
     "title": "Your maps"
+  },
+  "measurement_content_type": {
+    "lomas_changes": "Loss of Lomas",
+    "vi_lomas_changes": "Lomas Vegetation"
   },
   "models": {
     "add_annot": "Add annotations",

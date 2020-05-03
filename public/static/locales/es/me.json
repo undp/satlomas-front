@@ -1,4 +1,8 @@
 {
+  "change_type": {
+    "A": "\u00c1rea",
+    "P": "Porcentaje"
+  },
   "download": "Descargar",
   "files": {
     "created_at": "Fecha de subida",
@@ -51,6 +55,10 @@
     "description": "Descripci\u00f3n",
     "name": "Nombre",
     "title": "Tus mapas"
+  },
+  "measurement_content_type": {
+    "lomas_changes": "P\u00e9rdida de Lomas",
+    "vi_lomas_changes": "Vegetaci\u00f3n de Lomas"
   },
   "models": {
     "add_annot": "Agregar anotaciones",
