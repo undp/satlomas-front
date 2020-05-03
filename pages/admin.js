@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import HomeContent from "../components/admin/HomeContent";
 import { Link, withTranslation } from "../i18n";
+import { routerReplace } from "../utils/router";
 import { withAuthSync } from "../utils/auth";
 import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
 import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
@@ -75,6 +76,7 @@ const styles = (theme) => ({
     display: "flex",
     flexGrow: 1,
     alignItems: "center",
+    cursor: "pointer"
   },
   titleLogo: {
     marginRight: 5,
@@ -215,6 +217,14 @@ class Admin extends React.Component {
     }
   }
 
+  componentDidMount() {
+    // By default, go to /alerts
+    const { section } = this.props.query;
+    if (!section) {
+      routerReplace("/admin/alerts");
+    }
+  }
+
   handleDrawerOpen = () => {
     this.setState({ open: true });
   };
@@ -261,15 +271,17 @@ class Admin extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              className={classes.title}
-            >
-              GeoLomas - Administración
+            <Link href="/">
+              <Typography
+                component="h1"
+                variant="h6"
+                color="inherit"
+                noWrap
+                className={classes.title}
+              >
+                GeoLomas - Administración
             </Typography>
+            </Link>
             <AppbarButtons />
           </Toolbar>
         </AppBar>
