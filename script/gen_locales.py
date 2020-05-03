@@ -4,7 +4,7 @@ import json
 import os
 import shutil
 
-BASE_LOCALE_PATH = os.path.join('static', 'locales')
+BASE_LOCALE_PATH = os.path.join('public', 'static', 'locales')
 
 data = {}
 all_locales = []

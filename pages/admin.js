@@ -4,22 +4,21 @@ import LayersIcon from "@material-ui/icons/Layers";
 import MapIcon from "@material-ui/icons/Map";
 import MenuIcon from "@material-ui/icons/Menu";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import HomeIcon from "@material-ui/icons/Home";
 import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import LayersContent from "../components/admin/LayersContent";
-import MapsContent from "../components/admin/MapsContent";
-import KeysContent from "../components/admin/KeysContent";
 import HomeContent from "../components/admin/HomeContent";
-import ButtonsContent from "../components/ButtonsContent";
-import { Link, withTranslation, i18n } from "../i18n";
-import { buildApiUrl } from "../utils/api";
+import { Link, withTranslation } from "../i18n";
 import { withAuthSync } from "../utils/auth";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
+import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
+import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
+import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
+import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
+import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
+import AlertsTableContent from "../components/admin/AlertsTableContent";
+import AppbarButtons from "../components/AppbarButtons";
 
 import {
   AppBar,
@@ -32,9 +31,6 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  Menu,
-  MenuItem,
-  ListItemSecondaryAction,
 } from '@material-ui/core';
 
 const drawerWidth = 200;
@@ -124,32 +120,70 @@ const styles = (theme) => ({
   },
 });
 
-const sortedSections = ["stations", "maps", "layers", "keys"];
-const sortedSectionsBeta = ["stations", "maps", "layers", "keys"];
+const allSections = [
+  "alerts",
+  "rules",
+  "profile",
+  "parameter-rules",
+  "scope-type-rules",
+  "scope-rules",
+  "create-parameter-rule",
+  "create-scope-type-rule",
+  "create-scope-rule",
+];
+
+const sidebarSections = [
+  "alerts",
+  "parameter-rules",
+  "scope-type-rules",
+  "scope-rules"
+];
 
 const sections = {
-  stations: {
-    path: "/stations",
-    icon: <DashboardIcon />,
-    content: null,
-  },
-  layers: {
-    key: "layers",
-    path: "/layers",
+  alerts: {
+    key: "alerts",
+    path: "/alerts",
     icon: <LayersIcon />,
-    content: <LayersContent />,
+    content: <AlertsTableContent />,
   },
-  maps: {
-    key: "maps",
-    path: "/maps",
+  'parameter-rules': {
+    key: "parameter-rules",
+    path: "/parameter-rules",
+    icon: <DashboardIcon />,
+    content: <ParameterRulesListContent />,
+  },
+  'scope-type-rules': {
+    key: "scope-type-rules",
+    path: "/scope-type-rules",
+    icon: <DashboardIcon />,
+    content: <ScopeTypeRulesListContent />,
+  },
+  'scope-rules': {
+    key: "scope-rules",
+    path: "/scope-rules",
+    icon: <DashboardIcon />,
+    content: <ScopeRulesListContent />,
+  },
+  'create-parameter-rule': {
+    key: "create-parameter-rule",
+    path: "/parameter-rules/new",
+    content: <CreateParameterRuleContent />,
+  },
+  'create-scope-type-rule': {
+    key: "create-scope-type-rule",
+    path: "/scope-type-rules/new",
+    content: <CreateScopeTypeRuleContent />,
+  },
+  'create-scope-rule': {
+    key: "create-scope-rule",
+    path: "/scope-rules/new",
+    content: <CreateScopeRuleContent />,
+  },
+  profile: {
+    key: "profile",
+    path: "/profile",
     icon: <MapIcon />,
-    content: <MapsContent />,
-  },
-  keys: {
-    key: "keys",
-    path: "/keys",
-    icon: <VpnKeyIcon />,
-    content: <KeysContent />,
+    content: null,
   },
 };
 
@@ -157,7 +191,6 @@ class Admin extends React.Component {
   state = {
     open: true,
     section: null,
-    beta: false,
     contextualMenuOpen: null,
     username: "",
   };
@@ -165,17 +198,19 @@ class Admin extends React.Component {
   static async getInitialProps({ query }) {
     return {
       namespacesRequired: ["me", "common"],
-      query: query,
+      query,
     };
   }
 
   constructor(props) {
     super(props);
 
+    console.log("Query param", props.query);
     let { section } = props.query;
 
     // Set current section based on path
-    if (section && sortedSections.includes(section)) {
+    if (section && allSections.includes(section)) {
+      console.log("Set section from query param:", section)
       this.state.section = section;
     }
   }
@@ -192,18 +227,17 @@ class Admin extends React.Component {
     this.setState({ section });
   };
 
-
   render() {
-    const { t, classes, token } = this.props;
-    const { section, open, beta } = this.state;
+    const { t, classes, token, query } = this.props;
+    const { section, open } = this.state;
 
-    const sectionList = beta ? sortedSectionsBeta : sortedSections;
-
+    console.log("Rendering content of:", section);
     const originalContent = section && sections[section].content;
     const content =
       originalContent &&
       React.cloneElement(originalContent, {
-        token: token,
+        ...query,
+        token,
       });
 
     return (
@@ -234,14 +268,9 @@ class Admin extends React.Component {
               noWrap
               className={classes.title}
             >
-              GeoLomas Platform
+              GeoLomas - Administración
             </Typography>
-            {/* <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton> */}
-            <ButtonsContent/>
+            <AppbarButtons />
           </Toolbar>
         </AppBar>
         <Drawer
@@ -261,29 +290,7 @@ class Admin extends React.Component {
           </div>
           <Divider />
           <List>
-            <Link href="/admin">
-              <ListItem button selected={!sectionList.includes(section)}>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary={t(`sidebar.home`)} />
-              </ListItem>
-            </Link>
-          </List>
-          <Divider />
-          <List>
-            <Link href="/stations-map">
-              <ListItem button>
-                <ListItemIcon>
-                  <MapIcon />
-                </ListItemIcon>
-                <ListItemText primary={t(`sidebar.stations_map`)} />
-              </ListItem>
-            </Link>
-          </List>
-          <Divider />
-          <List>
-            {sectionList.map((key) => (
+            {sidebarSections.map((key) => (
               <Link
                 key={key}
                 href={`/admin?section=${key}`}
@@ -301,21 +308,21 @@ class Admin extends React.Component {
             ))}
           </List>
           <Divider />
-          {/* <List>
+          <List>
             <Link
-              href={`/admin?section=requests`}
-              as={`/admin${sections["requests"].path}`}
+              href={`/admin?section=profile`}
+              as={`/admin${sections["profile"].path}`}
             >
               <ListItem
                 button
-                onClick={() => this.handleSectionChange("requests")}
-                selected={section === "requests"}
+                onClick={() => this.handleSectionChange("profile")}
+                selected={section === "profile"}
               >
-                <ListItemIcon>{sections["requests"].icon}</ListItemIcon>
-                <ListItemText primary={t(`sidebar.requests`)} />
+                <ListItemIcon>{sections["profile"].icon}</ListItemIcon>
+                <ListItemText primary={t(`sidebar.profile`)} />
               </ListItem>
             </Link>
-          </List> */}
+          </List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />

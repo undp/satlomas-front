@@ -1,4 +1,8 @@
 {
+  "change_type": {
+    "A": "\u00c1rea",
+    "P": "Porcentaje"
+  },
   "download": "Descargar",
   "files": {
     "created_at": "Fecha de subida",
@@ -52,6 +56,10 @@
     "name": "Nombre",
     "title": "Tus mapas"
   },
+  "measurement_content_type": {
+    "lomas_changes": "P\u00e9rdida de Lomas",
+    "vi_lomas_changes": "Vegetaci\u00f3n de Lomas"
+  },
   "models": {
     "add_annot": "Agregar anotaciones",
     "add_imgs": "Agregar im\u00e1genes",
@@ -66,6 +74,15 @@
       "OD": "Detecci\u00f3n de Objetos"
     }
   },
+  "parameters": {
+    "humidity": "Humedad Relativa (%)",
+    "pm25": "Material Particulado (PM2.5)",
+    "precipitation": "Precipitaciones (niebla)",
+    "pressure": "Presi\u00f3n Atmosf\u00e9rica (mbar)",
+    "temperature": "Temperatura de Ambiente (\u00b0C)",
+    "wind_direction": "Direcci\u00f3n del Viento (grados)",
+    "wind_speed": "Velocidad del Viento (m/s)"
+  },
   "requests": {
     "area_km2": "\u00c1rea (km\u00b2)",
     "created_at": "Fecha",
@@ -74,14 +91,11 @@
     "title": "Tus pedidos"
   },
   "sidebar": {
-    "dashboard": "Dashboard",
-    "files": "Archivos",
-    "home": "Inicio",
-    "keys": "API Keys",
-    "layers": "Capas",
-    "maps": "Mapas",
-    "stations": "Estaciones",
-    "stations_map": "Mapa de Estaciones"
+    "alerts": "Alertas",
+    "parameter-rules": "Reglas de Par\u00e1metros",
+    "profile": "Perfil",
+    "scope-rules": "Reglas de \u00c1mbitos",
+    "scope-type-rules": "Reglas de Tipos de \u00c1mbitos"
   },
   "view": "Ver"
 }

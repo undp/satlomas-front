@@ -6,7 +6,7 @@ import { withTranslation, i18n } from "../i18n";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
-import ButtonsContent from "../components/ButtonsContent";
+import AppbarButtons from "../components/AppbarButtons";
 
 import {
   AppBar,
@@ -24,6 +24,18 @@ import {
 const styles = (theme) => ({
   appBar: {
     position: "relative",
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  rightButtons: {
+    position: "relative",
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
   },
   menuItem: {
     minWidth: 150,
@@ -155,7 +167,10 @@ class Index extends React.Component {
             <Typography variant="h6" color="inherit" noWrap>
               GeoLomas
             </Typography>
-            <ButtonsContent />
+            <div className={classes.grow} />
+            <div className={classes.rightButtons}>
+              <AppbarButtons />
+            </div>
           </Toolbar>
         </AppBar>
         <main>
