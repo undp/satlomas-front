@@ -1,9 +1,9 @@
 import { withStyles } from "@material-ui/core/styles";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import LayersIcon from "@material-ui/icons/Layers";
-import MapIcon from "@material-ui/icons/Map";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import ListIcon from "@material-ui/icons/List";
+import PersonIcon from "@material-ui/icons/Person";
 import MenuIcon from "@material-ui/icons/Menu";
-import DashboardIcon from "@material-ui/icons/Dashboard";
 import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
@@ -143,25 +143,25 @@ const sections = {
   alerts: {
     key: "alerts",
     path: "/alerts",
-    icon: <LayersIcon />,
+    icon: <NotificationsIcon />,
     content: <AlertsTableContent />,
   },
   'parameter-rules': {
     key: "parameter-rules",
     path: "/parameter-rules",
-    icon: <DashboardIcon />,
+    icon: <ListIcon />,
     content: <ParameterRulesListContent />,
   },
   'scope-type-rules': {
     key: "scope-type-rules",
     path: "/scope-type-rules",
-    icon: <DashboardIcon />,
+    icon: <ListIcon />,
     content: <ScopeTypeRulesListContent />,
   },
   'scope-rules': {
     key: "scope-rules",
     path: "/scope-rules",
-    icon: <DashboardIcon />,
+    icon: <ListIcon />,
     content: <ScopeRulesListContent />,
   },
   'create-parameter-rule': {
@@ -182,7 +182,7 @@ const sections = {
   profile: {
     key: "profile",
     path: "/profile",
-    icon: <MapIcon />,
+    icon: <PersonIcon />,
     content: null,
   },
 };
