@@ -12,11 +12,15 @@ import {
   TableCell,
   IconButton,
 } from '@material-ui/core';
-import { i18n, withTranslation } from "../../i18n";
+import { i18n } from "../../i18n";
 import Moment from "react-moment";
 import EditIcon from '@material-ui/icons/Edit';
 import { routerPush } from "../../utils/router";
 import RulesListContent from "./RulesListContent";
+import { withSnackbar } from 'notistack';
+import axios from "axios";
+import { buildApiUrl } from "../../utils/api";
+import config from "../../config";
 
 const styles = theme => ({
   root: {
@@ -28,8 +32,16 @@ const styles = theme => ({
   }
 });
 
+const getScopeName = (scopes, id) => {
+  if (!id) return 'Cualquiera';
+  if (!scopes) return '';
+  const scope = scopes[id];
+  if (!scope) return '';
+  return `${scope.scope_type} - ${scope.name}`
+}
+
 let ScopeRulesTable = (props) => {
-  const { t, classes, rows } = props;
+  const { scopes, classes, rows } = props;
   const locale = i18n.language;
 
   return (
@@ -52,9 +64,9 @@ let ScopeRulesTable = (props) => {
             {rows.map(row => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{row.scope ? row.scope.name : 'Cualquiera'}</TableCell>
-                <TableCell>{row.measurement_content_type}</TableCell>
-                <TableCell>{row.change_type}</TableCell>
+                <TableCell>{getScopeName(scopes, row.scope)}</TableCell>
+                <TableCell>{t(`measurement_content_type.${row.measurement_content_type}`)}</TableCell>
+                <TableCell>{t(`change_type.${row.change_type}`)}</TableCell>
                 <TableCell>{row.valid_min} - {row.valid_max}</TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.updated_at}</Moment></TableCell>
@@ -82,14 +94,47 @@ ScopeRulesTable.propTypes = {
 };
 
 ScopeRulesTable = withStyles(styles)(ScopeRulesTable);
-ScopeRulesTable = withTranslation(["me", "common"])(ScopeRulesTable);
 
-const ScopeRulesListContent = ({ token }) => (
-  <RulesListContent
-    token={token}
-    ruleType="scope"
-    title="Reglas por Ámbito"
-    tableComponent={<ScopeRulesTable />} />
-);
+class ScopeRulesListContent extends React.Component {
+  state = {
+    scopes: {}
+  }
+
+  componentDidMount() {
+    this.fetchScopes()
+  }
+
+  async fetchScopes() {
+    try {
+      // Fetch all scopes, skipping geometry field
+      const response = await axios.get(buildApiUrl("/scopes/"), { params: { skipgeom: 1 } });
+      const scopesArray = response.data;
+      let scopes = {};
+      for (let i = 0; i < scopesArray.length; i++) {
+        const scope = scopesArray[i];
+        scopes[scope.id] = scope;
+      }
+      this.setState({ scopes });
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar("Failed to get scopes", { variant: 'error' });
+    }
+  }
+
+  render() {
+    const { token } = this.props;
+    const { scopes } = this.state;
+
+    return (
+      <RulesListContent
+        token={token}
+        ruleType="scope"
+        title="Reglas por Ámbito"
+        tableComponent={<ScopeRulesTable scopes={scopes} />} />
+    );
+  }
+}
+
+ScopeRulesListContent = withSnackbar(ScopeRulesListContent)
 
 export default ScopeRulesListContent;

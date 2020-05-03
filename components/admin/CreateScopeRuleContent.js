@@ -69,7 +69,7 @@ class ScopeRuleForm extends React.Component {
       const response = await axios.get(buildApiUrl("/scopes/"), { params: { skipgeom: 1 } });
       const scopes = response.data.map(scope => ({
         id: scope.id,
-        name: scope.name
+        name: `${scope.scope_type} - ${scope.name}`,
       }));
       this.setState({ scopes });
     } catch (err) {
