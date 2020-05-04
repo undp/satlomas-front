@@ -32,7 +32,7 @@ class ConfirmationDialog extends React.Component{
               {t("confirmation.cancel")}
             </Button>
             <Button onClick={this.handleOk} color="primary">
-              Ok
+              {this.props.delete ? "Eliminar" : "Ok"}
             </Button>
           </DialogActions>
         </Dialog>
