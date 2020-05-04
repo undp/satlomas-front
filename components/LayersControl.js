@@ -35,13 +35,13 @@ class LayersControl extends React.Component {
     if (onToggle) onToggle(this._findLayer(event.target.value), event);
   };
 
-  handleItemClick = uuid => {
+  handleItemClick = id => {
     // const { onToggle } = this.props;
-    // if (onToggle) onToggle(this._findLayer(uuid), event);
+    // if (onToggle) onToggle(this._findLayer(id), event);
   };
 
-  _findLayer(uuid) {
-    const layer = this.props.layers.find(layer => layer.uuid === uuid);
+  _findLayer(id) {
+    const layer = this.props.layers.find(layer => layer.id === id);
     return layer;
   }
 
@@ -61,6 +61,7 @@ class LayersControl extends React.Component {
           onClick={this.handleClick}
           color="primary"
           size="small"
+          disabled={layers.length === 0}
         >
           <LayersIcon />
         </Fab>
@@ -73,22 +74,22 @@ class LayersControl extends React.Component {
         >
           {layers.map(layer => (
             <MenuItem
-              key={layer.uuid}
-              onClick={this.handleItemClick(layer.uuid)}
+              key={layer.id}
+              onClick={this.handleItemClick(layer.id)}
             >
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={activeLayers.includes(layer.uuid)}
+                    checked={activeLayers.includes(layer.id)}
                     onChange={this.handleCheckboxChange}
-                    value={layer.uuid}
+                    value={layer.id}
                   />
                 }
                 label={layer.name}
               />
               <OpacitySlider
-                value={layersOpacity[layer.uuid] || 100}
-                onChange={(e, value) => onOpacityChange(layer.uuid, value)}
+                value={layersOpacity[layer.id] || 100}
+                onChange={(e, value) => onOpacityChange(layer.id, value)}
               />
             </MenuItem>
           ))}

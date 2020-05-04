@@ -7,9 +7,6 @@ const styles = {
   root: {
     width: 40
   },
-  slider: {
-    padding: "22px 0px"
-  }
 };
 
 class OpacitySlider extends React.Component {
@@ -19,7 +16,6 @@ class OpacitySlider extends React.Component {
     return (
       <div className={classes.root}>
         <Slider
-          classes={{ container: classes.slider }}
           value={value}
           onChange={onChange}
         />

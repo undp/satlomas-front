@@ -27,6 +27,10 @@ import { KeyboardDatePicker } from "@material-ui/pickers"
 import moment from "moment";
 
 const allTypes = ["lomas-changes", "vi-lomas-changes"];
+const typeBasePaths = {
+  "lomas-changes": "/lomas",
+  "vi-lomas-changes": "/vi-lomas"
+}
 
 const mapboxStyle = "mapbox.streets";
 
@@ -261,6 +265,9 @@ class ChangesMap extends Component {
     dateTo: null,
     customScope: null,
     selectedPeriodId: null,
+    layers: [],
+    activeLayers: ["ndvi"],
+    layersOpacity: {}
   };
 
   static getInitialProps = async ({ query }) => ({
@@ -275,12 +282,11 @@ class ChangesMap extends Component {
 
     // Set current section based on path
     if (type && allTypes.includes(type)) {
-      console.log("Set type from query param:", type)
       this.state.type = type;
     }
   }
 
-  fetchAndSetScopeTypes = async () => {
+  fetchScopeTypes = async () => {
     try {
       const response = await axios.get(buildApiUrl("/scopes/types/"), {});
       const scopeTypes = response.data;
@@ -310,23 +316,35 @@ class ChangesMap extends Component {
     }
   };
 
-  fetchAndSetPeriods = async () => {
+  fetchPeriods = async () => {
+    const { type } = this.state;
+    const basePath = typeBasePaths[type]
+
     try {
-      const response = await axios.get(buildApiUrl("/vi-lomas/available-periods/"));
+      const response = await axios.get(buildApiUrl(`${basePath}/available-periods/`));
 
       const periodsRaw = response.data;
       const firstDate = new Date(periodsRaw.first_date);
       const lastDate = new Date(periodsRaw.last_date);
-      const periods = periodsRaw.availables.map(p => ([new Date(p[0]), new Date(p[1])]));
+      const periods = periodsRaw.availables.map(p => ({
+        id: p.id,
+        from: new Date(p.date_from),
+        to: new Date(p.date_to)
+      }));
+
+      // Select latest period by default
+      const selectedPeriodId = periods.length > 0 ? periods.length - 1 : null;
 
       await this.setState({
         periods,
+        selectedPeriodId,
         periodsLoaded: true,
         firstDate,
         lastDate,
         dateFrom: firstDate,
         dateTo: lastDate,
       });
+
     } catch (err) {
       console.error(err);
       this.props.enqueueSnackbar(`Failed to get available periods`, {
@@ -364,14 +382,45 @@ class ChangesMap extends Component {
     return res;
   }
 
+  fetchRasters = async () => {
+    const { type, periods, selectedPeriodId } = this.state;
+    const basePath = typeBasePaths[type];
+
+    const { from, to } = periods[selectedPeriodId];
+    const params = {
+      from: moment(from).utc().format("YYYY-MM-DD"),
+      to: moment(to).utc().format("YYYY-MM-DD"),
+    }
+
+    try {
+      const response = await axios.get(buildApiUrl(`${basePath}/rasters/`), { params });
+      console.log("Rasters response", response.data);
+
+      const layers = response.data.map(r => ({
+        id: r.slug,
+        name: r.name,
+        tiles_url: r.tiles_url
+      }))
+
+      this.setState({ layers })
+
+    } catch (err) {
+      console.error(err);
+      this.props.enqueueSnackbar(`Failed to get rasters for currrently selected period`, {
+        variant: "error",
+      });
+    }
+  }
+
   componentDidMount() {
-    this.fetchAndSetScopeTypes();
-    this.fetchAndSetPeriods();
+    this.fetchScopeTypes();
+    this.fetchPeriods();
   };
 
   componentDidUpdate = async (_prevProps, prevState) => {
     // If selectedScopeType changed, refresh geojson layer with scopes from scopetype
-    const { selectedScopeType, scopeGeomsByType } = this.state;
+    const { selectedScopeType, scopeGeomsByType, selectedPeriodId } = this.state;
+
     if (selectedScopeType !== prevState.selectedScopeType) {
       if (!scopeGeomsByType[selectedScopeType]) {
         const geomData = await this.fetchAndBuildScopesGeoJSON(selectedScopeType);
@@ -385,6 +434,11 @@ class ChangesMap extends Component {
     }
 
     // TODO If selectedScope changed, highlight new scope and center map
+
+    // TODO If selectedPeriodId changed, fetch rasters from period and update "layers"
+    if (selectedPeriodId !== prevState.selectedPeriodId) {
+      this.fetchRasters();
+    }
   }
 
   handleDateFromChange = (datetime) => {
@@ -437,9 +491,32 @@ class ChangesMap extends Component {
     }))
   }
 
-  handlePeriodSliderChangeCommitted = (_event, value) => {
+  handlePeriodSliderChange = (_event, value) => {
     this.setState({ selectedPeriodId: value })
   }
+
+  handleToggleLayer = layer => {
+    if (!layer) return; // just in case
+    this.setState(prevState => ({
+      activeLayers: this._addOrRemove(prevState.activeLayers, layer.id)
+    }));
+  };
+
+  _addOrRemove(array, item) {
+    const include = array.includes(item);
+    return include
+      ? array.filter(arrayItem => arrayItem !== item)
+      : [...array, item];
+  }
+
+  handleOpacityChange = (id, value) => {
+    this.setState(prevState => ({
+      layersOpacity: {
+        ...prevState.layersOpacity,
+        [id]: value
+      }
+    }));
+  };
 
   render() {
     const { classes } = this.props;
@@ -458,16 +535,26 @@ class ChangesMap extends Component {
       firstDate,
       lastDate,
       dateFrom,
-      dateTo
+      dateTo,
+      layers,
+      activeLayers,
+      layersOpacity,
     } = this.state;
 
     const loaded = scopesLoaded && periodsLoaded;
     const scopeGeomsData = scopeGeomsByType[selectedScopeType];
-    const filteredPeriods = periods.filter(p => (p[0] >= dateFrom && p[1] <= dateTo));
-    const periodLabels = filteredPeriods.map(([from, to]) => [
-      moment(from).format("YYYY-MM-DD"),
-      moment(to).format("YYYY-MM-DD")
+    const filteredPeriods = periods.filter(p => (p.from >= dateFrom && p.to <= dateTo));
+    const periodLabels = filteredPeriods.map(({ from, to }) => [
+      moment(from).utc().format("YYYY-MM-DD"),
+      moment(to).utc().format("YYYY-MM-DD")
     ]);
+
+    const visibleLayers = layers.filter(layer => activeLayers.includes(layer.id)).map((layer, i) => ({
+      ...layer,
+      zIndex: layers.length - i,
+      opacity: (layersOpacity[layer.id] || 100) / 100
+    }))
+    console.log("visibleLayers:", visibleLayers)
 
     return (
       <div className="index">
@@ -498,12 +585,16 @@ class ChangesMap extends Component {
             onZoomInClick={this.handleZoomInClick}
             onZoomOutClick={this.handleZoomOutClick} />
           <LayersControl
-            layers={[]}
-            activeLayers={[]} />
+            layers={layers}
+            activeLayers={activeLayers}
+            layersOpacity={layersOpacity}
+            onToggle={this.handleToggleLayer}
+            onOpacityChange={this.handleOpacityChange}
+          />
           {filteredPeriods.length > 0 && <PeriodSlider
             periods={filteredPeriods}
             periodLabels={periodLabels}
-            onChangeCommitted={this.handlePeriodSliderChangeCommitted}
+            onChange={this.handlePeriodSliderChange}
           />}
         </div>
         {loaded && (
@@ -529,7 +620,14 @@ class ChangesMap extends Component {
             data={scopeGeomsData}
             onClick={this.handleScopePolygonClick}
           />}
-          {/* <TileLayer type="raster" url="http://localhost:8080/{z}/{x}/{y}.png" maxZoom={13} /> */}
+          {visibleLayers.map(layer => (<TileLayer
+            key={layer.id}
+            type="raster"
+            url={layer.tiles_url}
+            maxZoom={13}
+            opacity={layers.opacity}
+            zIndex={layer.zIndex}
+          />))}
         </Map>
       </div >
     );

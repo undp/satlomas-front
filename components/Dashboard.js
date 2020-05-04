@@ -30,14 +30,14 @@ class Dashboard extends React.Component {
 
     if (periods.length === 0 || !scope) return;
 
-    const dateFrom = Math.min(...periods.map(p => Math.min(p[0], p[1])));
-    const dateTo = Math.max(...periods.map(p => Math.max(p[0], p[1])));
+    const dateFrom = Math.min(...periods.map(p => Math.min(p.from, p.to)));
+    const dateTo = Math.max(...periods.map(p => Math.max(p.from, p.to)));
 
     if (scope) {
       const body = {
         scope_id: scope,
-        from_date: moment(dateFrom).format("YYYY-MM-DD"),
-        end_date: moment(dateTo).format("YYYY-MM-DD"),
+        from_date: moment(dateFrom).utc().format("YYYY-MM-DD"),
+        end_date: moment(dateTo).utc().format("YYYY-MM-DD"),
       };
       try {
         const response = await axios.post(buildApiUrl("/vi-lomas/coverage/"), body);
