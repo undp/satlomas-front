@@ -7,8 +7,8 @@ const styles = theme => ({
   }
 });
 
-let DestroyButton = ({ classes }) => (
-  <Button variant="contained" disabled value="delete" color="secondary" type="submit" className={classes.button}>
+let DestroyButton = ({ classes, onClick }) => (
+  <Button variant="contained" onClick={() => onClick()} value="delete" color="secondary" className={classes.button}>
     Eliminar
   </Button>
 )

@@ -10,6 +10,7 @@ import CheckboxControl from './forms/CheckboxControl';
 import SubmitButton from './forms/SubmitButton';
 import BackButton from './forms/BackButton';
 import DestroyButton from './forms/DestroyButton';
+import ConfirmationDialog from '../ConfirmationDialog';
 import { routerPush } from "../../utils/router";
 import config from "../../config";
 
@@ -36,6 +37,7 @@ class ParameterRuleForm extends React.Component {
     },
     stations: [],
     loaded: false,
+    openConfirmationDialog: false,
   }
 
   async componentDidMount() {
@@ -148,9 +150,32 @@ class ParameterRuleForm extends React.Component {
     }));
   }
 
+  handleDelete = () => {
+    this.setState({openConfirmationDialog: true});
+  }
+
+  onDialogResult = async action => {
+    const { id, token } = this.props;
+    if(action){
+      try {
+        await axios.delete(buildApiUrl(`/alerts/parameter-rules/${id}/`),
+          { headers: { Authorization: token } }
+        );
+        this.props.enqueueSnackbar("Rule deleted", { variant: 'success' })
+        routerPush("/admin/parameter-rules");
+      } catch (err) {
+        console.error(err);
+        this.props.enqueueSnackbar("Failed to delete rule", { variant: 'error' });
+      }
+    }
+    this.setState({
+      openConfirmationDialog: false
+    });
+  }
+
   render() {
     const { classes, id } = this.props;
-    const { stations, fields, loaded } = this.state;
+    const { stations, fields, loaded, openConfirmationDialog } = this.state;
 
     return <Paper className={classes.root}>
       <form
@@ -195,8 +220,15 @@ class ParameterRuleForm extends React.Component {
           disabled={!loaded}
         />
         <SubmitButton edit={id} disabled={!loaded} />
-        {id && <DestroyButton />}
+        {id && <DestroyButton onClick={this.handleDelete}/>}
         <BackButton url={'/admin/parameter-rules'}/>
+        <ConfirmationDialog
+          onClose={this.onDialogResult}
+          open={openConfirmationDialog}
+          title={"Eliminar"}
+          content={"¿Esta seguro que desea eliminar esta regla?"}
+          delete={true}
+        />
       </form>
     </Paper>
   }
