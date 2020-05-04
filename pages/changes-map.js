@@ -226,7 +226,7 @@ SearchControl = withStyles(styles)(SearchControl);
 
 let PlotsControl = ({ classes, type, periods, scope, customScope }) => (
   <div className={classes.plotsControl}>
-    <ExpansionPanel>
+    <ExpansionPanel expanded={true}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography className={classes.plotsControlHeading}>{type === "vi-lomas-changes" ? "Cobertura de vegetación (MODIS VI)" : "Cobertura de Loma Perdida"}</Typography>
       </ExpansionPanelSummary>
