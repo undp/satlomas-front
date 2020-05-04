@@ -73,7 +73,7 @@ class ParameterRuleForm extends React.Component {
           is_absolute,
           valid_max,
           valid_min,
-          station: station && station.id,
+          station: station,
         }
       });
     } catch (err) {
