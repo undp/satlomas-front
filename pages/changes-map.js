@@ -394,7 +394,6 @@ class ChangesMap extends Component {
 
     try {
       const response = await axios.get(buildApiUrl(`${basePath}/rasters/`), { params });
-      console.log("Rasters response", response.data);
 
       const layers = response.data.map(r => ({
         id: r.slug,
@@ -554,7 +553,6 @@ class ChangesMap extends Component {
       zIndex: layers.length - i,
       opacity: (layersOpacity[layer.id] || 100) / 100
     }))
-    console.log("visibleLayers:", visibleLayers)
 
     return (
       <div className="index">
