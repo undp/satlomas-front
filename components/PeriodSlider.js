@@ -19,7 +19,7 @@ const ValueLabelComponent = (props) => {
 ValueLabelComponent.propTypes = {
   children: PropTypes.element.isRequired,
   open: PropTypes.bool.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles(theme => createStyles({
