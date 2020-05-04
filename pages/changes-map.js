@@ -26,6 +26,8 @@ import PeriodSlider from "../components/PeriodSlider";
 import { KeyboardDatePicker } from "@material-ui/pickers"
 import moment from "moment";
 
+const allTypes = ["lomas-changes", "vi-lomas-changes"];
+
 const mapboxStyle = "mapbox.streets";
 
 const Map = dynamic(() => import("../components/Map"), {
@@ -218,11 +220,11 @@ class SearchControl extends Component {
 
 SearchControl = withStyles(styles)(SearchControl);
 
-let PlotsControl = ({ classes, periods, scope, customScope }) => (
+let PlotsControl = ({ classes, type, periods, scope, customScope }) => (
   <div className={classes.plotsControl}>
     <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography className={classes.plotsControlHeading}>Cobertura de vegetación (MODIS VI)</Typography>
+        <Typography className={classes.plotsControlHeading}>{type === "vi-lomas-changes" ? "Cobertura de vegetación (MODIS VI)" : "Cobertura de Loma Perdida"}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Dashboard
@@ -239,6 +241,7 @@ PlotsControl = withStyles(styles)(PlotsControl);
 
 class ChangesMap extends Component {
   state = {
+    type: null,
     map: null,
     bounds: null,
     viewport: {
@@ -260,9 +263,22 @@ class ChangesMap extends Component {
     selectedPeriodId: null,
   };
 
-  static getInitialProps = async () => ({
+  static getInitialProps = async ({ query }) => ({
     namespacesRequired: ["common"],
+    query
   });
+
+  constructor(props) {
+    super(props);
+
+    let { type } = props.query;
+
+    // Set current section based on path
+    if (type && allTypes.includes(type)) {
+      console.log("Set type from query param:", type)
+      this.state.type = type;
+    }
+  }
 
   fetchAndSetScopeTypes = async () => {
     try {
@@ -428,6 +444,7 @@ class ChangesMap extends Component {
   render() {
     const { classes } = this.props;
     const {
+      type,
       viewport,
       bounds,
       scopeTypes,
@@ -492,6 +509,7 @@ class ChangesMap extends Component {
         {loaded && (
           <div className={classnames(classes.controlGroup, classes.topRight)}>
             <PlotsControl
+              type={type}
               periods={filteredPeriods}
               scope={selectedScope}
               customScope={customScope}
