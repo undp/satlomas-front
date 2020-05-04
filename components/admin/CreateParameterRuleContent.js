@@ -8,6 +8,7 @@ import SelectControl from './forms/SelectControl';
 import InputControl from './forms/InputControl';
 import CheckboxControl from './forms/CheckboxControl';
 import SubmitButton from './forms/SubmitButton';
+import BackButton from './forms/BackButton';
 import DestroyButton from './forms/DestroyButton';
 import { routerPush } from "../../utils/router";
 import config from "../../config";
@@ -195,6 +196,7 @@ class ParameterRuleForm extends React.Component {
         />
         <SubmitButton edit={id} disabled={!loaded} />
         {id && <DestroyButton />}
+        <BackButton url={'/admin/parameter-rules'}/>
       </form>
     </Paper>
   }
