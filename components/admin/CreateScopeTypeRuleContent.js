@@ -15,6 +15,7 @@ import SelectControl from './forms/SelectControl';
 import InputControl from './forms/InputControl';
 import SubmitButton from './forms/SubmitButton';
 import DestroyButton from './forms/DestroyButton';
+import BackButton from './forms/BackButton'
 import { routerPush } from "../../utils/router";
 import config from "../../config";
 
@@ -210,6 +211,7 @@ class ScopeTypeRuleForm extends React.Component {
         />
         <SubmitButton edit={id} disabled={!loaded} />
         {id && <DestroyButton />}
+        <BackButton url={'/admin/scope-type-rules'}/>
       </form>
     </Paper>
   }
