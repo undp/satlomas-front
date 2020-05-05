@@ -26,7 +26,7 @@ const ParameterPlot = ({ data }) => (
     <XAxis dataKey="t" style={axisStyle} />
     <YAxis style={axisStyle} />
     <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-    <Line type="monotone" dataKey="v" stroke="#8884d8" />
+    <Line type="monotone" dataKey="v" stroke="#009688" />
   </LineChart>
 );
 

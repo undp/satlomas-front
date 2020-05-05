@@ -87,7 +87,7 @@ class Dashboard extends React.Component {
             <XAxis dataKey="date" style={axisStyle} />
             <YAxis style={axisStyle} />
             <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-            <Line type="monotone" dataKey="area" stroke="#8884d8" />
+            <Line type="monotone" dataKey="area" stroke="#009688" />
           </LineChart>
         )}
       </div>
