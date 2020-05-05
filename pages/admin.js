@@ -12,6 +12,7 @@ import HomeContent from "../components/admin/HomeContent";
 import { Link, withTranslation } from "../i18n";
 import { routerReplace } from "../utils/router";
 import { withAuthSync } from "../utils/auth";
+import RasterListContent from "../components/admin/RasterListContent";
 import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
 import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
 import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
@@ -124,6 +125,7 @@ const styles = (theme) => ({
 
 const allSections = [
   "alerts",
+  "rasters",
   "rules",
   "profile",
   "parameter-rules",
@@ -136,6 +138,7 @@ const allSections = [
 
 const sidebarSections = [
   "alerts",
+  "rasters",
   "parameter-rules",
   "scope-type-rules",
   "scope-rules"
@@ -147,6 +150,12 @@ const sections = {
     path: "/alerts",
     icon: <NotificationsIcon />,
     content: <AlertsTableContent />,
+  },
+  rasters: {
+    key: "rasters",
+    path: "/rasters",
+    icon: <ListIcon />,
+    content: <RasterListContent />,
   },
   'parameter-rules': {
     key: "parameter-rules",
