@@ -12,7 +12,7 @@
   "home": {
     "api_descrip1": "Genera tu API Key desde este",
     "api_descrip2": "y podras integrar nuestra api a tu c\u00f3digo python. Para mas informaci\u00f3n puedes acceder a la Documentaci\u00f3n",
-    "api_title": "GeoLomas Labs API",
+    "api_title": "SatLomas API",
     "models_descrip": "Puedes generar tu modelo para detectar objectos de tus imagenes desde este",
     "models_title": "Modelos",
     "project_descrip": "El identificador del proyecto te ser\u00e1 de utilidad para utilizar nuestra API",

@@ -20,6 +20,9 @@ import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleC
 import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
 import AppbarButtons from "../components/AppbarButtons";
+import config from "../config";
+
+const { appName } = config;
 
 import {
   AppBar,
@@ -279,8 +282,8 @@ class Admin extends React.Component {
                 noWrap
                 className={classes.title}
               >
-                GeoLomas - Administración
-            </Typography>
+                {appName} - Administración
+              </Typography>
             </Link>
             <AppbarButtons />
           </Toolbar>

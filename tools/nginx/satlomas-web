@@ -1,12 +1,12 @@
 server {
-    server_name app.geolomas.com;
+    server_name app.satlomas.com;
 
     location /static/ {
-        root /home/ubuntu/geolomas-front;
+        root /home/ubuntu/satlomas-front;
     }
 
     location /_next/static/ {
-        alias /home/ubuntu/geolomas-front/.next/static/;
+        alias /home/ubuntu/satlomas-front/.next/static/;
     }
 
     location / {

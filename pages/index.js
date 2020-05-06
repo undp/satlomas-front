@@ -7,6 +7,9 @@ import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
 import AppbarButtons from "../components/AppbarButtons";
+import config from "../config";
+
+const { appName } = config;
 
 import {
   AppBar,
@@ -155,7 +158,7 @@ class Index extends React.Component {
     return (
       <React.Fragment>
         <Head>
-          <title>GeoLomas</title>
+          <title>{appName}</title>
         </Head>
         <CssBaseline />
         <AppBar
@@ -165,7 +168,7 @@ class Index extends React.Component {
           <Toolbar>
             {/* <CameraIcon className={classes.icon} /> */}
             <Typography variant="h6" color="inherit" noWrap>
-              GeoLomas
+              {appName}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
@@ -184,7 +187,7 @@ class Index extends React.Component {
                 color="textPrimary"
                 gutterBottom
               >
-                GeoLomas
+                {appName}
               </Typography>
               <Typography
                 variant="h6"

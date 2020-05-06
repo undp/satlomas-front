@@ -5,9 +5,12 @@ import React from "react";
 import { withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { logout, withAuthSync } from "../utils/auth";
+import config from "../config";
 
 import "../public/static/App.css"; // FIXME Convert to JSX styles
 import "../public/static/index.css"; // FIXME Convert to JSX styles
+
+const { appName } = config;
 
 const initialViewport = {
   center: [-36.179114636463652, -62.846142338298094],
@@ -115,7 +118,7 @@ class Layers extends React.Component {
     return (
       <div className="index">
         <Head>
-          <title>GeoLomas Platform</title>
+          <title>{appName}</title>
           <link
             rel="shortcut icon"
             type="image/x-icon"

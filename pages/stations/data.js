@@ -34,7 +34,7 @@ import { isDate } from "../../utils/date";
 import FileDownload from "../../utils/file-download"
 import config from "../../config";
 
-const { stationParameters } = config;
+const { appName, stationParameters } = config;
 
 // FIXME Move to config.js
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
@@ -438,9 +438,10 @@ class StationsData extends React.Component {
       <React.Fragment>
         <Head>
           <title>
+            {appName} -
             {station
-              ? `GeoLomas - Dashboard: ${station.name}`
-              : `GeoLomas - Estaciones Meteorológicas`}
+              ? `Dashboard: ${station.name}`
+              : `Estaciones Meteorológicas`}
           </title>
         </Head>
         <CssBaseline />

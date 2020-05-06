@@ -11,6 +11,9 @@ import QuoteButton from "../components/QuoteButton";
 import { withTranslation } from "../i18n";
 import { buildApiUrl } from "../utils/api";
 import { withAuthSync } from "../utils/auth";
+import config from "../config";
+
+const { appName } = config;
 
 // const sentinelModifiedAttribution =
 //   'Contains modified <a href="http://www.esa.int/Our_Activities/Observing_the_Earth/Copernicus">Copernicus</a> Sentinel data 2019, processed by ESA.';
@@ -207,7 +210,7 @@ class Maps extends React.Component {
     return (
       <div className="index">
         <Head>
-          <title>GeoLomas Platform</title>
+          <title>{appName}</title>
           <link
             rel="shortcut icon"
             type="image/x-icon"

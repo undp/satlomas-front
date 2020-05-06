@@ -109,7 +109,7 @@
   "soil_desc": "Suelo utilizado para siembra y cultivo.",
   "soil_desc_long": "El servicio de mapeo de \u00e1rea sembrada consiste en un archivo vectorial con la ubicaci\u00f3n de los pol\u00edgonos con \u00e1reas sembradas  y las imagenes utilizadas para el \u00e1rea solicitada.",
   "soil_title": "Area sembrada",
-  "title": "GeoLomas Platform",
+  "title": "SatLomas",
   "true_color_desc": "Imagen satelital de color verdadero",
   "true_color_title": "Color verdadero",
   "username": "Usuario"

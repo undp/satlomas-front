@@ -109,7 +109,7 @@
   "soil_desc": "Soil land use for different crops.",
   "soil_desc_long": "The sown area map service consists of a vector file containing the polygon of each sowned area and the images used for calculations within the requested territory.",
   "soil_title": "Sown area",
-  "title": "GeoLomas Platform",
+  "title": "SatLomas",
   "true_color_desc": "True color satellite image",
   "true_color_title": "True color",
   "username": "Username"

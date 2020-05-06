@@ -1,6 +1,6 @@
 const KNOWN_HOST_PAIRS = [
   ["localhost", "localhost:8000"],
-  ["app.geolomas.dymaxionlabs.com", "api.geolomas.dymaxionlabs.com"]
+  ["app.satlomas.dymaxionlabs.com", "api.satlomas.dymaxionlabs.com"]
 ];
 
 export function buildApiUrl(path) {

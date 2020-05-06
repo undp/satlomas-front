@@ -1,4 +1,5 @@
 export default {
+  appName: "SatLomas",
   stationParameters: [
     {
       id: "temperature",

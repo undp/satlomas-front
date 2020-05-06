@@ -1,5 +1,5 @@
 namespace,key,es,en
-common,title,GeoLomas Platform,GeoLomas Platform
+common,title,SatLomas,SatLomas
 common,loading,Cargando...,Loading...
 common,username,Usuario,Username
 common,password,Contraseña,Password
@@ -196,7 +196,7 @@ me,keys_new.create,Crear,Create
 me,keys_new.copy,Copiar,Copy
 me,home.models_title,Modelos,Models
 me,home.models_descrip,Puedes generar tu modelo para detectar objectos de tus imagenes desde este,You can generate your model to detect objects from your images from this
-me,home.api_title,GeoLomas Labs API,GeoLomas Labs API
+me,home.api_title,SatLomas API,SatLomas API
 me,home.api_descrip1,Genera tu API Key desde este,Generate your API Key from this
 me,home.api_descrip2,y podras integrar nuestra api a tu código python. Para mas información puedes acceder a la Documentación,and you can integrate our api to your python code. For more information you can access the Documentation
 me,home.project_title,Proyectos,Project

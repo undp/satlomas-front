@@ -31,10 +31,10 @@ import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
 import { isDate } from "../../utils/date";
-import config from "../../config";
 import AppbarButtons from "../../components/AppbarButtons";
+import config from "../../config";
 
-const { stationParameters } = config;
+const { stationParameters, appName } = config;
 
 // FIXME Move to config.js
 const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
@@ -348,9 +348,9 @@ class StationsDashboard extends React.Component {
       <React.Fragment>
         <Head>
           <title>
-            {station
-              ? `GeoLomas - Dashboard: ${station.name}`
-              : `GeoLomas - Estaciones Meteorológicas`}
+            {appName} - {station
+              ? `Dashboard: ${station.name}`
+              : `Estaciones Meteorológicas`}
           </title>
         </Head>
         <CssBaseline />

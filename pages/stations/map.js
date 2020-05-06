@@ -19,6 +19,9 @@ import LoadingProgress from "../../components/LoadingProgress";
 import MapDrawer from "../../components/MapDrawer";
 import SearchFab from "../../components/SearchFab";
 import SearchField from "../../components/SearchField";
+import config from "../../config";
+
+const { appName } = config;
 
 const styles = (theme) => ({
   controlGroup: {
@@ -177,7 +180,7 @@ class StationsMap extends Component {
     return (
       <div className="index">
         <Head>
-          <title>GeoLomas Platform - Mapa de Estaciones Meteorológicas</title>
+          <title>{appName} - Mapa de Estaciones Meteorológicas</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"

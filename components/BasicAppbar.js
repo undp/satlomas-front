@@ -2,8 +2,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "../i18n";
 import { withStyles } from '@material-ui/core/styles';
-
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import config from "../config";
+
+const { appName } = config;
 
 const styles = theme => ({
   appBar: {
@@ -29,7 +31,7 @@ const BasicAppbar = withStyles(styles)(({ classes }) => (
           noWrap
           className={classes.title}
         >
-          GeoLomas Platform
+          {appName}
         </Typography>
       </Link>
     </Toolbar>

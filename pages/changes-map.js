@@ -25,6 +25,9 @@ import LayersControl from "../components/LayersControl";
 import PeriodSlider from "../components/PeriodSlider";
 import { KeyboardDatePicker } from "@material-ui/pickers"
 import moment from "moment";
+import config from "../config";
+
+const { appName } = config;
 
 const allTypes = ["lomas-changes", "vi-lomas-changes"];
 const typeBasePaths = {
@@ -557,7 +560,7 @@ class ChangesMap extends Component {
     return (
       <div className="index">
         <Head>
-          <title>GeoLomas Platform - Mapa de Cambios</title>
+          <title>{appName} - Mapa de Cambios</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"

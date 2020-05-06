@@ -1,6 +1,6 @@
-# GeoLomas frontend
+# SatLomas frontend
 
-This is the repository for the GeoLomas platform frontend web app.
+This is the repository for the SatLomas platform frontend web app.
 It uses the REST API provided by the backend, for fetching user data,
 raster/vector layers, etc.
 
