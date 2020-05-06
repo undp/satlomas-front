@@ -53,7 +53,7 @@ let RasterTable = (props) => {
           </TableHead>
           <TableBody>
             {rows.map(row => (
-              <TableRow key={row.id}>
+              <TableRow key={row.id + row.type}>
                 <TableCell>{row.slug}</TableCell>
                 <TableCell>{row.period_readeable}</TableCell>
                 <TableCell>{row.name}</TableCell>
@@ -72,7 +72,7 @@ let RasterTable = (props) => {
                 <TableCell align="right">
                   <Tooltip title="Download">
                     <IconButton
-                      onClick={() => downloadHandler(row.id, row.type)}
+                      onClick={() => downloadHandler(row.id, row.name, row.type)}
                       aria-label="Editar regla"
                     >
                       <GetAppIcon />
@@ -147,13 +147,13 @@ class RasterListContent extends React.Component {
     this.setState({ rows: result });
   }
 
-  downloadRaster(id, type){
+  downloadRaster(id, name, type){
     axios.get(buildApiUrl(`${typeBasePaths[type]}/download-raster/${id}`), {
       headers: { Authorization: this.props.token },
       responseType: 'blob'
     })
     .then(response => {
-      FileDownload(response.data, file.name);
+      FileDownload(response.data, name);
     });
   }
 
