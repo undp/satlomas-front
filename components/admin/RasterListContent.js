@@ -55,7 +55,7 @@ let RasterTable = (props) => {
             {rows.map(row => (
               <TableRow key={row.id}>
                 <TableCell>{row.slug}</TableCell>
-                <TableCell>{row.period}</TableCell>
+                <TableCell>{row.period_readeable}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
@@ -72,7 +72,7 @@ let RasterTable = (props) => {
                 <TableCell align="right">
                   <Tooltip title="Download">
                     <IconButton
-                      onClick={() => downloadHandler(row.id)}
+                      onClick={() => downloadHandler(row.id, row.type)}
                       aria-label="Editar regla"
                     >
                       <GetAppIcon />
@@ -95,10 +95,18 @@ RasterTable.propTypes = {
 RasterTable = withStyles(styles)(RasterTable);
 RasterTable = withTranslation(["me", "common"])(RasterTable);
 
+const typeBasePaths = {
+  "lomas": "/lomas",
+  "vi-lomas": "/vi-lomas"
+}
+
 class RasterListContent extends React.Component {
   state = {
       rows: [],
-      //rows : [{id:1, slug:"s1", period: "02 2020", name: "archivo.js", tiles_url:"asdasd.com",description: "asdasdasd", created_at:"01-01-2020", updated_at: "01-01-2020"}],
+  }
+  constructor (props){
+    super(props);
+    this.downloadRaster = this.downloadRaster.bind(this);
   }
 
   async componentDidMount() {
@@ -107,15 +115,40 @@ class RasterListContent extends React.Component {
 
   async fetchData(){
     const { token } = this.props;
-    const response = await axios.get(
+
+    const vi_lomas_response = await axios.get(
         buildApiUrl("/vi-lomas/rasters"), 
         { headers: { "Accept-Language": i18n.language, Authorization: token }}
     );
-    this.setState({ rows: response.data })
+    let vi_lomas_rasters = vi_lomas_response.data;
+    for (var i = 0; i < vi_lomas_rasters.length; i++) {
+      vi_lomas_rasters[i]['type'] = 'vi-lomas'
+      vi_lomas_rasters[i]['period_readeable'] = `${vi_lomas_rasters[i]['period']['date_from']} - ${vi_lomas_rasters[i]['period']['date_to']}` 
+    }
+
+    const lomas_response = await axios.get(
+      buildApiUrl("/lomas/rasters"), 
+      { headers: { "Accept-Language": i18n.language, Authorization: token }}
+    );
+    let lomas_rasters = lomas_response.data;
+    for (var i = 0; i < lomas_rasters.length; i++) {
+      lomas_rasters[i]['type'] = 'lomas'
+      lomas_rasters[i]['period_readeable'] = `${lomas_rasters[i]['period']['date_from']} - ${lomas_rasters[i]['period']['date_to']}` 
+
+    }
+
+    let result = vi_lomas_rasters.concat(lomas_rasters);
+    result.sort(function (a, b) {
+      if (a["period"]["date_from"] > ["period"]["date_from"]) { return -1;}
+      if (b["period"]["date_from"] > a["period"]["date_from"]) { return 1;}
+      return 0;
+    });
+
+    this.setState({ rows: result });
   }
 
-  downloadRaster(id){
-    axios.get(buildApiUrl(`/vi-lomas/download-raster/${id}`), {
+  downloadRaster(id, type){
+    axios.get(buildApiUrl(`${typeBasePaths[type]}/download-raster/${id}`), {
       headers: { Authorization: this.props.token },
       responseType: 'blob'
     })
