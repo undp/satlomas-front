@@ -625,7 +625,7 @@ class ChangesMap extends Component {
             key={layer.id}
             type="raster"
             url={layer.tiles_url}
-            maxZoom={13}
+            maxNativeZoom={13}
             opacity={layers.opacity}
             zIndex={layer.zIndex}
           />))}
