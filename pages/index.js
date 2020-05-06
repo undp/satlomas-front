@@ -97,7 +97,7 @@ const cards = [
     title: "Cobertura verde en Lomas",
     description:
       "Mapa de cobertura verde de Lomas, basado en el producto VI de MODIS, actualizado mensualmente.",
-    image: "",
+    image: "/static/thumbs/changes-map-vi-lomas.jpg",
     buttons: [{ name: "Ver", href: "/maps/vi-lomas-changes" }],
   },
   {
@@ -105,7 +105,7 @@ const cards = [
     title: "Cobertura de Lomas",
     description:
       "Mapa de cambios de cobertura de loma perdida y remanente, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
-    image: "",
+    image: "/static/thumbs/changes-map-lomas.jpg",
     buttons: [{ name: "Ver", href: "/maps/lomas-changes" }],
   },
   {
@@ -195,24 +195,22 @@ class Index extends React.Component {
                 color="textSecondary"
                 paragraph
               >
-                Something short and leading about the collection below—its contents,
-                the creator, etc. Make it short and sweet, but not too short so
-                folks don&apos;t simply skip over it entirely.
+                Plataforma de monitoreo satelital del ecosistema de las Lomas
               </Typography>
-              <div className={classes.heroButtons}>
+              {/* <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">
                   <Grid item>
                     <Button variant="contained" color="primary">
                       Más información
                     </Button>
                   </Grid>
-                  {/* <Grid item>
-                      <Button variant="outlined" color="primary">
-                        Secondary action
-                      </Button>
-                    </Grid> */}
+                  <Grid item>
+                    <Button variant="outlined" color="primary">
+                      Secondary action
+                    </Button>
+                  </Grid>
                 </Grid>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className={classNames(classes.layout, classes.cardGrid)}>
@@ -253,7 +251,7 @@ class Index extends React.Component {
           </div>
         </main>
         {/* Footer */}
-        <footer className={classes.footer}>
+        {/* <footer className={classes.footer}>
           <Typography variant="h6" align="center" gutterBottom>
             Footer
           </Typography>
@@ -265,7 +263,7 @@ class Index extends React.Component {
           >
             Something here to give the footer a purpose!
           </Typography>
-        </footer>
+        </footer> */}
         {/* End footer */}
       </React.Fragment>
     );
