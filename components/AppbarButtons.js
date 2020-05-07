@@ -87,6 +87,13 @@ class AlertsMenuButton extends React.Component {
     }
   }
 
+
+  expandMenu(e){
+    const token = cookie.get("token");
+    this.setState({ anchorEl: e.currentTarget });
+    axios.get(buildApiUrl("/alerts/seen"), { headers: { Authorization: token } });
+  }
+
   render() {
     const { classes } = this.props;
     const { count, anchorEl, alerts, hasMoreAlerts } = this.state
@@ -98,7 +105,7 @@ class AlertsMenuButton extends React.Component {
           aria-controls="menu-appbar"
           aria-haspopup="true"
           color="inherit"
-          onClick={e => this.setState({ anchorEl: e.currentTarget })}
+          onClick={e => this.expandMenu(e)}
         >
           <Badge badgeContent={count} color="secondary">
             <NotificationsIcon />
