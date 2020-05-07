@@ -2,7 +2,7 @@ server {
     server_name app.satlomas.com;
 
     location /static/ {
-        root /home/ubuntu/satlomas-front;
+        root /home/ubuntu/satlomas-front/public;
     }
 
     location /_next/static/ {
