@@ -127,10 +127,17 @@ class AlertsMenuButton extends React.Component {
         >
           <MenuItem>Alertas</MenuItem>
           {alerts.map(alert => (
-            <MenuItem key={alert.id}>
-              <Typography className={classes.notificationText}>Alerta {alert.id}</Typography>
-              <Moment className={classes.momentFont} fromNow>{alert.last_seen_at}</Moment>
-            </MenuItem>
+            alert.last_seen_at ? 
+              <MenuItem key={alert.id}> 
+                <Typography className={classes.notificationText}>Alerta {alert.id}</Typography>
+                <Moment className={classes.momentFont} fromNow>{alert.last_seen_at}</Moment> 
+              </MenuItem>
+              : 
+              <MenuItem key={alert.id} style={{backgroundColor: 'lightblue'}}> 
+                <Typography className={classes.notificationText}>Alerta {alert.id}</Typography>
+              </MenuItem>
+            
+ 
           ))}
           {!hasMoreAlerts && (
             <MenuItem className={classes.notifButton}>
