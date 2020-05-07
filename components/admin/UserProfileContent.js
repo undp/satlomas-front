@@ -6,7 +6,7 @@ import { buildApiUrl } from "../../utils/api";
 import { withStyles } from '@material-ui/core/styles';
 import cookie from "js-cookie";
 import { routerPush } from "../../utils/router";
-
+import { withSnackbar } from 'notistack';
 
 import {
   Button,
@@ -104,6 +104,10 @@ class UserProfileContent extends React.Component {
     this.setState({ emailAlerts: !this.state.emailAlerts });
   };
 
+  onEmailChange = e => {
+    this.setState({ email: e.target.value });
+  };
+
   onChangePasswordClick = () => {
     routerPush("/password/reset");
   }
@@ -121,14 +125,26 @@ class UserProfileContent extends React.Component {
           }
         }
       );
+      response = axios.patch(
+        buildApiUrl(`/alerts/users/${this.state.username}/`),
+        { email: this.state.email },
+        { 
+          headers: {
+            "Accept-Language": i18n.language, 
+            Authorization: token,
+          }
+        }
+      );
+      this.props.enqueueSnackbar("Perfil guardado.");
     } catch (error) {
+      this.props.enqueueSnackbar("Error al guardar perfil.", { variant: 'error' });
       console.error(error);
     }
   };
 
   render() {
     const { classes } = this.props;
-    const { isSubmitting } = this.state;
+    const { isSubmitting, email, emailAlerts } = this.state;
 
     return (
       <main className={classes.main}>
@@ -146,14 +162,15 @@ class UserProfileContent extends React.Component {
                 id="email"
                 name="email"
                 autoComplete="email"
-                value={this.state.email}
+                value={email}
+                onChange={this.onEmailChange}
               />
             </FormControl>
            
              <FormControl margin="normal" required fullWidth>
              <FormControlLabel 
               control={<Checkbox value="emailAlerts" color="primary" 
-              checked={this.state.emailAlerts}
+              checked={emailAlerts}
               onClick={this.onEmailAlertsClick} />}
               label={"Enviar notificaciones de alertas por email."}
             />
@@ -186,10 +203,12 @@ class UserProfileContent extends React.Component {
 
 UserProfileContent.propTypes = {
   classes: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired
 };
 
 UserProfileContent = withStyles(styles)(UserProfileContent);
 UserProfileContent = withTranslation()(UserProfileContent);
+UserProfileContent = withSnackbar(UserProfileContent);
 
 export default UserProfileContent;
