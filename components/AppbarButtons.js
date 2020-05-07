@@ -45,6 +45,8 @@ class AlertsMenuButton extends React.Component {
   state = {
     anchorEl: null,
     alerts: [],
+    badgeShow: false,
+    count: 0,
     hasMoreAlerts: false
   }
 
@@ -63,22 +65,25 @@ class AlertsMenuButton extends React.Component {
 
   async fetchAlerts() {
     const token = cookie.get("token");
-    const { username } = this.props
 
     try {
-      const response = await axios.get(buildApiUrl("/alerts"), {
+      const response = await axios.get(buildApiUrl("/alerts/latest"), {
         headers: {
           "Accept-Language": i18n.language,
           Authorization: token,
         },
-        data: { user: username }, // FIXME Not needed
       });
-
-      const allAlerts = response.data;
+      
+      const allAlerts = response.data['alerts'];
       const hasMoreAlerts = allAlerts.count > MAX_NOTIFICATIONS_FIRST;
       const alerts = allAlerts.slice(0, MAX_NOTIFICATIONS_FIRST);
-
-      this.setState({ alerts, hasMoreAlerts });
+      
+      this.setState({ 
+        alerts, 
+        hasMoreAlerts, 
+        count: response.data['news'],
+        badgeShow: response.data['news'] == 0,
+      });
     } catch (error) {
       console.error(error);
       this.props.enqueueSnackbar(`Failed to sync alerts`, {
@@ -96,7 +101,7 @@ class AlertsMenuButton extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { count, anchorEl, alerts, hasMoreAlerts } = this.state
+    const { badgeShow, count, anchorEl, alerts, hasMoreAlerts } = this.state
 
     return (
       <>
@@ -107,7 +112,10 @@ class AlertsMenuButton extends React.Component {
           color="inherit"
           onClick={e => this.expandMenu(e)}
         >
-          <Badge badgeContent={count} color="secondary">
+          <Badge 
+            badgeContent={count} 
+            invisible={badgeShow}
+            color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
