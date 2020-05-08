@@ -648,7 +648,7 @@ class ObjectsMap extends Component {
             key={layer.id}
             type="raster"
             url={layer.tiles_url}
-            maxNativeZoom={13}
+            maxNativeZoom={18}
             opacity={layers.opacity}
             zIndex={layer.zIndex}
           />))}
