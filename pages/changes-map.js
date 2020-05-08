@@ -629,7 +629,7 @@ class ChangesMap extends Component {
             key={layer.id}
             type="raster"
             url={layer.tiles_url}
-            maxNativeZoom={13}
+            maxNativeZoom={type === "vi-lomas-changes" ? 13 : 14}
             opacity={layer.opacity}
             zIndex={layer.zIndex}
           />))}
