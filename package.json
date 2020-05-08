@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@material-ui/codemod": "^4.5.0",
-    "csv-parse": "^4.3.3",
+    "csv-parse": "^4.4.6",
     "file-loader": "^2.0.0",
     "url-loader": "^1.1.2"
   }
