@@ -59,8 +59,13 @@ class Dashboard extends React.Component {
       };
       try {
         const response = await axios.get(buildApiUrl(`${basePath}/coverage/`), { params });
+        const values = response.data.values.map(value => ({
+          ...value,
+          ym: moment(value.date).format("YYYY-MM"),
+          area: value.area / 10000,
+        }));
         this.setState({
-          data: response.data.values,
+          data: values,
         });
       } catch (err) {
         console.error(err);
@@ -91,8 +96,8 @@ class Dashboard extends React.Component {
             data={data}
             margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
           >
-            <XAxis dataKey="date" style={axisStyle} />
-            <YAxis style={axisStyle} />
+            <XAxis dataKey="ym" style={axisStyle} />
+            <YAxis style={axisStyle} unit=" ha" />
             <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
             <Line type="monotone" dataKey="area" stroke="#009688" />
           </LineChart>
