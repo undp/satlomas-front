@@ -624,7 +624,7 @@ class ChangesMap extends Component {
             data={scopeGeomsData}
             onClick={this.handleScopePolygonClick}
           />}
-          {/* <LomasPolygonsLayer /> */}
+          <LomasPolygonsLayer />
           {visibleLayers.map(layer => (<TileLayer
             key={layer.id}
             type="raster"
