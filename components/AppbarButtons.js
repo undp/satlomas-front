@@ -203,22 +203,26 @@ class AppbarButtons extends React.Component {
   async fetchUsername() {
     const token = cookie.get("token");
 
-    try {
-      const response = await axios.get(buildApiUrl("/auth/user/"), {
-        headers: {
-          "Accept-Language": i18n.language,
-          Authorization: token,
-        },
-      });
-      const { username } = response.data;
-      this.setState({ username, loading: false });
-    } catch (error) {
-      console.error(error);
-      this.setState({ username: "", loading: false })
-      this.props.enqueueSnackbar(`Failed to get user data`, {
-        variant: "error",
-      });
+    if (token) {
+      try {
+        const response = await axios.get(buildApiUrl("/auth/user/"), {
+          headers: {
+            "Accept-Language": i18n.language,
+            Authorization: token,
+          },
+        });
+        const { username } = response.data;
+        this.setState({ username, loading: false });
+      } catch (error) {
+        console.error(error);
+        this.setState({ username: "", loading: false })
+        this.props.enqueueSnackbar(`Failed to get user data`, {
+          variant: "error",
+        });
+      }
     }
+
+    this.setState({ loading: false })
   }
 
   render() {
