@@ -110,7 +110,7 @@ const cards = [
   },
   {
     key: "objects-map",
-    title: "Detección de objectos",
+    title: "Detección de objetos",
     description:
       "Mapa de objetos detectados en Loma, basado en las imágenes del satélite PeruSat-1.",
     image: "/static/thumbs/objects-map.jpg",
