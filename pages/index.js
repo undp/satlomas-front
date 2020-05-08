@@ -94,19 +94,27 @@ const styles = (theme) => ({
 const cards = [
   {
     key: "green-map",
-    title: "Cobertura verde en Lomas",
+    title: "Cobertura verde",
     description:
-      "Mapa de cobertura verde de Lomas, basado en el producto VI de MODIS, actualizado mensualmente.",
+      "Mapa de cobertura de vegetación de Lomas, basado en el producto VI de MODIS, actualizado mensualmente.",
     image: "/static/thumbs/changes-map-vi-lomas.jpg",
     buttons: [{ name: "Ver", href: "/maps/vi-lomas-changes" }],
   },
   {
     key: "changes-map",
-    title: "Cobertura de Lomas",
+    title: "Cobertura de Loma perdida",
     description:
-      "Mapa de cambios de cobertura de loma perdida y remanente, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
+      "Mapa de cobertura de Loma perdida, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
     image: "/static/thumbs/changes-map-lomas.jpg",
     buttons: [{ name: "Ver", href: "/maps/lomas-changes" }],
+  },
+  {
+    key: "objects-map",
+    title: "Detección de objectos",
+    description:
+      "Mapa de objetos detectados en Loma, basado en las imágenes del satélite PeruSat-1.",
+    image: "/static/thumbs/objects-map.jpg",
+    buttons: [{ name: "Ver", href: "/objects-map" }],
   },
   {
     key: "stations-map",
@@ -217,13 +225,13 @@ class Index extends React.Component {
             {/* End hero unit */}
             <Grid container spacing={5}>
               {cards.map((card) => (
-                <Grid item key={card.key} sm={6} md={4} lg={3}>
+                <Grid item key={card.key} sm={6} md={4} lg={4}>
                   <Card className={classes.card}>
                     <Link href={card.buttons[0].href}>
                       <CardMedia
                         className={classes.cardMedia}
                         image={card.image}
-                        title="Screenshot"
+                        title={card.title}
                       >
                         &nbsp;
                       </CardMedia>
