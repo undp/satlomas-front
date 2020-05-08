@@ -41,7 +41,8 @@ class Dashboard extends React.Component {
 
   getTimeSeries = async () => {
     const { type, periods, scope } = this.props;
-    const basePath = typeBasePaths[type]
+    //const basePath = typeBasePaths[type]
+    const basePath = '/vi-lomas';
 
     this.setState({ loading: true });
 
