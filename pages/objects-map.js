@@ -23,6 +23,7 @@ import Dashboard from "../components/Dashboard";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
 import PeriodSlider from "../components/PeriodSlider";
+import LomasPolygonsLayer from "../components/LomasPolygonsLayer"
 import { KeyboardDatePicker } from "@material-ui/pickers"
 import moment from "moment";
 import config from "../config";
@@ -100,14 +101,15 @@ const styles = (theme) => ({
   },
 });
 
-class ScopePolygons extends React.Component {
+class ScopePolygonsLayer extends React.Component {
   _style = feature => {
     const { selectedScope } = this.props
-    const color = feature.properties.id === selectedScope ? "#fff700" : "#ff7b00";
+    const isSelected = feature.properties.id === selectedScope
+    const color = isSelected ? "#fff700" : "#ff7b00";
     return {
-      fillColor: "#000000",
+      color,
+      fillColor: color,
       fillOpacity: 0.0,
-      color: color,
       weight: 2
     };
   };
@@ -145,7 +147,6 @@ const ObjectsLayer = ({ data }) => (
     }}
   />
 )
-
 
 class SearchControl extends Component {
   render() {
@@ -258,8 +259,8 @@ class ObjectsMap extends Component {
     map: null,
     bounds: null,
     viewport: {
-      center: [-12.046373, -76.542755],
-      zoom: 10,
+      center: [-12.152283757631155, -76.89549811061045],
+      zoom: 14,
     },
     scopesLoaded: false,
     scopeTypes: {},
@@ -637,13 +638,14 @@ class ObjectsMap extends Component {
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
         >
-          {scopeGeomsData && <ScopePolygons
+          {scopeGeomsData && <ScopePolygonsLayer
             type={selectedScopeType}
             selectedScope={selectedScope}
             data={scopeGeomsData}
             onClick={this.handleScopePolygonClick}
           />}
           {objects && <ObjectsLayer data={objects} />}
+          <LomasPolygonsLayer />
           {visibleLayers.map(layer => (<TileLayer
             key={layer.id}
             type="raster"
