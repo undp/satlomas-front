@@ -235,6 +235,7 @@ let PlotsControl = ({ classes, type, periods, scope, customScope }) => (
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Dashboard
+          type={type}
           periods={periods}
           scope={scope}
           customScope={customScope}

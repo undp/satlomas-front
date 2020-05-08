@@ -9,6 +9,11 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
 
+const typeBasePaths = {
+  "lomas-changes": "/lomas",
+  "vi-lomas-changes": "/vi-lomas"
+}
+
 const styles = (theme) => ({
   progress: {
     marginBottom: theme.spacing(1)
@@ -35,7 +40,8 @@ class Dashboard extends React.Component {
   }
 
   getTimeSeries = async () => {
-    const { periods, scope } = this.props;
+    const { type, periods, scope } = this.props;
+    const basePath = typeBasePaths[type]
 
     this.setState({ loading: true });
 
@@ -51,7 +57,7 @@ class Dashboard extends React.Component {
         date_to: moment(dateTo).utc().format("YYYY-MM-DD"),
       };
       try {
-        const response = await axios.get(buildApiUrl("/vi-lomas/coverage/"), { params });
+        const response = await axios.get(buildApiUrl(`${basePath}/coverage/`), { params });
         this.setState({
           data: response.data.values,
         });
