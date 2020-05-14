@@ -137,7 +137,6 @@ const cards = [
 class Index extends React.Component {
   state = {
     section: null,
-    beta: false,
     contextualMenuOpen: null,
     username: ""
   }
