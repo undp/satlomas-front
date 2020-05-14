@@ -110,7 +110,7 @@ class PasswordReset extends React.Component {
       })
       .catch(error => {
         this.setState({
-          errorMsg: t("login.error_msg"),
+          errorMsg: "Email incorrecto.",
           successMsg: ""
         });
       })

@@ -20,6 +20,7 @@ import CreateParameterRuleContent from "../components/admin/CreateParameterRuleC
 import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
 import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
 import AlertsTableContent from "../components/admin/AlertsTableContent";
+import UserProfileContent from "../components/admin/UserProfileContent";
 import AppbarButtons from "../components/AppbarButtons";
 import config from "../config";
 
@@ -197,7 +198,7 @@ const sections = {
     key: "profile",
     path: "/profile",
     icon: <PersonIcon />,
-    content: null,
+    content: <UserProfileContent />,
   },
 };
 
