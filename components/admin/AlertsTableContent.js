@@ -177,12 +177,12 @@ class AlertsTable extends React.Component {
 
   async componentDidMount() {
     await this.fetchData();
-    this.checkAlertsAsSeen();
+    this.markAsSeen();
   }
 
-  checkAlertsAsSeen(){
+  markAsSeen() {
     const { token } = this.props;
-    axios.get(buildApiUrl("/alerts/seen"), { headers: { Authorization: token } });
+    axios.put(buildApiUrl("/alerts/mark-as-seen/"), { headers: { Authorization: token } });
   }
 
   prepareRows(data) {

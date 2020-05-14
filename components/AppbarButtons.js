@@ -67,20 +67,20 @@ class AlertsMenuButton extends React.Component {
     const token = cookie.get("token");
 
     try {
-      const response = await axios.get(buildApiUrl("/alerts/latest"), {
+      const response = await axios.get(buildApiUrl("/alerts/latest/"), {
         headers: {
           "Accept-Language": i18n.language,
           Authorization: token,
         },
       });
-      
+
       const allAlerts = response.data['alerts'];
       const hasMoreAlerts = allAlerts.count > MAX_NOTIFICATIONS_FIRST;
       const alerts = allAlerts.slice(0, MAX_NOTIFICATIONS_FIRST);
-      
-      this.setState({ 
-        alerts, 
-        hasMoreAlerts, 
+
+      this.setState({
+        alerts,
+        hasMoreAlerts,
         count: response.data['news'],
         badgeShow: response.data['news'] == 0,
       });
@@ -92,11 +92,10 @@ class AlertsMenuButton extends React.Component {
     }
   }
 
-
-  expandMenu(e){
+  expandMenu(e) {
     const token = cookie.get("token");
     this.setState({ anchorEl: e.currentTarget });
-    axios.get(buildApiUrl("/alerts/seen"), { headers: { Authorization: token } });
+    axios.put(buildApiUrl("/alerts/mark-as-seen/"), { headers: { Authorization: token } });
   }
 
   render() {
@@ -112,8 +111,8 @@ class AlertsMenuButton extends React.Component {
           color="inherit"
           onClick={e => this.expandMenu(e)}
         >
-          <Badge 
-            badgeContent={count} 
+          <Badge
+            badgeContent={count}
             invisible={badgeShow}
             color="secondary">
             <NotificationsIcon />
@@ -127,17 +126,17 @@ class AlertsMenuButton extends React.Component {
         >
           <MenuItem>Alertas</MenuItem>
           {alerts.map(alert => (
-            alert.last_seen_at ? 
-              <MenuItem key={alert.id}> 
+            alert.last_seen_at ?
+              <MenuItem key={alert.id}>
                 <Typography className={classes.notificationText}>Alerta {alert.id}</Typography>
-                <Moment className={classes.momentFont} fromNow>{alert.last_seen_at}</Moment> 
+                <Moment className={classes.momentFont} fromNow>{alert.last_seen_at}</Moment>
               </MenuItem>
-              : 
-              <MenuItem key={alert.id} style={{backgroundColor: 'lightblue'}}> 
+              :
+              <MenuItem key={alert.id} style={{ backgroundColor: 'lightblue' }}>
                 <Typography className={classes.notificationText}>Alerta {alert.id}</Typography>
               </MenuItem>
-            
- 
+
+
           ))}
           {!hasMoreAlerts && (
             <MenuItem className={classes.notifButton}>
