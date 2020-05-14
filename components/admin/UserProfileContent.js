@@ -82,7 +82,7 @@ class UserProfileContent extends React.Component {
 
       this.setState({email: response.data.email, username: response.data.username})
 
-      response = await axios.get(buildApiUrl("/alerts/profile/" + response.data.username), {
+      response = await axios.get(buildApiUrl(`/alerts/user-profiles/${response.data.username}`), {
         headers: {
           "Accept-Language": i18n.language,
           Authorization: token,
@@ -116,7 +116,7 @@ class UserProfileContent extends React.Component {
     const token = cookie.get("token");
     try {
       var response = axios.patch(
-        buildApiUrl(`/alerts/profile/${this.state.username}/`),
+        buildApiUrl(`/alerts/user-profiles/${this.state.username}/`),
         { email_alerts: this.state.emailAlerts },
         { 
           headers: {
