@@ -95,7 +95,9 @@ class AlertsMenuButton extends React.Component {
   expandMenu(e) {
     const token = cookie.get("token");
     this.setState({ anchorEl: e.currentTarget });
-    axios.put(buildApiUrl("/alerts/mark-as-seen/"), { headers: { Authorization: token } });
+    axios.put(buildApiUrl("/alerts/mark-as-seen/"), null, {
+      headers: { Authorization: token }
+    });
   }
 
   render() {
