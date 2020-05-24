@@ -39,7 +39,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-const drawerWidth = 200;
+const drawerWidth = 300;
 
 const styles = (theme) => ({
   root: {
