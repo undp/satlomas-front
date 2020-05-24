@@ -1,10 +1,20 @@
 import React from 'react';
 import axios from "axios";
+import Moment from "react-moment";
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Paper } from '@material-ui/core';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
+import { i18n, withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withSnackbar } from 'notistack';
-import VirtualizedTable from '../VirtualizedTable';
 
 const styles = _theme => ({
   root: {
@@ -17,12 +27,6 @@ class AlertsTable extends React.Component {
   state = {
     loading: true,
     rows: [],
-    columns: [
-      { width: 120, flexGrow: 1.0, label: "Fecha y hora", dataKey: "created_at" },
-      { width: 120, flexGrow: 1.0, label: "Tipo de regla", dataKey: "rule_content_type" },
-      { width: 120, flexGrow: 1.0, label: "Regla", dataKey: "rule_id" },
-      { width: 120, flexGrow: 1.0, label: "Tipo de medida", dataKey: "measurement_content_type" },
-    ],
   }
 
   async componentDidMount() {
@@ -41,13 +45,14 @@ class AlertsTable extends React.Component {
     const { token } = this.props;
     const response = await axios.get(buildApiUrl("/alerts/"), { headers: { Authorization: token } });
     const rows = response.data;
-    console.log("Alerts:", rows);
     this.setState({ loading: false, rows });
   }
 
   render() {
     const { classes } = this.props;
-    const { loading, rows, columns } = this.state;
+    const { rows } = this.state;
+
+    const locale = i18n.language;
 
     return (
       <div className={classes.root}>
@@ -59,13 +64,28 @@ class AlertsTable extends React.Component {
           Alertas
         </Typography>
         <Paper>
-          {!loading && (
-            <VirtualizedTable
-              rowCount={rows.length}
-              rowGetter={({ index }) => rows[index]}
-              columns={columns}
-            />
-          )}
+          <TableContainer>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Fecha y hora</TableCell>
+                  <TableCell>Tipo de regla</TableCell>
+                  <TableCell>Regla</TableCell>
+                  <TableCell>Tipo de medida</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map(row => (
+                  <TableRow key={row.id}>
+                    <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
+                    <TableCell>{row.rule_content_type}</TableCell>
+                    <TableCell>{row.rule_id}</TableCell>
+                    <TableCell>{row.measurement_content_type}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Paper>
       </div>
     );
@@ -74,5 +94,6 @@ class AlertsTable extends React.Component {
 
 AlertsTable = withSnackbar(AlertsTable);
 AlertsTable = withStyles(styles)(AlertsTable);
+AlertsTable = withTranslation(["me", "common"])(AlertsTable);
 
 export default AlertsTable
