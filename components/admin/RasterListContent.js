@@ -45,7 +45,6 @@ let RasterTable = (props) => {
               <TableCell>Slug</TableCell>
               <TableCell>Periodo</TableCell>
               <TableCell>Archivo</TableCell>
-              <TableCell>Descripcion</TableCell>
               <TableCell>Fecha de creación</TableCell>
               <TableCell>Fecha de modificación</TableCell>
               <TableCell />
@@ -58,7 +57,6 @@ let RasterTable = (props) => {
                 <TableCell>{row.slug}</TableCell>
                 <TableCell>{row.period_readeable}</TableCell>
                 <TableCell>{row.name}</TableCell>
-                <TableCell>{row.description}</TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.updated_at}</Moment></TableCell>
                 <TableCell align="right">
