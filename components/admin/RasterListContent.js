@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Paper,
+  Typography,
   Table,
   TableBody,
   Tooltip,
@@ -63,9 +64,9 @@ let RasterTable = (props) => {
                 <TableCell align="right">
                   <Tooltip title="Copy URL">
                     <CopyToClipboard text={row.tiles_url}>
-                        <IconButton>
+                      <IconButton>
                         <FileCopyIcon />
-                        </IconButton>
+                      </IconButton>
                     </CopyToClipboard>
                   </Tooltip>
                 </TableCell>
@@ -102,9 +103,9 @@ const typeBasePaths = {
 
 class RasterListContent extends React.Component {
   state = {
-      rows: [],
+    rows: [],
   }
-  constructor (props){
+  constructor(props) {
     super(props);
     this.downloadRaster = this.downloadRaster.bind(this);
   }
@@ -113,60 +114,71 @@ class RasterListContent extends React.Component {
     this.fetchData();
   }
 
-  async fetchData(){
+  async fetchData() {
     const { token } = this.props;
 
     const vi_lomas_response = await axios.get(
-        buildApiUrl("/vi-lomas/rasters"), 
-        { headers: { "Accept-Language": i18n.language, Authorization: token }}
+      buildApiUrl("/vi-lomas/rasters"),
+      { headers: { "Accept-Language": i18n.language, Authorization: token } }
     );
     let vi_lomas_rasters = vi_lomas_response.data;
     for (var i = 0; i < vi_lomas_rasters.length; i++) {
       vi_lomas_rasters[i]['type'] = 'vi-lomas'
-      vi_lomas_rasters[i]['period_readeable'] = `${vi_lomas_rasters[i]['period']['date_from']} - ${vi_lomas_rasters[i]['period']['date_to']}` 
+      vi_lomas_rasters[i]['period_readeable'] = `${vi_lomas_rasters[i]['period']['date_from']} - ${vi_lomas_rasters[i]['period']['date_to']}`
     }
 
     const lomas_response = await axios.get(
-      buildApiUrl("/lomas/rasters"), 
-      { headers: { "Accept-Language": i18n.language, Authorization: token }}
+      buildApiUrl("/lomas/rasters"),
+      { headers: { "Accept-Language": i18n.language, Authorization: token } }
     );
     let lomas_rasters = lomas_response.data;
     for (var i = 0; i < lomas_rasters.length; i++) {
       lomas_rasters[i]['type'] = 'lomas'
-      lomas_rasters[i]['period_readeable'] = `${lomas_rasters[i]['period']['date_from']} - ${lomas_rasters[i]['period']['date_to']}` 
+      lomas_rasters[i]['period_readeable'] = `${lomas_rasters[i]['period']['date_from']} - ${lomas_rasters[i]['period']['date_to']}`
 
     }
 
     let result = vi_lomas_rasters.concat(lomas_rasters);
     result.sort(function (a, b) {
-      if (a["period"]["date_from"] > ["period"]["date_from"]) { return -1;}
-      if (b["period"]["date_from"] > a["period"]["date_from"]) { return 1;}
+      if (a["period"]["date_from"] > ["period"]["date_from"]) { return -1; }
+      if (b["period"]["date_from"] > a["period"]["date_from"]) { return 1; }
       return 0;
     });
 
     this.setState({ rows: result });
   }
 
-  downloadRaster(id, name, type){
+  downloadRaster(id, name, type) {
     axios.get(buildApiUrl(`${typeBasePaths[type]}/download-raster/${id}`), {
       headers: { Authorization: this.props.token },
       responseType: 'blob'
     })
-    .then(response => {
-      FileDownload(response.data, name);
-    });
+      .then(response => {
+        FileDownload(response.data, name);
+      });
   }
 
 
   render() {
+    const { classes } = this.props;
     const { rows } = this.state;
 
     return (
-      <RasterTable rows={rows} downloadHandler={this.downloadRaster}/>
+      <div className={classes.root}>
+        <Typography
+          variant="h6"
+          className={classes.title}
+          gutterBottom
+        >
+          Imágenes
+        </Typography>
+        <RasterTable rows={rows} downloadHandler={this.downloadRaster} />
+      </div>
     )
   }
 }
 
 RasterListContent = withSnackbar(RasterListContent);
+RasterListContent = withStyles(styles)(RasterListContent);
 
 export default RasterListContent;
