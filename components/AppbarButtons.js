@@ -142,7 +142,7 @@ class AlertsMenuButton extends React.Component {
           ))}
           {!hasMoreAlerts && (
             <MenuItem className={classes.notifButton}>
-              <Button onClick={() => Router.push("/admin/alerts")}>
+              <Button onClick={() => Router.push("/user/alerts")}>
                 Ver más...
               </Button>
             </MenuItem>
@@ -182,11 +182,11 @@ class ProfileMenuButton extends React.Component {
           open={Boolean(anchorEl)}
           onClose={() => this.setState({ anchorEl: null })}
         >
-          <MenuItem className={classes.menuItem} onClick={() => Router.push("/admin/profile")}>
+          <MenuItem className={classes.menuItem} onClick={() => Router.push("/user/profile")}>
             {username}
           </MenuItem>
-          <MenuItem className={classes.menuItem} onClick={() => Router.push("/admin")}>
-            Administrador
+          <MenuItem className={classes.menuItem} onClick={() => Router.push("/user")}>
+            Panel de Usuario
         </MenuItem>
           <MenuItem className={classes.menuItem} onClick={() => logout()}
           >

@@ -42,10 +42,10 @@ const ChangeTypeControl = ({ value, onChange }) => (
   </FormControl>
 )
 
-class ScopeTypeRuleForm extends React.Component {
+class ScopeRuleForm extends React.Component {
   state = {
     fields: {
-      scope_type: null,
+      scope: null,
       measurement_content_type: "",
       change_type: "",
       valid_min: "",
@@ -56,7 +56,7 @@ class ScopeTypeRuleForm extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchScopeTypes();
+    await this.fetchScopes();
 
     const { id } = this.props;
     if (id) {
@@ -66,17 +66,18 @@ class ScopeTypeRuleForm extends React.Component {
     this.setState({ loaded: true });
   }
 
-  async fetchScopeTypes() {
+  async fetchScopes() {
     try {
-      const response = await axios.get(buildApiUrl("/scopes/types/"));
-      const scopeTypes = response.data.map(scopeType => ({
-        id: scopeType.type,
-        name: scopeType.name
+      // Fetch all scopes, skipping geometry field
+      const response = await axios.get(buildApiUrl("/scopes/"), { params: { skipgeom: 1 } });
+      const scopes = response.data.map(scope => ({
+        id: scope.id,
+        name: `${scope.scope_type} - ${scope.name}`,
       }));
-      this.setState({ scopeTypes });
+      this.setState({ scopes });
     } catch (err) {
       console.error(err);
-      this.props.enqueueSnackbar("Failed to get scope types", { variant: 'error' });
+      this.props.enqueueSnackbar("Failed to get scopes", { variant: 'error' });
     }
   }
 
@@ -84,12 +85,12 @@ class ScopeTypeRuleForm extends React.Component {
     const { token } = this.props;
 
     try {
-      const response = await axios.get(buildApiUrl(`/alerts/scope-type-rules/${id}/`), {
+      const response = await axios.get(buildApiUrl(`/alerts/scope-rules/${id}/`), {
         headers: { Authorization: token }
       });
 
       const {
-        scope_type,
+        scope,
         measurement_content_type,
         change_type,
         valid_min,
@@ -98,7 +99,7 @@ class ScopeTypeRuleForm extends React.Component {
 
       this.setState({
         fields: {
-          scope_type,
+          scope,
           measurement_content_type,
           change_type,
           valid_max,
@@ -127,12 +128,12 @@ class ScopeTypeRuleForm extends React.Component {
     const { fields } = this.state;
 
     try {
-      await axios.post(buildApiUrl("/alerts/scope-type-rules/"),
+      await axios.post(buildApiUrl("/alerts/scope-rules/"),
         fields,
         { headers: { Authorization: token } }
       );
 
-      routerPush("/admin/scope-type-rules");
+      routerPush("/user/scope-rules");
     } catch (err) {
       console.error(err);
       this.props.enqueueSnackbar("Failed to create new rule", { variant: 'error' });
@@ -144,7 +145,7 @@ class ScopeTypeRuleForm extends React.Component {
     const { fields } = this.state;
 
     try {
-      await axios.put(buildApiUrl(`/alerts/scope-type-rules/${id}/`),
+      await axios.put(buildApiUrl(`/alerts/scope-rules/${id}/`),
         fields,
         { headers: { Authorization: token } }
       );
@@ -174,11 +175,11 @@ class ScopeTypeRuleForm extends React.Component {
     const { id, token } = this.props;
     if(action){
       try {
-        await axios.delete(buildApiUrl(`/alerts/scope-type-rules/${id}/`),
+        await axios.delete(buildApiUrl(`/alerts/scope-rules/${id}/`),
           { headers: { Authorization: token } }
         );
         this.props.enqueueSnackbar("Rule deleted", { variant: 'success' })
-        routerPush("/admin/scope-type-rules");
+        routerPush("/user/scope-rules");
       } catch (err) {
         console.error(err);
         this.props.enqueueSnackbar("Failed to delete rule", { variant: 'error' });
@@ -191,7 +192,7 @@ class ScopeTypeRuleForm extends React.Component {
 
   render() {
     const { classes, id } = this.props;
-    const { scopeTypes, fields, loaded, openConfirmationDialog } = this.state;
+    const { scopes, fields, loaded, openConfirmationDialog } = this.state;
 
     return <Paper className={classes.root}>
       <form
@@ -200,10 +201,10 @@ class ScopeTypeRuleForm extends React.Component {
         onSubmit={this.handleSubmit}
       >
         <SelectControl
-          id="scope_type"
-          label="Tipo de Ámbito"
-          value={fields.scope_type}
-          items={scopeTypes}
+          id="scope"
+          label="Ámbito"
+          value={fields.scope}
+          items={scopes}
           disabled={!loaded}
           onChange={this.handleChange}
         />
@@ -235,8 +236,8 @@ class ScopeTypeRuleForm extends React.Component {
           disabled={!loaded}
         />
         <SubmitButton edit={id} disabled={!loaded} />
+        <BackButton url={'/user/scope-rules'}/>
         {id && <DestroyButton onClick={this.handleDelete}/>}
-        <BackButton url={'/admin/scope-type-rules'}/>
         <ConfirmationDialog
           onClose={this.onDialogResult}
           open={openConfirmationDialog}
@@ -249,9 +250,9 @@ class ScopeTypeRuleForm extends React.Component {
   }
 }
 
-ScopeTypeRuleForm = withStyles(styles)(ScopeTypeRuleForm);
-ScopeTypeRuleForm = withSnackbar(ScopeTypeRuleForm);
+ScopeRuleForm = withStyles(styles)(ScopeRuleForm);
+ScopeRuleForm = withSnackbar(ScopeRuleForm);
 
-const CreateScopeTypeRuleContent = (props) => <ScopeTypeRuleForm {...props} />;
+const CreateScopeRuleContent = (props) => <ScopeRuleForm {...props} />;
 
-export default CreateScopeTypeRuleContent;
+export default CreateScopeRuleContent;

@@ -151,7 +151,7 @@ class AlertsTable extends React.Component {
                     <TableCell>{ruleByContentType[row.rule_content_type].name}</TableCell>
                     <TableCell>
                       <Link
-                        href={`/admin/${ruleByContentType[row.rule_content_type].urlName}/${row.rule.id}`}>
+                        href={`/user/${ruleByContentType[row.rule_content_type].urlName}/${row.rule.id}`}>
                         {String(row.rule.id)}
                       </Link>
                     </TableCell>

@@ -58,7 +58,7 @@ class RulesListContent extends React.Component {
         >
           {title}
           <Button
-            onClick={() => routerPush(`/admin/${ruleType}-rules/new`)}
+            onClick={() => routerPush(`/user/${ruleType}-rules/new`)}
             className={classes.newButton}
             startIcon={<AddIcon />}
           >

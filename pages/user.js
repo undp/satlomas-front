@@ -8,19 +8,19 @@ import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
 import React from "react";
-import HomeContent from "../components/admin/HomeContent";
+import HomeContent from "../components/user/HomeContent";
 import { Link, withTranslation } from "../i18n";
 import { routerReplace } from "../utils/router";
 import { withAuthSync } from "../utils/auth";
-import RasterListContent from "../components/admin/RasterListContent";
-import ParameterRulesListContent from "../components/admin/ParameterRulesListContent";
-import ScopeTypeRulesListContent from "../components/admin/ScopeTypeRulesListContent";
-import ScopeRulesListContent from "../components/admin/ScopeRulesListContent";
-import CreateParameterRuleContent from "../components/admin/CreateParameterRuleContent";
-import CreateScopeTypeRuleContent from "../components/admin/CreateScopeTypeRuleContent";
-import CreateScopeRuleContent from "../components/admin/CreateScopeRuleContent";
-import AlertsTableContent from "../components/admin/AlertsTableContent";
-import UserProfileContent from "../components/admin/UserProfileContent";
+import RasterListContent from "../components/user/RasterListContent";
+import ParameterRulesListContent from "../components/user/ParameterRulesListContent";
+import ScopeTypeRulesListContent from "../components/user/ScopeTypeRulesListContent";
+import ScopeRulesListContent from "../components/user/ScopeRulesListContent";
+import CreateParameterRuleContent from "../components/user/CreateParameterRuleContent";
+import CreateScopeTypeRuleContent from "../components/user/CreateScopeTypeRuleContent";
+import CreateScopeRuleContent from "../components/user/CreateScopeRuleContent";
+import AlertsTableContent from "../components/user/AlertsTableContent";
+import UserProfileContent from "../components/user/UserProfileContent";
 import AppbarButtons from "../components/AppbarButtons";
 import config from "../config";
 
@@ -202,7 +202,7 @@ const sections = {
   },
 };
 
-class Admin extends React.Component {
+class UserPanel extends React.Component {
   state = {
     open: true,
     section: null,
@@ -234,7 +234,7 @@ class Admin extends React.Component {
     // By default, go to /alerts
     const { section } = this.props.query;
     if (!section) {
-      routerReplace("/admin/alerts");
+      routerReplace("/user/alerts");
     }
   }
 
@@ -292,7 +292,7 @@ class Admin extends React.Component {
                 noWrap
                 className={classes.title}
               >
-                {appName} - Administración
+                {appName} - Panel de Usuario
               </Typography>
             </Link>
             <AppbarButtons />
@@ -318,8 +318,8 @@ class Admin extends React.Component {
             {sidebarSections.map((key) => (
               <Link
                 key={key}
-                href={`/admin?section=${key}`}
-                as={`/admin${sections[key].path}`}
+                href={`/user?section=${key}`}
+                as={`/user${sections[key].path}`}
               >
                 <ListItem
                   button
@@ -335,8 +335,8 @@ class Admin extends React.Component {
           <Divider />
           <List>
             <Link
-              href={`/admin?section=profile`}
-              as={`/admin${sections["profile"].path}`}
+              href={`/user?section=profile`}
+              as={`/user${sections["profile"].path}`}
             >
               <ListItem
                 button
@@ -358,12 +358,12 @@ class Admin extends React.Component {
   }
 }
 
-Admin.propTypes = {
+UserPanel.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-Admin = withStyles(styles)(Admin);
-Admin = withTranslation(["me", "common"])(Admin);
-Admin = withAuthSync(Admin);
+UserPanel = withStyles(styles)(UserPanel);
+UserPanel = withTranslation(["me", "common"])(UserPanel);
+UserPanel = withAuthSync(UserPanel);
 
-export default Admin;
+export default UserPanel;

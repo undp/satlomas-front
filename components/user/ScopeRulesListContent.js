@@ -31,16 +31,16 @@ const styles = theme => ({
   }
 });
 
-const getStationName = (stations, id) => {
+const getScopeName = (scopes, id) => {
   if (!id) return 'Cualquiera';
-  if (!stations) return '';
-  const station = stations[id];
-  if (!station) return '';
-  return station.name;
+  if (!scopes) return '';
+  const scope = scopes[id];
+  if (!scope) return '';
+  return `${scope.scope_type} - ${scope.name}`
 }
 
-let ParameterRulesTable = (props) => {
-  const { t, classes, stations, rows } = props;
+let ScopeRulesTable = (props) => {
+  const { t, classes, scopes, rows } = props;
   const locale = i18n.language;
 
   return (
@@ -50,8 +50,9 @@ let ParameterRulesTable = (props) => {
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell>Estación</TableCell>
-              <TableCell>Parámetro</TableCell>
+              <TableCell>Ámbito</TableCell>
+              <TableCell>Tipo de Cobertura</TableCell>
+              <TableCell>Tipo de Medida</TableCell>
               <TableCell>Rango</TableCell>
               <TableCell>Fecha de creación</TableCell>
               <TableCell>Fecha de modificación</TableCell>
@@ -62,15 +63,16 @@ let ParameterRulesTable = (props) => {
             {rows.map(row => (
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
-                <TableCell>{getStationName(row.station)}</TableCell>
-                <TableCell>{t(`parameters.${row.parameter}`)}</TableCell>
-                <TableCell>{row.valid_min} - {row.valid_max}{row.is_absolute ? ` (absoluto)` : ''}</TableCell>
+                <TableCell>{getScopeName(scopes, row.scope)}</TableCell>
+                <TableCell>{t(`measurement_content_type.${row.measurement_content_type}`)}</TableCell>
+                <TableCell>{t(`change_type.${row.change_type}`)}</TableCell>
+                <TableCell>{row.valid_min} - {row.valid_max}</TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
                 <TableCell><Moment locale={locale} fromNow>{row.updated_at}</Moment></TableCell>
                 <TableCell align="right">
                   <Tooltip title="Editar">
                     <IconButton
-                      onClick={() => routerPush(`/admin/parameter-rules/${row.id}`)}
+                      onClick={() => routerPush(`/user/scope-rules/${row.id}`)}
                       aria-label="Editar regla"
                     >
                       <EditIcon />
@@ -86,52 +88,53 @@ let ParameterRulesTable = (props) => {
   );
 }
 
-ParameterRulesTable.propTypes = {
+ScopeRulesTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-ParameterRulesTable = withStyles(styles)(ParameterRulesTable);
-ParameterRulesTable = withTranslation(["me", "common"])(ParameterRulesTable);
+ScopeRulesTable = withTranslation(["me", "common"])(ScopeRulesTable);
+ScopeRulesTable = withStyles(styles)(ScopeRulesTable);
 
-class ParameterRulesListContent extends React.Component {
+class ScopeRulesListContent extends React.Component {
   state = {
-    stations: {}
+    scopes: {}
   }
 
   componentDidMount() {
-    this.fetchStations()
+    this.fetchScopes()
   }
 
-  async fetchStations() {
+  async fetchScopes() {
     try {
-      const response = await axios.get(buildApiUrl("/stations/stations"));
-      const stationsArray = response.data;
-      let stations = {};
-      for (let i = 0; i < stationsArray.length; i++) {
-        const station = stationsArray[i];
-        stations[station.id] = station;
+      // Fetch all scopes, skipping geometry field
+      const response = await axios.get(buildApiUrl("/scopes/"), { params: { skipgeom: 1 } });
+      const scopesArray = response.data;
+      let scopes = {};
+      for (let i = 0; i < scopesArray.length; i++) {
+        const scope = scopesArray[i];
+        scopes[scope.id] = scope;
       }
-      this.setState({ stations });
+      this.setState({ scopes });
     } catch (err) {
       console.error(err);
-      this.props.enqueueSnackbar("Failed to get stations", { variant: 'error' });
+      this.props.enqueueSnackbar("Failed to get scopes", { variant: 'error' });
     }
   }
 
   render() {
     const { token } = this.props;
-    const { stations } = this.state;
+    const { scopes } = this.state;
 
     return (
       <RulesListContent
         token={token}
-        ruleType="parameter"
-        title="Reglas por Parámetro"
-        tableComponent={<ParameterRulesTable stations={stations} />} />
-    )
+        ruleType="scope"
+        title="Reglas por Ámbito"
+        tableComponent={<ScopeRulesTable scopes={scopes} />} />
+    );
   }
 }
 
-ParameterRulesListContent = withSnackbar(ParameterRulesListContent);
+ScopeRulesListContent = withSnackbar(ScopeRulesListContent);
 
-export default ParameterRulesListContent;
+export default ScopeRulesListContent;

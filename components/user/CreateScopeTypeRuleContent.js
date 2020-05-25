@@ -3,18 +3,24 @@ import { withStyles } from '@material-ui/core/styles';
 import { withSnackbar } from "notistack";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
-import { Paper } from "@material-ui/core"
+import {
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+  Paper,
+} from "@material-ui/core"
 import SelectControl from './forms/SelectControl';
 import InputControl from './forms/InputControl';
-import CheckboxControl from './forms/CheckboxControl';
 import SubmitButton from './forms/SubmitButton';
-import BackButton from './forms/BackButton';
 import DestroyButton from './forms/DestroyButton';
+import BackButton from './forms/BackButton'
 import ConfirmationDialog from '../ConfirmationDialog';
 import { routerPush } from "../../utils/router";
 import config from "../../config";
 
-const { stationParameters } = config;
+const { measurementContentTypes } = config;
 
 const styles = theme => ({
   root: {
@@ -26,22 +32,31 @@ const styles = theme => ({
   }
 });
 
-class ParameterRuleForm extends React.Component {
+const ChangeTypeControl = ({ value, onChange }) => (
+  <FormControl component="fieldset">
+    <FormLabel component="legend">Tipo de Cambio</FormLabel>
+    <RadioGroup aria-label="change_type" name="change_type" value={value} onChange={onChange}>
+      <FormControlLabel value="A" control={<Radio />} label="Área" />
+      <FormControlLabel value="P" control={<Radio />} label="Porcentaje" />
+    </RadioGroup>
+  </FormControl>
+)
+
+class ScopeTypeRuleForm extends React.Component {
   state = {
     fields: {
-      station: null,
-      parameter: null,
-      is_absolute: false,
+      scope_type: null,
+      measurement_content_type: "",
+      change_type: "",
       valid_min: "",
-      valid_max: "",
+      valid_max: ""
     },
-    stations: [],
     loaded: false,
     openConfirmationDialog: false,
   }
 
   async componentDidMount() {
-    await this.fetchStations();
+    await this.fetchScopeTypes();
 
     const { id } = this.props;
     if (id) {
@@ -51,13 +66,17 @@ class ParameterRuleForm extends React.Component {
     this.setState({ loaded: true });
   }
 
-  async fetchStations() {
+  async fetchScopeTypes() {
     try {
-      const response = await axios.get(buildApiUrl("/stations/stations"));
-      this.setState({ stations: response.data });
+      const response = await axios.get(buildApiUrl("/scopes/types/"));
+      const scopeTypes = response.data.map(scopeType => ({
+        id: scopeType.type,
+        name: scopeType.name
+      }));
+      this.setState({ scopeTypes });
     } catch (err) {
       console.error(err);
-      this.props.enqueueSnackbar("Failed to get stations", { variant: 'error' });
+      this.props.enqueueSnackbar("Failed to get scope types", { variant: 'error' });
     }
   }
 
@@ -65,18 +84,25 @@ class ParameterRuleForm extends React.Component {
     const { token } = this.props;
 
     try {
-      const response = await axios.get(buildApiUrl(`/alerts/parameter-rules/${id}/`), {
+      const response = await axios.get(buildApiUrl(`/alerts/scope-type-rules/${id}/`), {
         headers: { Authorization: token }
       });
 
-      const { parameter, is_absolute, valid_min, valid_max, station } = response.data;
+      const {
+        scope_type,
+        measurement_content_type,
+        change_type,
+        valid_min,
+        valid_max
+      } = response.data;
+
       this.setState({
         fields: {
-          parameter,
-          is_absolute,
+          scope_type,
+          measurement_content_type,
+          change_type,
           valid_max,
           valid_min,
-          station: station,
         }
       });
     } catch (err) {
@@ -101,12 +127,12 @@ class ParameterRuleForm extends React.Component {
     const { fields } = this.state;
 
     try {
-      await axios.post(buildApiUrl("/alerts/parameter-rules/"),
+      await axios.post(buildApiUrl("/alerts/scope-type-rules/"),
         fields,
         { headers: { Authorization: token } }
       );
 
-      routerPush("/admin/parameter-rules");
+      routerPush("/user/scope-type-rules");
     } catch (err) {
       console.error(err);
       this.props.enqueueSnackbar("Failed to create new rule", { variant: 'error' });
@@ -118,12 +144,11 @@ class ParameterRuleForm extends React.Component {
     const { fields } = this.state;
 
     try {
-      await axios.put(buildApiUrl(`/alerts/parameter-rules/${id}/`),
+      await axios.put(buildApiUrl(`/alerts/scope-type-rules/${id}/`),
         fields,
         { headers: { Authorization: token } }
       );
       enqueueSnackbar("Rule updated", { variant: 'success' })
-      // routerPush("/admin/parameter-rules");
     } catch (err) {
       console.error(err);
       enqueueSnackbar("Failed to update rule", { variant: 'error' });
@@ -141,15 +166,6 @@ class ParameterRuleForm extends React.Component {
     }));
   }
 
-  handleIsAbsoluteChange = () => {
-    this.setState(prevState => ({
-      fields: {
-        ...prevState.fields,
-        is_absolute: !prevState.fields.is_absolute
-      }
-    }));
-  }
-
   handleDelete = () => {
     this.setState({openConfirmationDialog: true});
   }
@@ -158,11 +174,11 @@ class ParameterRuleForm extends React.Component {
     const { id, token } = this.props;
     if(action){
       try {
-        await axios.delete(buildApiUrl(`/alerts/parameter-rules/${id}/`),
+        await axios.delete(buildApiUrl(`/alerts/scope-type-rules/${id}/`),
           { headers: { Authorization: token } }
         );
         this.props.enqueueSnackbar("Rule deleted", { variant: 'success' })
-        routerPush("/admin/parameter-rules");
+        routerPush("/user/scope-type-rules");
       } catch (err) {
         console.error(err);
         this.props.enqueueSnackbar("Failed to delete rule", { variant: 'error' });
@@ -175,7 +191,7 @@ class ParameterRuleForm extends React.Component {
 
   render() {
     const { classes, id } = this.props;
-    const { stations, fields, loaded, openConfirmationDialog } = this.state;
+    const { scopeTypes, fields, loaded, openConfirmationDialog } = this.state;
 
     return <Paper className={classes.root}>
       <form
@@ -184,20 +200,25 @@ class ParameterRuleForm extends React.Component {
         onSubmit={this.handleSubmit}
       >
         <SelectControl
-          id="station"
-          label="Estación"
-          items={stations}
-          value={fields.station}
+          id="scope_type"
+          label="Tipo de Ámbito"
+          value={fields.scope_type}
+          items={scopeTypes}
           disabled={!loaded}
           onChange={this.handleChange}
         />
         <SelectControl
-          id="parameter"
-          label="Parámetro"
-          items={stationParameters}
-          value={fields.parameter}
+          id="measurement_content_type"
+          label="Tipo de Cobertura"
+          value={fields.measurement_content_type}
+          items={measurementContentTypes}
           disabled={!loaded}
           onChange={this.handleChange}
+        />
+        <ChangeTypeControl
+          value={fields.change_type}
+          onChange={this.handleChange}
+          disabled={!loaded}
         />
         <InputControl
           id="valid_min"
@@ -213,15 +234,9 @@ class ParameterRuleForm extends React.Component {
           value={fields.valid_max}
           disabled={!loaded}
         />
-        <CheckboxControl
-          label="¿Es absoluto?"
-          checked={fields.is_absolute}
-          onChange={this.handleIsAbsoluteChange}
-          disabled={!loaded}
-        />
         <SubmitButton edit={id} disabled={!loaded} />
         {id && <DestroyButton onClick={this.handleDelete}/>}
-        <BackButton url={'/admin/parameter-rules'}/>
+        <BackButton url={'/user/scope-type-rules'}/>
         <ConfirmationDialog
           onClose={this.onDialogResult}
           open={openConfirmationDialog}
@@ -234,9 +249,9 @@ class ParameterRuleForm extends React.Component {
   }
 }
 
-ParameterRuleForm = withStyles(styles)(ParameterRuleForm);
-ParameterRuleForm = withSnackbar(ParameterRuleForm);
+ScopeTypeRuleForm = withStyles(styles)(ScopeTypeRuleForm);
+ScopeTypeRuleForm = withSnackbar(ScopeTypeRuleForm);
 
-const CreateParameterRuleContent = (props) => <ParameterRuleForm {...props} />;
+const CreateScopeTypeRuleContent = (props) => <ScopeTypeRuleForm {...props} />;
 
-export default CreateParameterRuleContent;
+export default CreateScopeTypeRuleContent;

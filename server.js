@@ -24,19 +24,19 @@ const handle = app.getRequestHandler();
   for (let i = 0; i < ruleTypes.length; i++) {
     const ruleType = ruleTypes[i];
 
-    server.get(`/admin/${ruleType}-rules/new`, (req, res) => {
-      return app.render(req, res, "/admin", { section: `create-${ruleType}-rule` });
+    server.get(`/user/${ruleType}-rules/new`, (req, res) => {
+      return app.render(req, res, "/user", { section: `create-${ruleType}-rule` });
     });
 
-    server.get(`/admin/${ruleType}-rules/:id`, (req, res) => {
+    server.get(`/user/${ruleType}-rules/:id`, (req, res) => {
       const { id } = req.params;
-      return app.render(req, res, "/admin", { section: `create-${ruleType}-rule`, id });
+      return app.render(req, res, "/user", { section: `create-${ruleType}-rule`, id });
     });
   }
 
-  server.get("/admin/:section", (req, res) => {
+  server.get("/user/:section", (req, res) => {
     const { section } = req.params;
-    return app.render(req, res, "/admin", { section: section });
+    return app.render(req, res, "/user", { section: section });
   });
 
   server.get("*", (req, res) => handle(req, res));

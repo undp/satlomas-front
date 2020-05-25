@@ -61,7 +61,7 @@ let ScopeTypeRulesTable = (props) => {
                 <TableCell align="right">
                   <Tooltip title="Editar">
                     <IconButton
-                      onClick={() => routerPush(`/admin/scope-type-rules/${row.id}`)}
+                      onClick={() => routerPush(`/user/scope-type-rules/${row.id}`)}
                       aria-label="Editar regla"
                     >
                       <EditIcon />
