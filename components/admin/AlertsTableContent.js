@@ -12,17 +12,14 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { i18n, withTranslation } from "../../i18n";
+import { i18n, Link, withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withSnackbar } from 'notistack';
-import config from "../../config";
 
-const { stationParameters } = config;
-
-const ruleNameByType = {
-  parameterrule: "Parámetro",
-  scoperule: "Ámbito",
-  scopetyperule: "Tipo de Ámbito",
+const ruleByContentType = {
+  parameterrule: { name: "Parámetro", urlName: "parameter-rules" },
+  scoperule: { name: "Ámbito", urlName: "scope-rules" },
+  scopetyperule: { name: "Tipo de Ámbito", urlName: "scope-type-rules" }
 }
 
 const styles = _theme => ({
@@ -151,8 +148,13 @@ class AlertsTable extends React.Component {
                 {rows.map(row => (
                   <TableRow key={row.id}>
                     <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
-                    <TableCell>{ruleNameByType[row.rule_content_type]}</TableCell>
-                    <TableCell>{row.rule_id}</TableCell>
+                    <TableCell>{ruleByContentType[row.rule_content_type].name}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/admin/${ruleByContentType[row.rule_content_type].urlName}/${row.rule.id}`}>
+                        {String(row.rule.id)}
+                      </Link>
+                    </TableCell>
                     <TableCell>{this.describeAlert(row)}</TableCell>
                   </TableRow>
                 ))}
