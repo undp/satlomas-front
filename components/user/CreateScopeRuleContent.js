@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { withSnackbar } from "notistack";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
+import CheckboxControl from './forms/CheckboxControl';
 import {
   FormControl,
   FormLabel,
@@ -49,7 +50,8 @@ class ScopeRuleForm extends React.Component {
       measurement_content_type: "",
       change_type: "",
       valid_min: "",
-      valid_max: ""
+      valid_max: "",
+      is_absolute: false
     },
     loaded: false,
     openConfirmationDialog: false,
@@ -138,6 +140,15 @@ class ScopeRuleForm extends React.Component {
       console.error(err);
       this.props.enqueueSnackbar("Failed to create new rule", { variant: 'error' });
     }
+  }
+
+  handleIsAbsoluteChange = () => {
+    this.setState(prevState => ({
+      fields: {
+        ...prevState.fields,
+        is_absolute: !prevState.fields.is_absolute
+      }
+    }));
   }
 
   async patchRule(id) {
@@ -233,6 +244,12 @@ class ScopeRuleForm extends React.Component {
           label="Valor máximo"
           onChange={this.handleChange}
           value={fields.valid_max}
+          disabled={!loaded}
+        />
+        <CheckboxControl
+          label="¿Es absoluto?"
+          checked={fields.is_absolute}
+          onChange={this.handleIsAbsoluteChange}
           disabled={!loaded}
         />
         <SubmitButton edit={id} disabled={!loaded} />
