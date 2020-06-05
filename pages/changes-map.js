@@ -24,6 +24,7 @@ import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
 import PeriodSlider from "../components/PeriodSlider";
 import LomasPolygonsLayer from "../components/LomasPolygonsLayer"
+import LayersLegendExpansionPanel from "../components/LayersLegendExpansionPanel";
 import { KeyboardDatePicker } from "@material-ui/pickers"
 import moment from "moment";
 import config from "../config";
@@ -324,11 +325,10 @@ class ChangesMap extends Component {
 
   fetchPeriods = async () => {
     const { type } = this.state;
-    const basePath = typeBasePaths[type]
-
+    const basePath = typeBasePaths[type];
+  
     try {
       const response = await axios.get(buildApiUrl(`${basePath}/available-periods/`));
-
       const periodsRaw = response.data;
       const firstDate = new Date(periodsRaw.first_date);
       const lastDate = new Date(periodsRaw.last_date);
@@ -404,7 +404,15 @@ class ChangesMap extends Component {
       const layers = response.data.map(r => ({
         id: r.slug,
         name: r.name,
-        tiles_url: r.tiles_url
+        tiles_url: r.tiles_url,
+        legend: {
+          items: [
+            {color: '#1F6873', value: '0 - 0.2'},
+            {color: '#1FA188', value: '0.2 - 0.4'},
+            {color: '#70CF57', value: '0.4 - 0.6'},
+            {color: '#FDE725', value: '> 0.8'}
+          ]
+        }
       }))
 
       this.setState({ layers })
@@ -558,7 +566,13 @@ class ChangesMap extends Component {
       ...layer,
       zIndex: layers.length - i,
       opacity: (layersOpacity[layer.id] || 100) / 100
-    }))
+    }));
+
+    const layersWithLegend = layers.filter(
+      layer =>
+        activeLayers.includes(layer.id) &&
+        layer.name
+    )
 
     return (
       <div className="index">
@@ -583,6 +597,7 @@ class ChangesMap extends Component {
             onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
             onScopeSelectChange={this.handleScopeSelectChange}
           />
+          <LayersLegendExpansionPanel layers={layersWithLegend} />
         </div>)}
         <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
           <ZoomControl
