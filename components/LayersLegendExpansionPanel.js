@@ -52,7 +52,7 @@ const ColorBlock = ({ value }) => (
 );
 
 const Legend = withStyles(styles)(({ layer, classes }) => {
-  const legend = layer.extra_fields && layer.extra_fields.legend;
+  const legend = layer.legend;
   return legend ? (
     <List dense={true}>
       {legend.items.map((item, i) => (
@@ -70,9 +70,9 @@ class LayersLegendExpansionPanel extends React.Component {
     const { classes, layers } = this.props;
 
     return (
-      <div className={classes.root}>
+      <div>
         {layers.map(layer => (
-          <ExpansionPanel key={layer.uuid}>
+          <ExpansionPanel key={layer.id}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>{layer.name}</Typography>
             </ExpansionPanelSummary>
