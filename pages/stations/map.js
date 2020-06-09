@@ -114,6 +114,10 @@ class StationsMap extends Component {
     }
   }
 
+  filterStations(name) {
+    return this.state.stations.filter(o => o['name'].toLowerCase().includes(name.toLowerCase()));
+  }
+
   componentDidMount = async () => {
     const stations = await this.fetchStations();
     this.setState({ stations, filteredStations: stations });
@@ -137,7 +141,7 @@ class StationsMap extends Component {
 
   handleSearchFieldChange = async (e) => {
     const { value } = e.target;
-    const filteredStations = await this.fetchStations(value)
+    const filteredStations = this.filterStations(value);
     this.setState({
       searchFieldValue: value,
       filteredStations
