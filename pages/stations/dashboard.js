@@ -12,6 +12,7 @@ import {
   Toolbar,
   Typography,
   LinearProgress,
+  Button,
 } from "@material-ui/core";
 import StationsFilterButton from "../../components/StationsFilterButton";
 import TimeRangeFilterButton, {
@@ -84,7 +85,18 @@ const styles = (theme) => ({
     fontFamily: "Roboto, sans-serif",
     fontSize: 10,
   },
+  button: {
+    margin: theme.spacing(1)
+  },
 });
+
+let DataToolbar = ({ classes, onTableClick }) => (
+  <div>
+    <Button onClick={onTableClick} className={classes.button}>Tabla</Button>
+  </div>
+);
+DataToolbar = withStyles(styles)(DataToolbar)
+
 
 class StationsDashboard extends React.Component {
   state = {
@@ -257,6 +269,16 @@ class StationsDashboard extends React.Component {
     this.setState({ groupingInterval: e.target.value });
   };
 
+  handleTableClick = () => {
+    const { router } = this.props;
+    const { query } = router;
+
+    router.push({
+      pathname: "/stations/data",
+      query,
+    });
+  }
+
   pushNewRoute() {
     const {
       station,
@@ -400,6 +422,8 @@ class StationsDashboard extends React.Component {
           </Toolbar>
         </AppBar>
         <main>
+        <DataToolbar  onTableClick={this.handleTableClick} />
+
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
               <Grid container spacing={2}>
