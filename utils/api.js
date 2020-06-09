@@ -1,6 +1,7 @@
 const KNOWN_HOST_PAIRS = [
   ["localhost", "localhost:8000"],
-  ["app.satlomas.dymaxionlabs.com", "api.satlomas.dymaxionlabs.com"]
+  ["app.satlomas.dymaxionlabs.com", "api.satlomas.dymaxionlabs.com"],
+  ["satlomas.pe.undp.org", "api.satlomas.pe.undp.org"],
 ];
 
 export function buildApiUrl(path) {
