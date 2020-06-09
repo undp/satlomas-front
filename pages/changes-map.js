@@ -108,6 +108,16 @@ const styles = (theme) => ({
   },
 });
 
+const legendBySlug = { ndvi: {
+  items: [
+    {color: '#1F6873', value: '0 - 0.2'},
+    {color: '#1FA188', value: '0.2 - 0.4'},
+    {color: '#70CF57', value: '0.4 - 0.6'},
+    {color: '#FDE725', value: '> 0.8'}
+  ]
+}
+};
+
 class ScopePolygonsLayer extends React.Component {
   _style = feature => {
     const { selectedScope } = this.props
@@ -234,7 +244,7 @@ let PlotsControl = ({ classes, type, periods, scope, customScope }) => (
   <div className={classes.plotsControl}>
     <ExpansionPanel expanded={true}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography className={classes.plotsControlHeading}>{type === "vi-lomas-changes" ? "Cobertura de vegetación (MODIS VI)" : "Cobertura de Loma Perdida"}</Typography>
+        <Typography className={classes.plotsControlHeading}>{type === "vi-lomas-changes" ? "Variación del área de lomas" : "Cobertura de Loma Perdida"}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Dashboard
@@ -405,14 +415,7 @@ class ChangesMap extends Component {
         id: r.slug,
         name: r.name,
         tiles_url: r.tiles_url,
-        legend: {
-          items: [
-            {color: '#1F6873', value: '0 - 0.2'},
-            {color: '#1FA188', value: '0.2 - 0.4'},
-            {color: '#70CF57', value: '0.4 - 0.6'},
-            {color: '#FDE725', value: '> 0.8'}
-          ]
-        }
+        legend: legendBySlug[r.slug]
       }))
 
       this.setState({ layers })
