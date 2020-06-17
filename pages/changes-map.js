@@ -543,11 +543,22 @@ class ChangesMap extends Component {
     const { periods } = this.state;
     periods.forEach((p, i) => {
       if (datetime >= p.from && datetime <= p.to) {
-        this.setState({ selectedPeriodId: i });
+        this.setState({ selectedPeriodId: i, currentDate: p.to });
+        return;
       }
     });
-    this.setState({currentDate: datetime});
   };
+
+  handleDisabledDate = (datetime) => {
+    const { periods } = this.state;
+    var disable = true;
+    periods.forEach(p => {     
+      if (p.to.setHours(0,0,0,0) == datetime) {
+        disable = false;
+      }
+    });
+    return disable;
+  }
 
   render() {
     const { classes } = this.props;
@@ -641,6 +652,7 @@ class ChangesMap extends Component {
                 minDate={dateFrom}
                 maxDate={dateTo}
                 value={periodDate}
+                shouldDisableDate={this.handleDisabledDate}
                 onChange={this.onPeriodDateChange}
               />
             </FormControl>
