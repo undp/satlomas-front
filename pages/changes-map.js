@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Paper from '@material-ui/core/Paper';
 import { withStyles } from "@material-ui/core/styles";
 import Head from "next/head";
 import {
@@ -90,6 +91,12 @@ const styles = (theme) => ({
   datePickerControl: {
     width: '46%',
   },
+  periodDatePickerControl: {
+    width: '90%',
+  },
+  periodPaper: {
+    width: theme.spacing(20),
+  },
   textField: {
     margin: theme.spacing(1),
   },
@@ -108,14 +115,15 @@ const styles = (theme) => ({
   },
 });
 
-const legendBySlug = { ndvi: {
-  items: [
-    {color: '#1F6873', value: '0 - 0.2'},
-    {color: '#1FA188', value: '0.2 - 0.4'},
-    {color: '#70CF57', value: '0.4 - 0.6'},
-    {color: '#FDE725', value: '> 0.8'}
-  ]
-}
+const legendBySlug = {
+  ndvi: {
+    items: [
+      { color: '#1F6873', value: '0 - 0.2' },
+      { color: '#1FA188', value: '0.2 - 0.4' },
+      { color: '#70CF57', value: '0.4 - 0.6' },
+      { color: '#FDE725', value: '> 0.8' }
+    ]
+  }
 };
 
 class ScopePolygonsLayer extends React.Component {
@@ -284,7 +292,8 @@ class ChangesMap extends Component {
     selectedPeriodId: null,
     layers: [],
     activeLayers: ["ndvi"],
-    layersOpacity: {}
+    layersOpacity: {},
+    currentDate: null
   };
 
   static getInitialProps = async ({ query }) => ({
@@ -336,7 +345,7 @@ class ChangesMap extends Component {
   fetchPeriods = async () => {
     const { type } = this.state;
     const basePath = typeBasePaths[type];
-  
+
     try {
       const response = await axios.get(buildApiUrl(`${basePath}/available-periods/`));
       const periodsRaw = response.data;
@@ -507,10 +516,6 @@ class ChangesMap extends Component {
     }))
   }
 
-  handlePeriodSliderChange = (_event, value) => {
-    this.setState({ selectedPeriodId: value })
-  }
-
   handleToggleLayer = layer => {
     if (!layer) return; // just in case
     this.setState(prevState => ({
@@ -534,6 +539,27 @@ class ChangesMap extends Component {
     }));
   };
 
+  onPeriodDateChange = (datetime) => {
+    const { periods } = this.state;
+    periods.forEach((p, i) => {
+      if (datetime >= p.from && datetime <= p.to) {
+        this.setState({ selectedPeriodId: i, currentDate: p.to });
+        return;
+      }
+    });
+  };
+
+  handleDisabledDate = (datetime) => {
+    const { periods } = this.state;
+    var disable = true;
+    periods.forEach(p => {     
+      if (p.to.setHours(0,0,0,0) == datetime) {
+        disable = false;
+      }
+    });
+    return disable;
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -555,27 +581,28 @@ class ChangesMap extends Component {
       layers,
       activeLayers,
       layersOpacity,
+      currentDate
     } = this.state;
 
     const loaded = scopesLoaded && periodsLoaded;
     const scopeGeomsData = scopeGeomsByType[selectedScopeType];
     const filteredPeriods = periods.filter(p => (p.from >= dateFrom && p.to <= dateTo));
-    const periodLabels = filteredPeriods.map(({ from, to }) => [
-      moment(from).utc().format("YYYY-MM-DD"),
-      moment(to).utc().format("YYYY-MM-DD")
-    ]);
-
     const visibleLayers = layers.filter(layer => activeLayers.includes(layer.id)).map((layer, i) => ({
       ...layer,
       zIndex: layers.length - i,
       opacity: (layersOpacity[layer.id] || 100) / 100
     }));
 
+    var periodDate = dateTo;
+    if (currentDate) {
+      periodDate = currentDate;
+    }
+
     const layersWithLegend = layers.filter(
       layer =>
         activeLayers.includes(layer.id) &&
         layer.name
-    )
+    );
 
     return (
       <div className="index">
@@ -613,11 +640,23 @@ class ChangesMap extends Component {
             onToggle={this.handleToggleLayer}
             onOpacityChange={this.handleOpacityChange}
           />
-          {filteredPeriods.length > 0 && <PeriodSlider
-            periods={filteredPeriods}
-            periodLabels={periodLabels}
-            onChange={this.handlePeriodSliderChange}
-          />}
+          {filteredPeriods.length > 0 && 
+          <div className={classes.periodPaper}><Paper>
+            <FormControl className={classnames(classes.formControl, classes.periodDatePickerControl)}>
+              <KeyboardDatePicker
+                ampm={false}
+                autoOk={true}
+                variant="inline"
+                format="YYYY-MM-DD"
+                id="date-period"
+                minDate={dateFrom}
+                maxDate={dateTo}
+                value={periodDate}
+                shouldDisableDate={this.handleDisabledDate}
+                onChange={this.onPeriodDateChange}
+              />
+            </FormControl>
+          </Paper></div>}
         </div>
         {loaded && (
           <div className={classnames(classes.controlGroup, classes.topRight)}>
