@@ -1,8 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 import {
   Paper,
+  Button,
   Typography,
   Table,
   TableBody,
@@ -12,25 +13,27 @@ import {
   TableContainer,
   TableCell,
   IconButton,
-} from '@material-ui/core';
+} from "@material-ui/core";
 import { i18n, withTranslation } from "../../i18n";
 import Moment from "react-moment";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import GetAppIcon from '@material-ui/icons/GetApp';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import { withSnackbar } from 'notistack';
+import GetAppIcon from "@material-ui/icons/GetApp";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
+import { withSnackbar } from "notistack";
 import axios from "axios";
 import { buildApiUrl } from "../../utils/api";
 import FileDownload from "../../utils/file-download";
+import Link from "next/link";
 
-
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  importBtn: {
+    float: "right",
+  },
 });
-
 
 let RasterTable = (props) => {
   const { t, classes, rows, downloadHandler } = props;
@@ -52,13 +55,21 @@ let RasterTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(row => (
+            {rows.map((row) => (
               <TableRow key={row.id + row.type}>
                 <TableCell>{row.slug}</TableCell>
                 <TableCell>{row.period_readeable}</TableCell>
                 <TableCell>{row.name}</TableCell>
-                <TableCell><Moment locale={locale} fromNow>{row.created_at}</Moment></TableCell>
-                <TableCell><Moment locale={locale} fromNow>{row.updated_at}</Moment></TableCell>
+                <TableCell>
+                  <Moment locale={locale} fromNow>
+                    {row.created_at}
+                  </Moment>
+                </TableCell>
+                <TableCell>
+                  <Moment locale={locale} fromNow>
+                    {row.updated_at}
+                  </Moment>
+                </TableCell>
                 <TableCell align="right">
                   <Tooltip title="Copy URL">
                     <CopyToClipboard text={row.tiles_url}>
@@ -71,7 +82,9 @@ let RasterTable = (props) => {
                 <TableCell align="right">
                   <Tooltip title="Download">
                     <IconButton
-                      onClick={() => downloadHandler(row.id, row.name, row.type)}
+                      onClick={() =>
+                        downloadHandler(row.id, row.name, row.type)
+                      }
                       aria-label="Editar regla"
                     >
                       <GetAppIcon />
@@ -85,7 +98,7 @@ let RasterTable = (props) => {
       </TableContainer>
     </Paper>
   );
-}
+};
 
 RasterTable.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -95,14 +108,14 @@ RasterTable = withStyles(styles)(RasterTable);
 RasterTable = withTranslation(["me", "common"])(RasterTable);
 
 const typeBasePaths = {
-  "lomas": "/lomas",
-  "vi-lomas": "/vi-lomas"
-}
+  lomas: "/lomas",
+  "vi-lomas": "/vi-lomas",
+};
 
 class RasterListContent extends React.Component {
   state = {
     rows: [],
-  }
+  };
   constructor(props) {
     super(props);
     this.downloadRaster = this.downloadRaster.bind(this);
@@ -121,25 +134,31 @@ class RasterListContent extends React.Component {
     );
     let vi_lomas_rasters = vi_lomas_response.data;
     for (var i = 0; i < vi_lomas_rasters.length; i++) {
-      vi_lomas_rasters[i]['type'] = 'vi-lomas'
-      vi_lomas_rasters[i]['period_readeable'] = `${vi_lomas_rasters[i]['period']['date_from']} - ${vi_lomas_rasters[i]['period']['date_to']}`
+      vi_lomas_rasters[i]["type"] = "vi-lomas";
+      vi_lomas_rasters[i][
+        "period_readeable"
+      ] = `${vi_lomas_rasters[i]["period"]["date_from"]} - ${vi_lomas_rasters[i]["period"]["date_to"]}`;
     }
 
-    const lomas_response = await axios.get(
-      buildApiUrl("/lomas/rasters"),
-      { headers: { "Accept-Language": i18n.language, Authorization: token } }
-    );
+    const lomas_response = await axios.get(buildApiUrl("/lomas/rasters"), {
+      headers: { "Accept-Language": i18n.language, Authorization: token },
+    });
     let lomas_rasters = lomas_response.data;
     for (var i = 0; i < lomas_rasters.length; i++) {
-      lomas_rasters[i]['type'] = 'lomas'
-      lomas_rasters[i]['period_readeable'] = `${lomas_rasters[i]['period']['date_from']} - ${lomas_rasters[i]['period']['date_to']}`
-
+      lomas_rasters[i]["type"] = "lomas";
+      lomas_rasters[i][
+        "period_readeable"
+      ] = `${lomas_rasters[i]["period"]["date_from"]} - ${lomas_rasters[i]["period"]["date_to"]}`;
     }
 
     let result = vi_lomas_rasters.concat(lomas_rasters);
     result.sort(function (a, b) {
-      if (a["period"]["date_from"] > ["period"]["date_from"]) { return -1; }
-      if (b["period"]["date_from"] > a["period"]["date_from"]) { return 1; }
+      if (a["period"]["date_from"] > ["period"]["date_from"]) {
+        return -1;
+      }
+      if (b["period"]["date_from"] > a["period"]["date_from"]) {
+        return 1;
+      }
       return 0;
     });
 
@@ -147,15 +166,15 @@ class RasterListContent extends React.Component {
   }
 
   downloadRaster(id, name, type) {
-    axios.get(buildApiUrl(`${typeBasePaths[type]}/download-raster/${id}`), {
-      headers: { Authorization: this.props.token },
-      responseType: 'blob'
-    })
-      .then(response => {
+    axios
+      .get(buildApiUrl(`${typeBasePaths[type]}/download-raster/${id}`), {
+        headers: { Authorization: this.props.token },
+        responseType: "blob",
+      })
+      .then((response) => {
         FileDownload(response.data, name);
       });
   }
-
 
   render() {
     const { classes } = this.props;
@@ -163,16 +182,16 @@ class RasterListContent extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Typography
-          variant="h6"
-          className={classes.title}
-          gutterBottom
-        >
+        <Typography variant="h6" className={classes.title} gutterBottom>
           Imágenes
+          <Link href="/user/rasters/import">
+            <Button className={classes.importBtn}>Importar</Button>
+          </Link>
         </Typography>
+
         <RasterTable rows={rows} downloadHandler={this.downloadRaster} />
       </div>
-    )
+    );
   }
 }
 

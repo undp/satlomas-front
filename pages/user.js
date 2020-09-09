@@ -21,6 +21,7 @@ import CreateScopeTypeRuleContent from "../components/user/CreateScopeTypeRuleCo
 import CreateScopeRuleContent from "../components/user/CreateScopeRuleContent";
 import AlertsTableContent from "../components/user/AlertsTableContent";
 import UserProfileContent from "../components/user/UserProfileContent";
+import RasterImportContent from "../components/user/RasterImportContent";
 import AppbarButtons from "../components/AppbarButtons";
 import config from "../config";
 
@@ -37,7 +38,7 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
 const drawerWidth = 300;
 
@@ -81,7 +82,7 @@ const styles = (theme) => ({
     display: "flex",
     flexGrow: 1,
     alignItems: "center",
-    cursor: "pointer"
+    cursor: "pointer",
   },
   titleLogo: {
     marginRight: 5,
@@ -138,6 +139,7 @@ const allSections = [
   "create-parameter-rule",
   "create-scope-type-rule",
   "create-scope-rule",
+  "rasters-import",
 ];
 
 const sidebarSections = [
@@ -145,7 +147,7 @@ const sidebarSections = [
   "rasters",
   "parameter-rules",
   "scope-type-rules",
-  "scope-rules"
+  "scope-rules",
 ];
 
 const sections = {
@@ -161,35 +163,35 @@ const sections = {
     icon: <ListIcon />,
     content: <RasterListContent />,
   },
-  'parameter-rules': {
+  "parameter-rules": {
     key: "parameter-rules",
     path: "/parameter-rules",
     icon: <ListIcon />,
     content: <ParameterRulesListContent />,
   },
-  'scope-type-rules': {
+  "scope-type-rules": {
     key: "scope-type-rules",
     path: "/scope-type-rules",
     icon: <ListIcon />,
     content: <ScopeTypeRulesListContent />,
   },
-  'scope-rules': {
+  "scope-rules": {
     key: "scope-rules",
     path: "/scope-rules",
     icon: <ListIcon />,
     content: <ScopeRulesListContent />,
   },
-  'create-parameter-rule': {
+  "create-parameter-rule": {
     key: "create-parameter-rule",
     path: "/parameter-rules/new",
     content: <CreateParameterRuleContent />,
   },
-  'create-scope-type-rule': {
+  "create-scope-type-rule": {
     key: "create-scope-type-rule",
     path: "/scope-type-rules/new",
     content: <CreateScopeTypeRuleContent />,
   },
-  'create-scope-rule': {
+  "create-scope-rule": {
     key: "create-scope-rule",
     path: "/scope-rules/new",
     content: <CreateScopeRuleContent />,
@@ -199,6 +201,11 @@ const sections = {
     path: "/profile",
     icon: <PersonIcon />,
     content: <UserProfileContent />,
+  },
+  "rasters-import": {
+    key: "rasters-import",
+    path: "/rasters/import",
+    content: <RasterImportContent />,
   },
 };
 
@@ -225,7 +232,7 @@ class UserPanel extends React.Component {
 
     // Set current section based on path
     if (section && allSections.includes(section)) {
-      console.log("Set section from query param:", section)
+      console.log("Set section from query param:", section);
       this.state.section = section;
     }
   }
