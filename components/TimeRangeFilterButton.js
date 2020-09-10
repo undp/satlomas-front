@@ -1,7 +1,7 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import Moment from "react-moment"
+import Moment from "react-moment";
 import {
   Button,
   Popover,
@@ -12,12 +12,12 @@ import {
   Tab,
 } from "@material-ui/core";
 import SelectControl from "./SelectControl";
-import { KeyboardDatePicker } from "@material-ui/pickers"
+import { KeyboardDatePicker } from "@material-ui/pickers";
 
-export const DEFAULT_MODE = "historic";
+export const DEFAULT_MODE = "realtime";
 export const DEFAULT_RT_LAST_TIME = "1-year";
-export const DEFAULT_HISTORIC_START = "2011-01-01T00:00";
-export const DEFAULT_HISTORIC_END = "2012-01-01T00:00";
+export const DEFAULT_HISTORIC_START = "2019-01-01T00:00";
+export const DEFAULT_HISTORIC_END = "2020-01-01T00:00";
 export const DEFAULT_AGG_FUNC = "avg";
 export const DEFAULT_GROUP_INT = "month";
 
@@ -173,10 +173,16 @@ class TimeRangeSelectorButton extends React.Component {
             color="inherit"
           >
             <AccessTimeIcon className={classes.buttonIcon} />
-            {title}{` `}
-            {mode === "realtime" ? lastTimeItems[lastTime] : (<>
-              <Moment format="YYYY-MM-DD HH:mm">{start}</Moment> - <Moment format="YYYY-MM-DD HH:mm">{end}</Moment>
-            </>)}
+            {title}
+            {` `}
+            {mode === "realtime" ? (
+              lastTimeItems[lastTime]
+            ) : (
+              <>
+                <Moment format="YYYY-MM-DD HH:mm">{start}</Moment> -{" "}
+                <Moment format="YYYY-MM-DD HH:mm">{end}</Moment>
+              </>
+            )}
           </Button>
         </Tooltip>
         <Popover
