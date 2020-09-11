@@ -24,10 +24,10 @@ import TimeRangeFilterButton, {
   DEFAULT_RT_LAST_TIME,
   lastTimeItems,
   aggregationFuncItems,
-  groupingIntervalItems
+  groupingIntervalItems,
 } from "../../components/TimeRangeFilterButton";
 import ParameterCardContent from "../../components/ParameterCardContent";
-import { withRouter } from "next/router"
+import { withRouter } from "next/router";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
@@ -35,10 +35,7 @@ import { isDate } from "../../utils/date";
 import AppbarButtons from "../../components/AppbarButtons";
 import config from "../../config";
 
-const { stationParameters, appName } = config;
-
-// FIXME Move to config.js
-const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
+const { stationParameters, appName, refreshIntervalMs } = config;
 
 const styles = (theme) => ({
   appBar: {
@@ -86,17 +83,18 @@ const styles = (theme) => ({
     fontSize: 10,
   },
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
 });
 
 let DataToolbar = ({ classes, onTableClick }) => (
   <div>
-    <Button onClick={onTableClick} className={classes.button}>Tabla</Button>
+    <Button onClick={onTableClick} className={classes.button}>
+      Tabla
+    </Button>
   </div>
 );
-DataToolbar = withStyles(styles)(DataToolbar)
-
+DataToolbar = withStyles(styles)(DataToolbar);
 
 class StationsDashboard extends React.Component {
   state = {
@@ -104,7 +102,10 @@ class StationsDashboard extends React.Component {
     station: null,
     mode: DEFAULT_MODE,
     realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
-    historicParams: { start: new Date(DEFAULT_HISTORIC_START), end: new Date(DEFAULT_HISTORIC_END) },
+    historicParams: {
+      start: new Date(DEFAULT_HISTORIC_START),
+      end: new Date(DEFAULT_HISTORIC_END),
+    },
     aggregationFunc: DEFAULT_AGG_FUNC,
     groupingInterval: DEFAULT_GROUP_INT,
     stationsAnchorEl: null,
@@ -135,7 +136,7 @@ class StationsDashboard extends React.Component {
       start,
       end,
       aggregationFunc,
-      groupingInterval
+      groupingInterval,
     } = this.getValidTimeRangeParameters();
 
     this.setState((prevState) => ({
@@ -146,7 +147,7 @@ class StationsDashboard extends React.Component {
       historicParams: { ...prevState.historicParams, start, end },
       aggregationFunc,
       groupingInterval,
-    }))
+    }));
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -156,7 +157,7 @@ class StationsDashboard extends React.Component {
       realtimeParams: { lastTime },
       historicParams: { start, end },
       aggregationFunc,
-      groupingInterval
+      groupingInterval,
     } = this.state;
 
     // Set mode if it changed
@@ -184,7 +185,7 @@ class StationsDashboard extends React.Component {
 
   setRealtimeMode() {
     this.updateNow();
-    this.rtInterval = setInterval(() => this.updateNow(), REFRESH_INTERVAL_MS);
+    this.rtInterval = setInterval(() => this.updateNow(), refreshIntervalMs);
   }
 
   setHistoricMode() {
@@ -277,7 +278,7 @@ class StationsDashboard extends React.Component {
       pathname: "/stations/data",
       query,
     });
-  }
+  };
 
   pushNewRoute() {
     const {
@@ -286,7 +287,7 @@ class StationsDashboard extends React.Component {
       realtimeParams: { lastTime },
       historicParams: { start, end },
       groupingInterval,
-      aggregationFunc
+      aggregationFunc,
     } = this.state;
 
     const { router } = this.props;
@@ -302,21 +303,14 @@ class StationsDashboard extends React.Component {
         start,
         end,
         groupInt: groupingInterval,
-        aggFunc: aggregationFunc
-      }
+        aggFunc: aggregationFunc,
+      },
     });
   }
 
   getValidTimeRangeParameters() {
-    const { query } = this.props
-    let {
-      mode,
-      lastTime,
-      start,
-      end,
-      aggFunc,
-      groupInt
-    } = query;
+    const { query } = this.props;
+    let { mode, lastTime, start, end, aggFunc, groupInt } = query;
 
     if (!["realtime", "historic"].includes(mode)) {
       mode = DEFAULT_MODE;
@@ -344,8 +338,8 @@ class StationsDashboard extends React.Component {
       start,
       end,
       aggregationFunc: aggFunc,
-      groupingInterval: groupInt
-    }
+      groupingInterval: groupInt,
+    };
   }
 
   render() {
@@ -370,7 +364,8 @@ class StationsDashboard extends React.Component {
       <React.Fragment>
         <Head>
           <title>
-            {appName} - {station
+            {appName} -{" "}
+            {station
               ? `Dashboard: ${station.name}`
               : `Estaciones Meteorológicas`}
           </title>
@@ -379,9 +374,7 @@ class StationsDashboard extends React.Component {
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              {station
-                ? `Dashboard: ${station.name}`
-                : `Cargando datos...`}
+              {station ? `Dashboard: ${station.name}` : `Cargando datos...`}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
@@ -422,7 +415,7 @@ class StationsDashboard extends React.Component {
           </Toolbar>
         </AppBar>
         <main>
-        <DataToolbar  onTableClick={this.handleTableClick} />
+          <DataToolbar onTableClick={this.handleTableClick} />
 
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
@@ -449,8 +442,8 @@ class StationsDashboard extends React.Component {
               </Grid>
             </div>
           ) : (
-              <LinearProgress />
-            )}
+            <LinearProgress />
+          )}
         </main>
       </React.Fragment>
     );

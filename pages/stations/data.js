@@ -34,10 +34,7 @@ import { isDate } from "../../utils/date";
 import FileDownload from "../../utils/file-download";
 import config from "../../config";
 
-const { appName, stationParameters } = config;
-
-// FIXME Move to config.js
-const REFRESH_INTERVAL_MS = 1000 * 1; // Refresh every 60 seconds
+const { appName, stationParameters, refreshIntervalMs } = config;
 
 const styles = (theme) => ({
   appBar: {
@@ -197,7 +194,7 @@ class StationsData extends React.Component {
 
   setRealtimeMode() {
     this.updateNow();
-    this.rtInterval = setInterval(() => this.updateNow(), REFRESH_INTERVAL_MS);
+    this.rtInterval = setInterval(() => this.updateNow(), refreshIntervalMs);
   }
 
   setHistoricMode() {
