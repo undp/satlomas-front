@@ -148,6 +148,12 @@ class StationsDashboard extends React.Component {
       aggregationFunc,
       groupingInterval,
     }));
+
+    if (mode === "realtime") {
+      this.setRealtimeMode();
+    } else if (mode === "historic") {
+      this.setHistoricMode();
+    }
   }
 
   componentDidUpdate(_prevProps, prevState) {
