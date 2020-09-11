@@ -24,7 +24,9 @@ import TimeRangeFilterButton, {
   aggregationFuncItems,
   groupingIntervalItems,
 } from "../../components/TimeRangeFilterButton";
-import StationTable from "../../components/StationTable";
+import StationTable, {
+  calculateTimeRange,
+} from "../../components/StationTable";
 import AppbarButtons from "../../components/AppbarButtons";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
@@ -236,7 +238,7 @@ class StationsData extends React.Component {
     const parameter = stationParameters.map((param) => param.id).join(",");
     const timeRangeParams =
       mode === "realtime" ? realtimeParams : historicParams;
-    const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
+    const [start, end] = calculateTimeRange(mode, timeRangeParams);
 
     const mStart = moment(start);
     const mEnd = moment(end);
@@ -272,23 +274,6 @@ class StationsData extends React.Component {
       this.props.enqueueSnackbar("Failed to download CSV file", {
         variant: "error",
       });
-    }
-  }
-
-  calculateTimeRange(mode, params) {
-    switch (mode) {
-      case "realtime": {
-        const { now, lastTime } = params;
-        const [time, unit] = lastTime.split("-");
-        const seconds = this.getSecondsFromTimeAndUnit(time, unit);
-        return [new Date(now - seconds), now];
-      }
-      case "historic": {
-        const { start, end } = params;
-        return [start, end];
-      }
-      default:
-        throw "invalid time range mode";
     }
   }
 
