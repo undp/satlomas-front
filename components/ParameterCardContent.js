@@ -7,7 +7,13 @@ import moment from "moment";
 import { buildApiUrl } from "../utils/api";
 import _ from "lodash";
 
-import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+import {
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@material-ui/core";
 
 const axisStyle = {
   fontSize: 12,
@@ -125,16 +131,19 @@ class ParameterCardContent extends React.Component {
     const params = {
       station: stationId,
       parameter,
-      start: mStart.format("YYYY-MM-DDTHH:mm"),
-      end: mEnd.format("YYYY-MM-DDTHH:mm"),
+      start: mStart.format(),
+      end: mEnd.format(),
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };
 
     try {
-      const response = await axios.get(buildApiUrl("/stations/measurements/summary"), {
-        params,
-      });
+      const response = await axios.get(
+        buildApiUrl("/stations/measurements/summary"),
+        {
+          params,
+        }
+      );
       this.setState({ data: response.data, loading: false });
     } catch (err) {
       this.props.enqueueSnackbar(`Failed to get data for '${parameter}'`, {
@@ -152,8 +161,8 @@ class ParameterCardContent extends React.Component {
       (showTable ? (
         <ParameterTable data={data} />
       ) : (
-          <ParameterPlot data={data} />
-        ))
+        <ParameterPlot data={data} />
+      ))
     );
   }
 }

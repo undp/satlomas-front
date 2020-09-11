@@ -1,26 +1,26 @@
-import React from 'react';
+import React from "react";
 import axios from "axios";
-import { Paper } from '@material-ui/core';
-import VirtualizedTable from './VirtualizedTable';
+import { Paper } from "@material-ui/core";
+import VirtualizedTable from "./VirtualizedTable";
 import { buildApiUrl } from "../utils/api";
-import _ from 'lodash';
-import { withSnackbar } from 'notistack';
-import moment from "moment"
-import strftime from '../utils/strftime';
+import _ from "lodash";
+import { withSnackbar } from "notistack";
+import moment from "moment";
+import strftime from "../utils/strftime";
 
 class StationTable extends React.Component {
   state = {
     loading: true,
     rows: [],
     columns: [],
-  }
+  };
 
   componentDidMount() {
     const { parameters } = this.props;
-    let columns = [{ width: 100, flexGrow: 1.0, label: 'Fecha', dataKey: 't', },]
-    parameters.forEach(e => columns.push(
-      { width: 80, flexGrow: 1.0, label: e.name, dataKey: e.id, }
-    ));
+    let columns = [{ width: 100, flexGrow: 1.0, label: "Fecha", dataKey: "t" }];
+    parameters.forEach((e) =>
+      columns.push({ width: 80, flexGrow: 1.0, label: e.name, dataKey: e.id })
+    );
     this.setState({ columns });
     this.fetchData();
   }
@@ -85,21 +85,25 @@ class StationTable extends React.Component {
     }
 
     let parameter = "";
-    parameters.forEach(e => parameter = parameter.concat(e.id).concat(","));
+    parameters.forEach((e) => (parameter = parameter.concat(e.id).concat(",")));
     parameter = parameter.substring(0, parameter.length - 1);
     const params = {
       station: stationId,
       parameter: parameter,
-      start: mStart.format("YYYY-MM-DDTHH:mm"),
-      end: mEnd.format("YYYY-MM-DDTHH:mm"),
+      start: mStart.format(),
+      end: mEnd.format(),
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };
+    console.log("PARAMS:", params);
 
     try {
-      const response = await axios.get(buildApiUrl("/stations/measurements/summary"), {
-        params,
-      });
+      const response = await axios.get(
+        buildApiUrl("/stations/measurements/summary"),
+        {
+          params,
+        }
+      );
       const formattedRows = this.formatRows(response.data);
       this.setState({ rows: formattedRows, loading: false });
     } catch (err) {
@@ -111,31 +115,31 @@ class StationTable extends React.Component {
   }
 
   formatRows = (rows) => {
-    return rows.map(row => {
-      let formattedRow = {}
+    return rows.map((row) => {
+      let formattedRow = {};
       Object.entries(row).map(([k, v]) => {
-        formattedRow[k] = +(+v).toFixed(2)
-      })
-      formattedRow['t'] = this.formatDateTime(row.t);
+        formattedRow[k] = +(+v).toFixed(2);
+      });
+      formattedRow["t"] = this.formatDateTime(row.t);
       return formattedRow;
-    })
-  }
+    });
+  };
 
   formatDateTime(t) {
     const { groupingInterval } = this.props;
     const ft = new Date(Date.parse(t));
 
     switch (groupingInterval) {
-      case 'hour':
+      case "hour":
         return strftime("%Y-%m-%d %H:00", ft);
-      case 'day':
+      case "day":
         return strftime("%Y-%m-%d", ft);
       // TODO
       // case 'week':
       //   return strftime("%Y %W", ft);
-      case 'month':
+      case "month":
         return strftime("%Y-%m", ft);
-      case 'year':
+      case "year":
         return strftime("%Y", ft);
       default:
         return t;
@@ -147,7 +151,7 @@ class StationTable extends React.Component {
 
     return (
       <>
-        <Paper style={{ height: '80vh', width: '100%' }}>
+        <Paper style={{ height: "80vh", width: "100%" }}>
           {!loading && (
             <VirtualizedTable
               rowCount={rows.length}
@@ -163,4 +167,4 @@ class StationTable extends React.Component {
 
 StationTable = withSnackbar(StationTable);
 
-export default StationTable
+export default StationTable;

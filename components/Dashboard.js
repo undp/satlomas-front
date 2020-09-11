@@ -11,16 +11,16 @@ import { buildApiUrl } from "../utils/api";
 
 const typeBasePaths = {
   "lomas-changes": "/lomas",
-  "vi-lomas-changes": "/vi-lomas"
-}
+  "vi-lomas-changes": "/vi-lomas",
+};
 
 const styles = (theme) => ({
   progress: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   invisible: {
-    visibility: 'hidden'
-  }
+    visibility: "hidden",
+  },
 });
 
 const axisStyle = {
@@ -32,7 +32,7 @@ const axisStyle = {
 class Dashboard extends React.Component {
   state = {
     data: null,
-    loading: true
+    loading: true,
   };
 
   componentDidMount() {
@@ -42,24 +42,26 @@ class Dashboard extends React.Component {
   getTimeSeries = async () => {
     const { type, periods, scope } = this.props;
     //const basePath = typeBasePaths[type]
-    const basePath = '/vi-lomas';
+    const basePath = "/vi-lomas";
 
     this.setState({ loading: true });
 
     if (periods.length === 0 || !scope) return;
 
-    const dateFrom = Math.min(...periods.map(p => Math.min(p.from, p.to)));
-    const dateTo = Math.max(...periods.map(p => Math.max(p.from, p.to)));
+    const dateFrom = Math.min(...periods.map((p) => Math.min(p.from, p.to)));
+    const dateTo = Math.max(...periods.map((p) => Math.max(p.from, p.to)));
 
     if (scope) {
       const params = {
         scope,
-        date_from: moment(dateFrom).utc().format("YYYY-MM-DD"),
-        date_to: moment(dateTo).utc().format("YYYY-MM-DD"),
+        date_from: moment(dateFrom).format(),
+        date_to: moment(dateTo).format(),
       };
       try {
-        const response = await axios.get(buildApiUrl(`${basePath}/coverage/`), { params });
-        const values = response.data.values.map(value => ({
+        const response = await axios.get(buildApiUrl(`${basePath}/coverage/`), {
+          params,
+        });
+        const values = response.data.values.map((value) => ({
           ...value,
           ym: moment(value.date).format("YYYY-MM"),
           area: value.area / 10000,
@@ -73,7 +75,7 @@ class Dashboard extends React.Component {
           variant: "error",
         });
       }
-      this.setState({ loading: false })
+      this.setState({ loading: false });
     }
   };
 
@@ -88,7 +90,12 @@ class Dashboard extends React.Component {
     const { data, loading } = this.state;
     return (
       <div>
-        <LinearProgress className={classNames(classes.progress, !loading && classes.invisible)} />
+        <LinearProgress
+          className={classNames(
+            classes.progress,
+            !loading && classes.invisible
+          )}
+        />
         {data && (
           <LineChart
             width={500}

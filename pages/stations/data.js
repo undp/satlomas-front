@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Head from "next/head";
 import axios from "axios";
-import moment from "moment"
+import moment from "moment";
 import {
   AppBar,
   CssBaseline,
@@ -22,7 +22,7 @@ import TimeRangeFilterButton, {
   DEFAULT_RT_LAST_TIME,
   lastTimeItems,
   aggregationFuncItems,
-  groupingIntervalItems
+  groupingIntervalItems,
 } from "../../components/TimeRangeFilterButton";
 import StationTable from "../../components/StationTable";
 import AppbarButtons from "../../components/AppbarButtons";
@@ -31,13 +31,13 @@ import { withSnackbar } from "notistack";
 import { withRouter } from "next/router";
 import { buildApiUrl } from "../../utils/api";
 import { isDate } from "../../utils/date";
-import FileDownload from "../../utils/file-download"
+import FileDownload from "../../utils/file-download";
 import config from "../../config";
 
 const { appName, stationParameters } = config;
 
 // FIXME Move to config.js
-const REFRESH_INTERVAL_MS = 1000 * 60; // Refresh every 60 seconds
+const REFRESH_INTERVAL_MS = 1000 * 1; // Refresh every 60 seconds
 
 const styles = (theme) => ({
   appBar: {
@@ -86,17 +86,21 @@ const styles = (theme) => ({
   },
   button: {
     margin: theme.spacing(1),
-  }
+  },
 });
 
 let DataToolbar = ({ classes, onDownloadClick, onDashboardClick }) => (
   <div>
-    <Button onClick={onDashboardClick} className={classes.button}>Dashboard</Button>
-    <Button onClick={onDownloadClick} className={classes.button}>Descargar</Button>
+    <Button onClick={onDashboardClick} className={classes.button}>
+      Dashboard
+    </Button>
+    <Button onClick={onDownloadClick} className={classes.button}>
+      Descargar
+    </Button>
   </div>
-)
+);
 
-DataToolbar = withStyles(styles)(DataToolbar)
+DataToolbar = withStyles(styles)(DataToolbar);
 
 class StationsData extends React.Component {
   state = {
@@ -104,7 +108,10 @@ class StationsData extends React.Component {
     station: null,
     mode: DEFAULT_MODE,
     realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
-    historicParams: { start: new Date(DEFAULT_HISTORIC_START), end: new Date(DEFAULT_HISTORIC_END) },
+    historicParams: {
+      start: new Date(DEFAULT_HISTORIC_START),
+      end: new Date(DEFAULT_HISTORIC_END),
+    },
     aggregationFunc: DEFAULT_AGG_FUNC,
     groupingInterval: DEFAULT_GROUP_INT,
     stationsAnchorEl: null,
@@ -135,7 +142,7 @@ class StationsData extends React.Component {
       start,
       end,
       aggregationFunc,
-      groupingInterval
+      groupingInterval,
     } = this.getValidTimeRangeParameters();
 
     this.setState((prevState) => ({
@@ -146,7 +153,13 @@ class StationsData extends React.Component {
       historicParams: { ...prevState.historicParams, start, end },
       aggregationFunc,
       groupingInterval,
-    }))
+    }));
+
+    if (mode === "realtime") {
+      this.setRealtimeMode();
+    } else if (mode === "historic") {
+      this.setHistoricMode();
+    }
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -156,7 +169,7 @@ class StationsData extends React.Component {
       realtimeParams: { lastTime },
       historicParams: { start, end },
       aggregationFunc,
-      groupingInterval
+      groupingInterval,
     } = this.state;
 
     // Set mode if it changed
@@ -223,8 +236,9 @@ class StationsData extends React.Component {
       aggregationFunc,
     } = this.state;
 
-    const parameter = stationParameters.map(param => param.id).join(",");
-    const timeRangeParams = mode === "realtime" ? realtimeParams : historicParams;
+    const parameter = stationParameters.map((param) => param.id).join(",");
+    const timeRangeParams =
+      mode === "realtime" ? realtimeParams : historicParams;
     const [start, end] = this.calculateTimeRange(mode, timeRangeParams);
 
     const mStart = moment(start);
@@ -237,8 +251,8 @@ class StationsData extends React.Component {
     const params = {
       station: station.id,
       parameter,
-      start: mStart.format("YYYY-MM-DDTHH:mm"),
-      end: mEnd.format("YYYY-MM-DDTHH:mm"),
+      start: mStart.format(),
+      end: mEnd.format(),
       grouping_interval: groupingInterval,
       aggregation_func: aggregationFunc,
     };
@@ -246,11 +260,14 @@ class StationsData extends React.Component {
     const filename = "data.csv";
 
     try {
-      const response = await axios.get(buildApiUrl(`/stations/measurements/summary`), {
-        params,
-        headers: { Accept: 'text/csv' },
-        responseType: 'blob'
-      });
+      const response = await axios.get(
+        buildApiUrl(`/stations/measurements/summary`),
+        {
+          params,
+          headers: { Accept: "text/csv" },
+          responseType: "blob",
+        }
+      );
       console.log(response);
       FileDownload(response.data, filename);
     } catch (err) {
@@ -336,7 +353,7 @@ class StationsData extends React.Component {
 
   handleDownloadClick = () => {
     this.downloadCSV();
-  }
+  };
 
   handleDashboardClick = () => {
     const { router } = this.props;
@@ -346,17 +363,11 @@ class StationsData extends React.Component {
       pathname: "/stations/dashboard",
       query,
     });
-  }
+  };
 
   getValidTimeRangeParameters() {
-    const { query } = this.props
-    let {
-      mode,
-      lastTime,
-      start,
-      end,
-      aggFunc,
-      groupInt } = query;
+    const { query } = this.props;
+    let { mode, lastTime, start, end, aggFunc, groupInt } = query;
 
     if (!["realtime", "historic"].includes(mode)) {
       mode = DEFAULT_MODE;
@@ -384,8 +395,8 @@ class StationsData extends React.Component {
       start,
       end,
       aggregationFunc: aggFunc,
-      groupingInterval: groupInt
-    }
+      groupingInterval: groupInt,
+    };
   }
 
   pushNewRoute() {
@@ -395,7 +406,7 @@ class StationsData extends React.Component {
       realtimeParams: { lastTime },
       historicParams: { start, end },
       groupingInterval,
-      aggregationFunc
+      aggregationFunc,
     } = this.state;
 
     const { router } = this.props;
@@ -411,8 +422,8 @@ class StationsData extends React.Component {
         start,
         end,
         groupInt: groupingInterval,
-        aggFunc: aggregationFunc
-      }
+        aggFunc: aggregationFunc,
+      },
     });
   }
 
@@ -448,9 +459,7 @@ class StationsData extends React.Component {
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              {station
-                ? `Datos: ${station.name}`
-                : `Cargando datos...`}
+              {station ? `Datos: ${station.name}` : `Cargando datos...`}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
@@ -491,7 +500,10 @@ class StationsData extends React.Component {
           </Toolbar>
         </AppBar>
         <main>
-          <DataToolbar onDownloadClick={this.handleDownloadClick} onDashboardClick={this.handleDashboardClick} />
+          <DataToolbar
+            onDownloadClick={this.handleDownloadClick}
+            onDashboardClick={this.handleDashboardClick}
+          />
           {!loading && station ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
               <StationTable
@@ -504,8 +516,8 @@ class StationsData extends React.Component {
               ></StationTable>
             </div>
           ) : (
-              <LinearProgress />
-            )}
+            <LinearProgress />
+          )}
         </main>
       </React.Fragment>
     );
