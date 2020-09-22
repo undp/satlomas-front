@@ -39,8 +39,8 @@ const handle = app.getRequestHandler();
     });
   }
 
-  server.get("/user/rasters/import", (req, res) => {
-    return app.render(req, res, "/user", { section: "rasters-import" });
+  server.get("/user/rasters/import-perusat", (req, res) => {
+    return app.render(req, res, "/user", { section: "rasters-import-perusat" });
   });
 
   server.get("/user/:section", (req, res) => {

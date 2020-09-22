@@ -21,7 +21,7 @@ import CreateScopeTypeRuleContent from "../components/user/CreateScopeTypeRuleCo
 import CreateScopeRuleContent from "../components/user/CreateScopeRuleContent";
 import AlertsTableContent from "../components/user/AlertsTableContent";
 import UserProfileContent from "../components/user/UserProfileContent";
-import RasterImportContent from "../components/user/RasterImportContent";
+import RasterImportPerusatContent from "../components/user/RasterImportPerusatContent";
 import AppbarButtons from "../components/AppbarButtons";
 import config from "../config";
 
@@ -139,7 +139,7 @@ const allSections = [
   "create-parameter-rule",
   "create-scope-type-rule",
   "create-scope-rule",
-  "rasters-import",
+  "rasters-import-perusat",
 ];
 
 const sidebarSections = [
@@ -202,10 +202,10 @@ const sections = {
     icon: <PersonIcon />,
     content: <UserProfileContent />,
   },
-  "rasters-import": {
-    key: "rasters-import",
-    path: "/rasters/import",
-    content: <RasterImportContent />,
+  "rasters-import-perusat": {
+    key: "rasters-import-perusat",
+    path: "/rasters/import-perusat",
+    content: <RasterImportPerusatContent />,
   },
 };
 
@@ -227,12 +227,12 @@ class UserPanel extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log("Query param", props.query);
+    // console.log("Query param", props.query);
     let { section } = props.query;
 
     // Set current section based on path
     if (section && allSections.includes(section)) {
-      console.log("Set section from query param:", section);
+      // console.log("Set section from query param:", section);
       this.state.section = section;
     }
   }

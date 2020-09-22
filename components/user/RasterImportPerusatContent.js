@@ -3,10 +3,79 @@ import PropTypes from "prop-types";
 import React from "react";
 import { i18n, Link, withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
-import { withStyles } from "@material-ui/core/styles";
-import cookie from "js-cookie";
-import { routerPush } from "../../utils/router";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
+import InputControl from "./forms/InputControl";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+  Checkbox,
+  IconButton,
+  CommentIcon,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+export default function CheckboxList() {
+  const classes = useStyles();
+  const [checked, setChecked] = React.useState([0]);
+
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  return (
+    <List className={classes.root}>
+      {[0, 1, 2, 3].map((value) => {
+        const labelId = `checkbox-list-label-${value}`;
+
+        return (
+          <ListItem
+            key={value}
+            role={undefined}
+            dense
+            button
+            onClick={handleToggle(value)}
+          >
+            <ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={checked.indexOf(value) !== -1}
+                tabIndex={-1}
+                disableRipple
+                inputProps={{ "aria-labelledby": labelId }}
+              />
+            </ListItemIcon>
+            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            <ListItemSecondaryAction>
+              <IconButton edge="end" aria-label="comments">
+                <CommentIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        );
+      })}
+    </List>
+  );
+}
 
 import {
   Button,
@@ -47,12 +116,13 @@ const styles = (theme) => ({
   },
 });
 
-class RasterImportContent extends React.Component {
+class RasterImportPerusatContent extends React.Component {
   state = {
     sftpUsername: "",
     sftpPassword: "",
     sftpHost: "",
     sftpPort: "",
+    sftpPath: "",
     isSubmitting: false,
   };
 
@@ -105,12 +175,13 @@ class RasterImportContent extends React.Component {
     // this.fetchUserProfile();
   }
 
+  onInputChange = (e) => {
+    console.log(e.target.name);
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
   // onEmailAlertsClick = (e) => {
   //   this.setState({ emailAlerts: !this.state.emailAlerts });
-  // };
-
-  // onEmailChange = (e) => {
-  //   this.setState({ email: e.target.value });
   // };
 
   // onChangePasswordClick = () => {
@@ -157,60 +228,49 @@ class RasterImportContent extends React.Component {
       sftpPort,
       sftpUsername,
       sftpPassword,
+      sftpPath,
     } = this.state;
 
     return (
       <main className={classes.main}>
         <Typography component="h1" variant="h5">
-          Importar imágenes
+          Importar escenas de PeruSat-1
         </Typography>
         <Typography style={{ color: "red" }}>{this.state.errorMsg}</Typography>
-        <form className={classes.form}>
-          <FormControl margin="normal" fullWidth className={classes.input}>
-            <InputLabel htmlFor="sftp-host">SFTP Host</InputLabel>
-            <Input
-              id="sftp-host"
-              name="sftp-host"
-              autoComplete="sftp-host"
-              value={sftpHost}
-              // onChange={this.onEmailChange}
-              placeholder="example.com"
-            />
-          </FormControl>
-
-          <FormControl margin="normal" fullWidth className={classes.input}>
-            <InputLabel htmlFor="sftp-port">SFTP Port</InputLabel>
-            <Input
-              id="sftp-port"
-              name="sftp-port"
-              autoComplete="sftp-port"
-              value={sftpPort}
-              // onChange={this.onEmailChange}
-              placeholder="9922"
-            />
-          </FormControl>
-
-          <FormControl margin="normal" fullWidth className={classes.input}>
-            <InputLabel htmlFor="sftp-username">SFTP Username</InputLabel>
-            <Input
-              id="sftp-username"
-              name="sftp-username"
-              autoComplete="sftp-username"
-              value={sftpUsername}
-              // onChange={this.onEmailChange}
-            />
-          </FormControl>
-
-          <FormControl margin="normal" fullWidth className={classes.input}>
-            <InputLabel htmlFor="sftp-password">SFTP Password</InputLabel>
-            <Input
-              id="sftp-password"
-              name="sftp-password"
-              autoComplete="sftp-password"
-              value={sftpPassword}
-              // onChange={this.onEmailChange}
-            />
-          </FormControl>
+        <form className={classes.form} autoComplete="on">
+          <InputControl
+            id="sftpHost"
+            label="SFTP Host"
+            value={sftpHost}
+            placeholder="example.com"
+            onChange={this.onInputChange}
+          />
+          <InputControl
+            id="sftpPort"
+            label="SFTP Port"
+            value={sftpPort}
+            placeholder="22"
+            onChange={this.onInputChange}
+          />
+          <InputControl
+            id="sftpUsername"
+            label="SFTP Username"
+            value={sftpUsername}
+            onChange={this.onInputChange}
+          />
+          <InputControl
+            id="sftpPassword"
+            label="SFTP Password"
+            value={sftpPassword}
+            type="password"
+            onChange={this.onInputChange}
+          />
+          <InputControl
+            id="sftpPath"
+            label="SFTP Path"
+            value={sftpPath}
+            onChange={this.onInputChange}
+          />
 
           {/* <FormControl margin="normal" required fullWidth>
             <FormControlLabel
@@ -244,14 +304,14 @@ class RasterImportContent extends React.Component {
   }
 }
 
-RasterImportContent.propTypes = {
+RasterImportPerusatContent.propTypes = {
   classes: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-RasterImportContent = withStyles(styles)(RasterImportContent);
-RasterImportContent = withTranslation()(RasterImportContent);
-RasterImportContent = withSnackbar(RasterImportContent);
+RasterImportPerusatContent = withStyles(styles)(RasterImportPerusatContent);
+RasterImportPerusatContent = withTranslation()(RasterImportPerusatContent);
+RasterImportPerusatContent = withSnackbar(RasterImportPerusatContent);
 
-export default RasterImportContent;
+export default RasterImportPerusatContent;

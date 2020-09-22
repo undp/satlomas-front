@@ -184,8 +184,8 @@ class RasterListContent extends React.Component {
       <div className={classes.root}>
         <Typography variant="h6" className={classes.title} gutterBottom>
           Imágenes
-          <Link href="/user/rasters/import">
-            <Button className={classes.importBtn}>Importar</Button>
+          <Link href="/user/rasters/import-perusat">
+            <Button className={classes.importBtn}>Importar PeruSat-1</Button>
           </Link>
         </Typography>
 
