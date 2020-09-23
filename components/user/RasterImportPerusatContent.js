@@ -1,129 +1,55 @@
 import axios from "axios";
 import PropTypes from "prop-types";
 import React from "react";
-import { i18n, Link, withTranslation } from "../../i18n";
+import { i18n, withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import InputControl from "./forms/InputControl";
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-  Checkbox,
-  IconButton,
-  CommentIcon,
-} from "@material-ui/core";
+import FileListTable from "./FileListTable";
+import cookie from "js-cookie";
+import { Button, Typography, Grid, Paper } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
-export default function CheckboxList() {
-  const classes = useStyles();
-  const [checked, setChecked] = React.useState([0]);
-
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
-  return (
-    <List className={classes.root}>
-      {[0, 1, 2, 3].map((value) => {
-        const labelId = `checkbox-list-label-${value}`;
-
-        return (
-          <ListItem
-            key={value}
-            role={undefined}
-            dense
-            button
-            onClick={handleToggle(value)}
-          >
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={checked.indexOf(value) !== -1}
-                tabIndex={-1}
-                disableRipple
-                inputProps={{ "aria-labelledby": labelId }}
-              />
-            </ListItemIcon>
-            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-            <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="comments">
-                <CommentIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-}
-
-import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Input,
-  InputLabel,
-  LinearProgress,
-  Typography,
-} from "@material-ui/core";
+const defaultHostname = process.env.NEXT_PUBLIC_DEFAULT_SFTP_HOSTNAME;
+const defaultPort = process.env.NEXT_PUBLIC_DEFAULT_SFTP_PORT;
+const defaultUsername = process.env.NEXT_PUBLIC_DEFAULT_SFTP_USERNAME;
+const defaultPassword = process.env.NEXT_PUBLIC_DEFAULT_SFTP_PASSWORD;
 
 const styles = (theme) => ({
   main: {
-    display: "block", // Fix IE 11 issue.
+    display: "block",
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "50%", // Fix IE 11 issue.
     marginTop: theme.spacing(2),
   },
-  submit: {
-    marginTop: theme.spacing(3),
-    width: "20%",
-  },
-  passwordSubmit: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-    width: "40%",
-  },
-  passwordReset: {
-    marginTop: theme.spacing(2),
+  button: {
+    marginTop: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
 });
 
 class RasterImportPerusatContent extends React.Component {
   state = {
-    sftpUsername: "",
-    sftpPassword: "",
-    sftpHost: "",
-    sftpPort: "",
-    sftpPath: "",
-    isSubmitting: false,
+    hostname: defaultHostname || "",
+    port: defaultPort || "",
+    username: defaultUsername || "",
+    password: defaultPassword || "",
+    path: "/",
+    listing: false,
+    submitting: false,
+    connected: false,
+    files: [],
+    selectedFiles: [],
   };
 
   static async getInitialProps({ query }) {
@@ -133,102 +59,128 @@ class RasterImportPerusatContent extends React.Component {
     };
   }
 
-  // async fetchUserProfile() {
-  //   const token = cookie.get("token");
-  //   try {
-  //     var response = await axios.get(buildApiUrl("/auth/user/"), {
-  //       headers: {
-  //         "Accept-Language": i18n.language,
-  //         Authorization: token,
-  //       },
-  //     });
-  //     console.log("/auth/user/", response.data);
+  async fetchFiles(path) {
+    const token = cookie.get("token");
+    const { hostname, port, username, password } = this.state;
+    const data = { hostname, port, username, password };
 
-  //     var profileResponse = await axios.get(
-  //       buildApiUrl(`/alerts/user-profiles/${response.data.username}`),
-  //       {
-  //         headers: {
-  //           "Accept-Language": i18n.language,
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-  //     console.log("/alerts/user-profile/", profileResponse.data);
+    this.setState({ listing: true });
 
-  //     this.setState({
-  //       email: response.data.email,
-  //       username: response.data.username,
-  //       emailAlerts: profileResponse.data.email_alerts,
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     this.props.enqueueSnackbar(
-  //       "Error al cargar los datos de perfil de usuario",
-  //       {
-  //         variant: "error",
-  //       }
-  //     );
-  //   }
-  // }
+    let files;
 
-  componentDidMount() {
-    // this.fetchUserProfile();
+    try {
+      var response = await axios.post(
+        buildApiUrl("/lomas/import/sftp/list/"),
+        data,
+        {
+          params: { path },
+          headers: {
+            "Accept-Language": i18n.language,
+            Authorization: token,
+          },
+        }
+      );
+      files = response.data.values;
+      console.log("/import/sftp/list/", files);
+    } catch (err) {
+      this.props.enqueueSnackbar(
+        `Ocurrió un error: ${err.response.data["detail"]}`,
+        {
+          variant: "error",
+        }
+      );
+    }
+
+    this.setState({ listing: false });
+
+    return files;
   }
 
+  onConnectDisconnectClick = () => {
+    this.setState(
+      (prevState) => ({
+        connected: !prevState.connected,
+        files: [],
+        selectedFiles: [],
+        path: "/",
+      }),
+      async () => {
+        if (this.state.connected) {
+          const files = await this.fetchFiles(this.state.path);
+          if (files) {
+            this.setState({ files });
+          } else {
+            this.setState({ connected: false });
+          }
+        }
+      }
+    );
+  };
+
   onInputChange = (e) => {
-    console.log(e.target.name);
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  // onEmailAlertsClick = (e) => {
-  //   this.setState({ emailAlerts: !this.state.emailAlerts });
-  // };
+  onChangePath = async (dirname) => {
+    const files = await this.fetchFiles(dirname);
+    if (files) {
+      // Only change path and update files if fetch response went OK
+      this.setState({ path: dirname, files, selectedFiles: [] });
+    }
+  };
 
-  // onChangePasswordClick = () => {
-  //   routerPush("/password/reset");
-  // };
+  onSelectFiles = (path, files) => {
+    this.setState({ selectedFiles: files });
+  };
 
-  // onSubmit = () => {
-  //   const token = cookie.get("token");
-  //   try {
-  //     var response = axios.patch(
-  //       buildApiUrl(`/alerts/user-profiles/${this.state.username}/`),
-  //       { email_alerts: this.state.emailAlerts },
-  //       {
-  //         headers: {
-  //           "Accept-Language": i18n.language,
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-  //     response = axios.patch(
-  //       buildApiUrl(`/alerts/users/${this.state.username}/`),
-  //       { email: this.state.email },
-  //       {
-  //         headers: {
-  //           "Accept-Language": i18n.language,
-  //           Authorization: token,
-  //         },
-  //       }
-  //     );
-  //     this.props.enqueueSnackbar("Perfil guardado", { variant: "success" });
-  //   } catch (error) {
-  //     this.props.enqueueSnackbar("Error al guardar perfil", {
-  //       variant: "error",
-  //     });
-  //     console.error(error);
-  //   }
-  // };
+  onSubmit = () => {
+    const token = cookie.get("token");
+    alert(this.state.selectedFiles);
+    return;
+
+    try {
+      var response = axios.patch(
+        buildApiUrl(`/alerts/user-profiles/${this.state.username}/`),
+        { email_alerts: this.state.emailAlerts },
+        {
+          headers: {
+            "Accept-Language": i18n.language,
+            Authorization: token,
+          },
+        }
+      );
+      response = axios.patch(
+        buildApiUrl(`/alerts/users/${this.state.username}/`),
+        { email: this.state.email },
+        {
+          headers: {
+            "Accept-Language": i18n.language,
+            Authorization: token,
+          },
+        }
+      );
+      this.props.enqueueSnackbar("Perfil guardado", { variant: "success" });
+    } catch (error) {
+      this.props.enqueueSnackbar("Error al guardar perfil", {
+        variant: "error",
+      });
+      console.error(error);
+    }
+  };
 
   render() {
     const { classes } = this.props;
     const {
-      isSubmitting,
-      sftpHost,
-      sftpPort,
-      sftpUsername,
-      sftpPassword,
-      sftpPath,
+      listing,
+      connected,
+      submitting,
+      hostname,
+      port,
+      username,
+      password,
+      path,
+      files,
+      selectedFiles,
     } = this.state;
 
     return (
@@ -238,66 +190,76 @@ class RasterImportPerusatContent extends React.Component {
         </Typography>
         <Typography style={{ color: "red" }}>{this.state.errorMsg}</Typography>
         <form className={classes.form} autoComplete="on">
-          <InputControl
-            id="sftpHost"
-            label="SFTP Host"
-            value={sftpHost}
-            placeholder="example.com"
-            onChange={this.onInputChange}
-          />
-          <InputControl
-            id="sftpPort"
-            label="SFTP Port"
-            value={sftpPort}
-            placeholder="22"
-            onChange={this.onInputChange}
-          />
-          <InputControl
-            id="sftpUsername"
-            label="SFTP Username"
-            value={sftpUsername}
-            onChange={this.onInputChange}
-          />
-          <InputControl
-            id="sftpPassword"
-            label="SFTP Password"
-            value={sftpPassword}
-            type="password"
-            onChange={this.onInputChange}
-          />
-          <InputControl
-            id="sftpPath"
-            label="SFTP Path"
-            value={sftpPath}
-            onChange={this.onInputChange}
-          />
-
-          {/* <FormControl margin="normal" required fullWidth>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  value="emailAlerts"
-                  color="primary"
-                  checked={emailAlerts}
-                  onClick={this.onEmailAlertsClick}
+          <Grid container spacing={3}>
+            <Grid item xs>
+              <Paper className={classes.paper}>
+                <InputControl
+                  id="hostname"
+                  label="SFTP Hostname"
+                  value={hostname}
+                  placeholder="example.com"
+                  onChange={this.onInputChange}
+                  required
+                  disabled={connected}
                 />
-              }
-              label={"Enviar notificaciones de alertas por email."}
-            />
-          </FormControl> */}
+                <InputControl
+                  id="port"
+                  label="SFTP Port"
+                  value={port}
+                  placeholder="22"
+                  onChange={this.onInputChange}
+                  required
+                  disabled={connected}
+                />
+                <InputControl
+                  id="username"
+                  label="SFTP Username"
+                  value={username}
+                  onChange={this.onInputChange}
+                  disabled={connected}
+                />
+                <InputControl
+                  id="password"
+                  label="SFTP Password"
+                  value={password}
+                  type="password"
+                  onChange={this.onInputChange}
+                  disabled={connected}
+                />
 
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
-            className={classes.submit}
-            onClick={this.onSubmit}
-          >
-            Importar
-          </Button>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  disabled={listing}
+                  className={classes.button}
+                  onClick={this.onConnectDisconnectClick}
+                >
+                  {connected ? "Desconectar" : "Conectar"}
+                </Button>
 
-          {isSubmitting && <LinearProgress />}
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  disabled={submitting || selectedFiles.length === 0}
+                  onClick={this.onSubmit}
+                >
+                  Importar
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs>
+              <FileListTable
+                disabled={!connected}
+                path={path}
+                rows={files}
+                onChangePath={this.onChangePath}
+                onSelectFiles={this.onSelectFiles}
+                loading={listing}
+              />
+            </Grid>
+          </Grid>
         </form>
       </main>
     );

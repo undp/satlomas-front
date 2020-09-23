@@ -8,8 +8,9 @@ const InputControl = ({
   value,
   disabled,
   placeholder,
+  required,
 }) => (
-  <FormControl margin="normal" required fullWidth>
+  <FormControl margin="normal" required={required} fullWidth>
     <InputLabel htmlFor={id}>{label}</InputLabel>
     <Input
       id={id}

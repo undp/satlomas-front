@@ -4,6 +4,7 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import ListIcon from "@material-ui/icons/List";
 import PersonIcon from "@material-ui/icons/Person";
 import MenuIcon from "@material-ui/icons/Menu";
+import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
@@ -160,7 +161,7 @@ const sections = {
   rasters: {
     key: "rasters",
     path: "/rasters",
-    icon: <ListIcon />,
+    icon: <PhotoLibraryIcon />,
     content: <RasterListContent />,
   },
   "parameter-rules": {
