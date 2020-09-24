@@ -8,7 +8,14 @@ import { withSnackbar } from "notistack";
 import InputControl from "./forms/InputControl";
 import FileListTable from "./FileListTable";
 import cookie from "js-cookie";
-import { Button, Typography, Grid, Paper } from "@material-ui/core";
+import {
+  Button,
+  Typography,
+  Grid,
+  Paper,
+  CircularProgress,
+  Backdrop,
+} from "@material-ui/core";
 
 const defaultHostname = process.env.NEXT_PUBLIC_DEFAULT_SFTP_HOSTNAME;
 const defaultPort = process.env.NEXT_PUBLIC_DEFAULT_SFTP_PORT;
@@ -36,6 +43,10 @@ const styles = (theme) => ({
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 });
 
 class RasterImportPerusatContent extends React.Component {
@@ -62,7 +73,7 @@ class RasterImportPerusatContent extends React.Component {
   async fetchFiles(path) {
     const token = cookie.get("token");
     const { hostname, port, username, password } = this.state;
-    const data = { hostname, port, username, password };
+    const data = { hostname, port, username, password, path };
 
     this.setState({ listing: true });
 
@@ -73,7 +84,6 @@ class RasterImportPerusatContent extends React.Component {
         buildApiUrl("/lomas/import/sftp/list/"),
         data,
         {
-          params: { path },
           headers: {
             "Accept-Language": i18n.language,
             Authorization: token,
@@ -133,39 +143,49 @@ class RasterImportPerusatContent extends React.Component {
     this.setState({ selectedFiles: files });
   };
 
-  onSubmit = () => {
+  onSubmit = async () => {
+    this.setState({ submitting: true });
+
     const token = cookie.get("token");
-    alert(this.state.selectedFiles);
-    return;
+    const {
+      hostname,
+      port,
+      username,
+      password,
+      path,
+      selectedFiles,
+    } = this.state;
+
+    const data = {
+      hostname,
+      port,
+      username,
+      password,
+      files: selectedFiles.map((file) => `${path}${file}`),
+    };
 
     try {
-      var response = axios.patch(
-        buildApiUrl(`/alerts/user-profiles/${this.state.username}/`),
-        { email_alerts: this.state.emailAlerts },
-        {
-          headers: {
-            "Accept-Language": i18n.language,
-            Authorization: token,
-          },
-        }
-      );
-      response = axios.patch(
-        buildApiUrl(`/alerts/users/${this.state.username}/`),
-        { email: this.state.email },
-        {
-          headers: {
-            "Accept-Language": i18n.language,
-            Authorization: token,
-          },
-        }
-      );
-      this.props.enqueueSnackbar("Perfil guardado", { variant: "success" });
-    } catch (error) {
-      this.props.enqueueSnackbar("Error al guardar perfil", {
-        variant: "error",
+      await axios.post(buildApiUrl("/lomas/import/sftp/"), data, {
+        headers: {
+          "Accept-Language": i18n.language,
+          Authorization: token,
+        },
       });
-      console.error(error);
+      this.props.enqueueSnackbar(
+        "El trabajo de carga de imágenes se agregó con éxito.",
+        { variant: "success" }
+      );
+    } catch (err) {
+      this.props.enqueueSnackbar(
+        `Ocurrió un error: ${JSON.stringify(err.response.data)}`,
+        {
+          variant: "error",
+        }
+      );
+      console.error(err);
     }
+
+    this.setState({ submitting: false });
   };
 
   render() {
@@ -185,6 +205,9 @@ class RasterImportPerusatContent extends React.Component {
 
     return (
       <main className={classes.main}>
+        <Backdrop className={classes.backdrop} open={submitting}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Typography component="h1" variant="h5">
           Importar escenas de PeruSat-1
         </Typography>
