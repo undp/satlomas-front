@@ -18,6 +18,15 @@
     "project_descrip": "El identificador del proyecto te ser\u00e1 de utilidad para utilizar nuestra API",
     "project_title": "Proyectos"
   },
+  "jobs": {
+    "states": {
+      "CANCELED": "Cancelado",
+      "FAILED": "Fallido",
+      "FINISHED": "Finalizado",
+      "PENDING": "Pendiente",
+      "STARTED": "Ejecutando"
+    }
+  },
   "keys": {
     "active": "Activa",
     "confirmContent": "Esta acci\u00f3n no se puede deshacer \u00bfEsta seguro que desea revocar esta API Key?",
@@ -92,6 +101,7 @@
   },
   "sidebar": {
     "alerts": "Alertas",
+    "jobs": "Trabajos",
     "parameter-rules": "Reglas de Par\u00e1metros",
     "profile": "Perfil",
     "rasters": "Im\u00e1genes",
