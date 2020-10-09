@@ -5,6 +5,7 @@ import ListIcon from "@material-ui/icons/List";
 import PersonIcon from "@material-ui/icons/Person";
 import MenuIcon from "@material-ui/icons/Menu";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
+import AllInboxIcon from "@material-ui/icons/AllInbox";
 import classNames from "classnames";
 import Head from "next/head";
 import PropTypes from "prop-types";
@@ -23,6 +24,7 @@ import CreateScopeRuleContent from "../components/user/CreateScopeRuleContent";
 import AlertsTableContent from "../components/user/AlertsTableContent";
 import UserProfileContent from "../components/user/UserProfileContent";
 import RasterImportPerusatContent from "../components/user/RasterImportPerusatContent";
+import JobsContent from "../components/user/JobsContent";
 import AppbarButtons from "../components/AppbarButtons";
 import config from "../config";
 
@@ -131,6 +133,7 @@ const styles = (theme) => ({
 
 const allSections = [
   "alerts",
+  "jobs",
   "rasters",
   "rules",
   "profile",
@@ -145,6 +148,7 @@ const allSections = [
 
 const sidebarSections = [
   "alerts",
+  "jobs",
   "rasters",
   "parameter-rules",
   "scope-type-rules",
@@ -157,6 +161,12 @@ const sections = {
     path: "/alerts",
     icon: <NotificationsIcon />,
     content: <AlertsTableContent />,
+  },
+  jobs: {
+    key: "jobs",
+    path: "/jobs",
+    icon: <AllInboxIcon />,
+    content: <JobsContent />,
   },
   rasters: {
     key: "rasters",

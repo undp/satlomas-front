@@ -18,6 +18,15 @@
     "project_descrip": "The project identifier will be useful to use our API",
     "project_title": "Project"
   },
+  "jobs": {
+    "states": {
+      "CANCELED": "Canceled",
+      "FAILED": "Failed",
+      "FINISHED": "Finished",
+      "PENDING": "Pending",
+      "STARTED": "Running"
+    }
+  },
   "keys": {
     "active": "Active",
     "confirmContent": "This action cannot be undone. Are you sure you want to revoke this API Key?",
@@ -92,6 +101,7 @@
   },
   "sidebar": {
     "alerts": "Alerts",
+    "jobs": "Jobs",
     "parameter-rules": "Parameter Rules",
     "profile": "Profile",
     "rasters": "Images",

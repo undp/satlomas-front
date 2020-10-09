@@ -145,6 +145,7 @@ me,sidebar.scope-type-rules,Reglas de Tipos de Ámbitos,Scope Type Rules
 me,sidebar.alerts,Alertas,Alerts
 me,sidebar.rasters,Imágenes,Images
 me,sidebar.profile,Perfil,Profile
+me,sidebar.jobs,Trabajos,Jobs
 me,download,Descargar,Download
 me,view,Ver,View
 me,models.title,Tus Modelos,Your Models
@@ -213,6 +214,11 @@ me,measurement_content_type.vi_lomas_changes,Vegetación de Lomas,Lomas Vegetati
 me,measurement_content_type.lomas_changes,Pérdida de Lomas,Loss of Lomas
 me,change_type.P,Porcentaje,Percentage
 me,change_type.A,Área,Area
+me,jobs.states.PENDING,Pendiente,Pending
+me,jobs.states.STARTED,Ejecutando,Running
+me,jobs.states.FINISHED,Finalizado,Finished
+me,jobs.states.FAILED,Fallido,Failed
+me,jobs.states.CANCELED,Cancelado,Canceled
 image_upload_dialog,upload_progress.title,Subiendo...,Uploading...
 image_upload_dialog,upload_btn,Subir imágenes,Upload images
 image_upload_dialog,cancel_btn,Cancelar,Cancel
