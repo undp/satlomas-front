@@ -21,8 +21,9 @@ import {
   CssBaseline,
   Grid,
   Toolbar,
+  Paper,
   Typography,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
 const styles = (theme) => ({
   appBar: {
@@ -52,7 +53,7 @@ const styles = (theme) => ({
   heroContent: {
     maxWidth: 600,
     margin: "0 auto",
-    padding: `${theme.spacing(8)}px 0 ${theme.spacing(6)}px`,
+    padding: `${theme.spacing(8)}px 0 0`,
   },
   heroButtons: {
     marginTop: theme.spacing(4),
@@ -87,7 +88,16 @@ const styles = (theme) => ({
     padding: theme.spacing(6),
   },
   toolbarButtons: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
+  },
+  paperRoot: {
+    backgroundColor: "#189655",
+    color: "#fff",
+    padding: theme.spacing(3),
+    margin: `0 ${theme.spacing(3)}px ${theme.spacing(10)}px`,
+  },
+  paperParagraph: {
+    margin: `${theme.spacing(2)}px 0`,
   },
 });
 
@@ -130,7 +140,10 @@ const cards = [
     description:
       "Dashboard de las estaciones meteorológicas, con información actualizada en tiempo real.",
     image: "/static/thumbs/stations-dashboard.jpg",
-    buttons: [{ name: "Dashboard", href: "/stations/dashboard" }, { name: "Tabla", href: "/stations/data" }],
+    buttons: [
+      { name: "Dashboard", href: "/stations/dashboard" },
+      { name: "Tabla", href: "/stations/data" },
+    ],
   },
 ];
 
@@ -138,8 +151,8 @@ class Index extends React.Component {
   state = {
     section: null,
     contextualMenuOpen: null,
-    username: ""
-  }
+    username: "",
+  };
 
   static async getInitialProps({ query }) {
     return {
@@ -168,10 +181,7 @@ class Index extends React.Component {
           <title>{appName}</title>
         </Head>
         <CssBaseline />
-        <AppBar
-          position="static"
-          className={classes.appBar}
-        >
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             {/* <CameraIcon className={classes.icon} /> */}
             <Typography variant="h6" color="inherit" noWrap>
@@ -220,7 +230,40 @@ class Index extends React.Component {
               </div> */}
             </div>
           </div>
+
           <div className={classNames(classes.layout, classes.cardGrid)}>
+            <Paper
+              classes={{
+                root: classes.paperRoot,
+              }}
+              elevation={3}
+            >
+              <Typography variant="h6">¡Bienvenidos al SatLomas!</Typography>
+              <Typography className={classes.paperParagraph}>
+                La plataforma de monitoreo satelital "SatLomas" es una
+                iniciativa del proyecto Conservación, gestión y rehabilitación
+                de los ecosistemas frágiles de lomas (EbA Lomas) el cual es
+                ejecutado por el Programa de las Naciones Unidas para el
+                Desarrollo (PNUD) bajo la dirección del Servicio Nacional de
+                Áreas Naturales Protegidas por el Estado (Sernanp) con el
+                financiamiento del Fondo Mundial del Ambiente (GEF) y el soporte
+                de la Agencia Espacial del Perú (Conida).
+              </Typography>
+              <Typography className={classes.paperParagraph}>
+                La plataforma integra herramientas de código abierto para el
+                procesamiento de imágenes satelitales públicas como el Sentinel
+                -2 y PeruSat-1 con el objetivo de determinar las afectaciones
+                por cambio de uso del suelo en los ecosistemas de lomas en Lima.
+                Asimismo, monitorea la cobertura herbácea de los ecosistemas de
+                lomas a través de las imágenes Modis.
+              </Typography>
+              <Typography className={classes.paperParagraph}>
+                Además, cuenta con herramientas que tienen conexión a sensores
+                IoT en tiempo real a fin medir y sistematizar la información de
+                variables meteorológicas de las lomas de Lima
+              </Typography>
+            </Paper>
+
             {/* End hero unit */}
             <Grid container spacing={5}>
               {cards.map((card) => (
@@ -242,14 +285,16 @@ class Index extends React.Component {
                       <Typography>{card.description}</Typography>
                     </CardContent>
                     <CardActions>
-                      {card.buttons.map(button => (<Button
-                        key={button.name}
-                        size="small"
-                        color="primary"
-                        onClick={() => Router.push(button.href)}
-                      >
-                        {button.name}
-                      </Button>))}
+                      {card.buttons.map((button) => (
+                        <Button
+                          key={button.name}
+                          size="small"
+                          color="primary"
+                          onClick={() => Router.push(button.href)}
+                        >
+                          {button.name}
+                        </Button>
+                      ))}
                     </CardActions>
                   </Card>
                 </Grid>
@@ -276,7 +321,6 @@ class Index extends React.Component {
     );
   }
 }
-
 
 Index.propTypes = {
   classes: PropTypes.object.isRequired,
