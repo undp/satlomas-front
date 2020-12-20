@@ -21,6 +21,7 @@ const defaultHostname = process.env.NEXT_PUBLIC_DEFAULT_SFTP_HOSTNAME;
 const defaultPort = process.env.NEXT_PUBLIC_DEFAULT_SFTP_PORT;
 const defaultUsername = process.env.NEXT_PUBLIC_DEFAULT_SFTP_USERNAME;
 const defaultPassword = process.env.NEXT_PUBLIC_DEFAULT_SFTP_PASSWORD;
+const defaultPath = process.env.NEXT_PUBLIC_DEFAULT_SFTP_PATH;
 
 const styles = (theme) => ({
   main: {
@@ -55,7 +56,7 @@ class RasterImportPerusatContent extends React.Component {
     port: defaultPort || "",
     username: defaultUsername || "",
     password: defaultPassword || "",
-    path: "/",
+    path: defaultPath || "/",
     listing: false,
     submitting: false,
     connected: false,
@@ -112,7 +113,7 @@ class RasterImportPerusatContent extends React.Component {
         connected: !prevState.connected,
         files: [],
         selectedFiles: [],
-        path: "/",
+        path: (defaultPath || "/"),
       }),
       async () => {
         if (this.state.connected) {
