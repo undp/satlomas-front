@@ -68,6 +68,11 @@ const styles = (theme) => ({
       marginRight: "auto",
     },
   },
+  logo: {
+    height: 100,
+    display: "block",
+    margin: "0 auto",
+  },
   cardGrid: {
     padding: `${theme.spacing(8)}px 0`,
   },
@@ -80,6 +85,10 @@ const styles = (theme) => ({
     paddingTop: "56.25%", // 16:9
     cursor: "pointer",
   },
+  cardTitle: {
+    color: theme.palette.primary.main,
+    fontWeight: 500,
+  },
   cardContent: {
     flexGrow: 1,
   },
@@ -91,8 +100,8 @@ const styles = (theme) => ({
     marginLeft: "auto",
   },
   paperRoot: {
-    backgroundColor: "#189655",
-    color: "#fff",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
     padding: theme.spacing(3),
     margin: `0 ${theme.spacing(3)}px ${theme.spacing(10)}px`,
   },
@@ -117,14 +126,6 @@ const cards = [
       "Mapa de cobertura de Loma perdida, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
     image: "/static/thumbs/changes-map-lomas.jpg",
     buttons: [{ name: "Ver", href: "/maps/lomas-changes" }],
-  },
-  {
-    key: "objects-map",
-    title: "Detección de objetos",
-    description:
-      "Mapa de objetos detectados en Loma, basado en las imágenes del satélite PeruSat-1.",
-    image: "/static/thumbs/objects-map.jpg",
-    buttons: [{ name: "Ver", href: "/objects-map" }],
   },
   {
     key: "stations-map",
@@ -197,22 +198,14 @@ class Index extends React.Component {
           {/* Hero unit */}
           <div className={classes.heroUnit}>
             <div className={classes.heroContent}>
-              <Typography
-                component="h1"
-                variant="h2"
-                align="center"
-                color="textPrimary"
-                gutterBottom
-              >
-                {appName}
-              </Typography>
+              <img src="/static/logo.jpg" className={classes.logo} />
               <Typography
                 variant="h6"
                 align="center"
                 color="textSecondary"
                 paragraph
               >
-                Plataforma de monitoreo satelital del ecosistema de las Lomas
+                Plataforma de monitoreo satelital
               </Typography>
               {/* <div className={classes.heroButtons}>
                 <Grid container spacing={2} justify="center">
@@ -267,7 +260,7 @@ class Index extends React.Component {
             {/* End hero unit */}
             <Grid container spacing={5}>
               {cards.map((card) => (
-                <Grid item key={card.key} sm={6} md={4} lg={4}>
+                <Grid item key={card.key} sm={6} md={6} lg={3}>
                   <Card className={classes.card}>
                     <Link href={card.buttons[0].href}>
                       <CardMedia
@@ -279,7 +272,12 @@ class Index extends React.Component {
                       </CardMedia>
                     </Link>
                     <CardContent className={classes.cardContent}>
-                      <Typography gutterBottom variant="h5" component="h2">
+                      <Typography
+                        className={classes.cardTitle}
+                        gutterBottom
+                        variant="h5"
+                        component="h2"
+                      >
                         {card.title}
                       </Typography>
                       <Typography>{card.description}</Typography>
