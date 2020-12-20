@@ -5,20 +5,20 @@ import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Menu from "@material-ui/core/Menu";
-import PowerSettingsNewRoundedIcon from '@material-ui/icons/PowerSettingsNewRounded';
+import PowerSettingsNewRoundedIcon from "@material-ui/icons/PowerSettingsNewRounded";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import { withStyles } from "@material-ui/core/styles";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import { withSnackbar } from 'notistack';
+import { withSnackbar } from "notistack";
 import { withTranslation, i18n } from "../i18n";
 import { logout } from "../utils/auth";
 import { buildApiUrl } from "../utils/api";
 import Router from "next/router";
 import axios from "axios";
 import cookie from "js-cookie";
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import Badge from '@material-ui/core/Badge';
-import Moment from 'react-moment';
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import Badge from "@material-ui/core/Badge";
+import Moment from "react-moment";
 
 const MAX_NOTIFICATIONS_FIRST = 5;
 
@@ -31,14 +31,14 @@ const styles = (_theme) => ({
   },
   momentFont: {
     fontSize: 9,
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
   notificationText: {
     marginRight: 20,
   },
   notifButton: {
-    justifyContent: 'center',
-  }
+    justifyContent: "center",
+  },
 });
 
 class AlertsMenuButton extends React.Component {
@@ -47,8 +47,8 @@ class AlertsMenuButton extends React.Component {
     alerts: [],
     badgeShow: false,
     count: 0,
-    hasMoreAlerts: false
-  }
+    hasMoreAlerts: false,
+  };
 
   componentDidMount() {
     this.fetchAlerts();
@@ -74,15 +74,15 @@ class AlertsMenuButton extends React.Component {
         },
       });
 
-      const allAlerts = response.data['alerts'];
+      const allAlerts = response.data["alerts"];
       const hasMoreAlerts = allAlerts.count > MAX_NOTIFICATIONS_FIRST;
       const alerts = allAlerts.slice(0, MAX_NOTIFICATIONS_FIRST);
 
       this.setState({
         alerts,
         hasMoreAlerts,
-        count: response.data['news'],
-        badgeShow: response.data['news'] == 0,
+        count: response.data["news"],
+        badgeShow: response.data["news"] == 0,
       });
     } catch (error) {
       console.error(error);
@@ -96,13 +96,13 @@ class AlertsMenuButton extends React.Component {
     const token = cookie.get("token");
     this.setState({ anchorEl: e.currentTarget });
     axios.put(buildApiUrl("/alerts/mark-as-seen/"), null, {
-      headers: { Authorization: token }
+      headers: { Authorization: token },
     });
   }
 
   render() {
     const { classes } = this.props;
-    const { badgeShow, count, anchorEl, alerts, hasMoreAlerts } = this.state
+    const { badgeShow, count, anchorEl, alerts, hasMoreAlerts } = this.state;
 
     return (
       <>
@@ -111,12 +111,9 @@ class AlertsMenuButton extends React.Component {
           aria-controls="menu-appbar"
           aria-haspopup="true"
           color="inherit"
-          onClick={e => this.expandMenu(e)}
+          onClick={(e) => this.expandMenu(e)}
         >
-          <Badge
-            badgeContent={count}
-            invisible={badgeShow}
-            color="secondary">
+          <Badge badgeContent={count} invisible={badgeShow} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -127,19 +124,24 @@ class AlertsMenuButton extends React.Component {
           onClose={() => this.setState({ anchorEl: null })}
         >
           <MenuItem>Alertas</MenuItem>
-          {alerts.map(alert => (
-            alert.last_seen_at ?
+          {alerts.map((alert) =>
+            alert.last_seen_at ? (
               <MenuItem key={alert.id}>
-                <Typography className={classes.notificationText}>Alerta {alert.id}</Typography>
-                <Moment className={classes.momentFont} fromNow>{alert.last_seen_at}</Moment>
+                <Typography className={classes.notificationText}>
+                  Alerta {alert.id}
+                </Typography>
+                <Moment className={classes.momentFont} fromNow>
+                  {alert.last_seen_at}
+                </Moment>
               </MenuItem>
-              :
-              <MenuItem key={alert.id} style={{ backgroundColor: 'lightblue' }}>
-                <Typography className={classes.notificationText}>Alerta {alert.id}</Typography>
+            ) : (
+              <MenuItem key={alert.id} style={{ backgroundColor: "lightblue" }}>
+                <Typography className={classes.notificationText}>
+                  Alerta {alert.id}
+                </Typography>
               </MenuItem>
-
-
-          ))}
+            )
+          )}
           {!hasMoreAlerts && (
             <MenuItem className={classes.notifButton}>
               <Button onClick={() => Router.push("/user/alerts")}>
@@ -158,8 +160,8 @@ AlertsMenuButton = withSnackbar(AlertsMenuButton);
 
 class ProfileMenuButton extends React.Component {
   state = {
-    anchorEl: null
-  }
+    anchorEl: null,
+  };
 
   render() {
     const { t, classes, username } = this.props;
@@ -172,7 +174,7 @@ class ProfileMenuButton extends React.Component {
           aria-controls="menu-appbar"
           aria-haspopup="true"
           color="inherit"
-          onClick={e => this.setState({ anchorEl: e.currentTarget })}
+          onClick={(e) => this.setState({ anchorEl: e.currentTarget })}
         >
           <AccountCircle />
         </IconButton>
@@ -182,17 +184,26 @@ class ProfileMenuButton extends React.Component {
           open={Boolean(anchorEl)}
           onClose={() => this.setState({ anchorEl: null })}
         >
-          <MenuItem className={classes.menuItem} onClick={() => Router.push("/user/profile")}>
+          <MenuItem
+            className={classes.menuItem}
+            onClick={() => Router.push("/user/profile")}
+          >
             {username}
           </MenuItem>
-          <MenuItem className={classes.menuItem} onClick={() => Router.push("/user")}>
-            Panel de Usuario
-        </MenuItem>
-          <MenuItem className={classes.menuItem} onClick={() => logout()}
+          <MenuItem
+            className={classes.menuItem}
+            onClick={() => Router.push("/user")}
           >
+            Panel de Usuario
+          </MenuItem>
+          <MenuItem className={classes.menuItem} onClick={() => logout()}>
             {t("common:logout_btn")}
             <ListItemSecondaryAction>
-              <ListItemIcon edge="end" aria-label="logout" className={classes.listItemIcon}>
+              <ListItemIcon
+                edge="end"
+                aria-label="logout"
+                className={classes.listItemIcon}
+              >
                 <PowerSettingsNewRoundedIcon />
               </ListItemIcon>
             </ListItemSecondaryAction>
@@ -210,7 +221,7 @@ class AppbarButtons extends React.Component {
   state = {
     loading: true,
     username: null,
-  }
+  };
 
   static async getInitialProps({ query }) {
     return {
@@ -238,35 +249,37 @@ class AppbarButtons extends React.Component {
         this.setState({ username, loading: false });
       } catch (error) {
         console.error(error);
-        this.setState({ username: "", loading: false })
+        cookie.remove("token");
+        this.setState({ username: "", loading: false });
         this.props.enqueueSnackbar(`Failed to get user data`, {
           variant: "error",
         });
       }
     }
 
-    this.setState({ loading: false })
+    this.setState({ loading: false });
   }
 
   render() {
     const { classes, t } = this.props;
-    const {
-      username,
-      loading,
-    } = this.state;
+    const { username, loading } = this.state;
 
-    return !loading && (
-      <div className={classes.toolbarButtons}>
-        {username ? (
-          <>
-            <AlertsMenuButton />
-            <ProfileMenuButton username={username} />
-          </>
-        ) : (
-            <Button color="inherit" onClick={() => Router.push("/login")}>Iniciar sesión</Button>
+    return (
+      !loading && (
+        <div className={classes.toolbarButtons}>
+          {username ? (
+            <>
+              <AlertsMenuButton />
+              <ProfileMenuButton username={username} />
+            </>
+          ) : (
+            <Button color="inherit" onClick={() => Router.push("/login")}>
+              Iniciar sesión
+            </Button>
           )}
-      </div>
-    )
+        </div>
+      )
+    );
   }
 }
 
