@@ -6,7 +6,9 @@ import { esES } from "@material-ui/core/locale";
 const theme = createMuiTheme(
   {
     palette: {
-      primary: teal,
+      primary: {
+        main: "#189655",
+      },
       secondary: pink,
       error: {
         main: red.A400,
