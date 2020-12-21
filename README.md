@@ -9,6 +9,7 @@ raster/vector layers, etc.
 * Install all dependencies with `yarn`.
 * Run `yarn build` (only needed the first time)
 * Run `yarn dev` to start the development server
+* Copy `env.sample` as `.env` and set environment variables needed.
 
 ## License
 
