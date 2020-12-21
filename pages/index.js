@@ -73,6 +73,16 @@ const styles = (theme) => ({
     display: "block",
     margin: "0 auto",
   },
+  sponsorLogos: {
+    margin: "0 auto",
+    width: "75%",
+    textAlign: "center",
+  },
+  sponsorLogo: {
+    display: "inline-block",
+    margin: theme.spacing(3),
+    verticalAlign: "middle",
+  },
   cardGrid: {
     padding: `${theme.spacing(8)}px 0`,
   },
@@ -301,8 +311,8 @@ class Index extends React.Component {
           </div>
         </main>
         {/* Footer */}
-        {/* <footer className={classes.footer}>
-          <Typography variant="h6" align="center" gutterBottom>
+        <footer className={classes.footer}>
+          {/* <Typography variant="h6" align="center" gutterBottom>
             Footer
           </Typography>
           <Typography
@@ -312,8 +322,35 @@ class Index extends React.Component {
             component="p"
           >
             Something here to give the footer a purpose!
-          </Typography>
-        </footer> */}
+          </Typography> */}
+          <div className={classes.sponsorLogos}>
+            <img
+              className={classes.sponsorLogo}
+              style={{ width: 120 }}
+              src="/static/logos/logo1.jpg"
+            />
+            <img
+              className={classes.sponsorLogo}
+              style={{ width: 120 }}
+              src="/static/logos/logo2.jpg"
+            />
+            <img
+              className={classes.sponsorLogo}
+              style={{ width: 100 }}
+              src="/static/logos/logo3.jpg"
+            />
+            <img
+              className={classes.sponsorLogo}
+              style={{ width: 80 }}
+              src="/static/logos/logo4.jpg"
+            />
+            <img
+              style={{ width: 40 }}
+              className={classes.sponsorLogo}
+              src="/static/logos/logo5.jpg"
+            />
+          </div>
+        </footer>
         {/* End footer */}
       </React.Fragment>
     );
