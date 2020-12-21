@@ -25,7 +25,7 @@ import AlertsTableContent from "../components/user/AlertsTableContent";
 import UserProfileContent from "../components/user/UserProfileContent";
 import RasterImportPerusatContent from "../components/user/RasterImportPerusatContent";
 import JobsContent from "../components/user/JobsContent";
-import AppbarButtons from "../components/AppbarButtons";
+import AppBarButtons from "../components/AppBarButtons";
 import config from "../config";
 
 const { appName } = config;
@@ -313,7 +313,7 @@ class UserPanel extends React.Component {
                 {appName} - Panel de Usuario
               </Typography>
             </Link>
-            <AppbarButtons />
+            <AppBarButtons />
           </Toolbar>
         </AppBar>
         <Drawer
