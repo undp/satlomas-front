@@ -254,11 +254,11 @@ class Index extends React.Component {
               </Typography>
               <Typography className={classes.paperParagraph}>
                 La plataforma integra herramientas de código abierto para el
-                procesamiento de imágenes satelitales públicas como el Sentinel
-                -2 y PeruSat-1 con el objetivo de determinar las afectaciones
-                por cambio de uso del suelo en los ecosistemas de lomas en Lima.
-                Asimismo, monitorea la cobertura herbácea de los ecosistemas de
-                lomas a través de las imágenes Modis.
+                procesamiento de imágenes satelitales públicas como el
+                Sentinel-2 y PeruSat-1 con el objetivo de determinar las
+                afectaciones por cambio de uso del suelo en los ecosistemas de
+                lomas en Lima. Asimismo, monitorea la cobertura herbácea de los
+                ecosistemas de lomas a través de las imágenes Modis.
               </Typography>
               <Typography className={classes.paperParagraph}>
                 Además, cuenta con herramientas que tienen conexión a sensores
