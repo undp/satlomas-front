@@ -38,7 +38,7 @@ const typeBasePaths = {
   "vi-lomas-changes": "/vi-lomas",
 };
 
-const mapboxStyle = "mapbox/streets-v11";
+// const mapboxStyle = "mapbox/streets-v11";
 
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -723,8 +723,8 @@ class ChangesMap extends Component {
           className={classes.map}
           bounds={bounds}
           viewport={viewport}
+          // basemapStyle={mapboxStyle}
           onViewportChanged={this.handleMapViewportChanged}
-          mapboxStyle={mapboxStyle}
         >
           {scopeGeomsData && (
             <ScopePolygonsLayer

@@ -22,13 +22,22 @@ const styles = (_theme) => ({
   },
 });
 
+const OSMBasemap = () => {
+  return (
+    <Basemap
+      url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    />
+  );
+};
+
 const MapboxBasemap = ({ style }) => {
   const styleId = style || "mapbox/satellite-v8";
 
   return (
     <Basemap
-      url={`https://api.mapbox.com/styles/v1/${styleId}/tiles/{z}/{x}/{y}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`}
-      attribution='&amp;copy <a href="http://mapbox.com/copyright">Mapbox</a> contributors'
+      url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     />
   );
 };
@@ -43,7 +52,7 @@ class Map extends React.Component {
       classes,
       className,
       children,
-      mapboxStyle,
+      basemapStyle,
       stationMarkers,
       selectedMarker,
       boundPoints,
@@ -68,7 +77,7 @@ class Map extends React.Component {
         bounds={realBounds}
         {...extraProps}
       >
-        <MapboxBasemap style={mapboxStyle} />
+        <OSMBasemap />
         {children}
         {stationMarkers && (
           <StationMarkerList

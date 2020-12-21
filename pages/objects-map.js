@@ -30,7 +30,7 @@ import config from "../config";
 
 const { appName } = config;
 
-const mapboxStyle = "mapbox.streets";
+// const mapboxStyle = "mapbox/streets-v11";
 
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -635,8 +635,8 @@ class ObjectsMap extends Component {
           className={classes.map}
           bounds={bounds}
           viewport={viewport}
+          // basemapStyle={mapboxStyle}
           onViewportChanged={this.handleMapViewportChanged}
-          mapboxStyle={mapboxStyle}
         >
           {scopeGeomsData && <ScopePolygonsLayer
             type={selectedScopeType}
