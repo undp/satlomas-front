@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 import { withStyles } from "@material-ui/core/styles";
 import Head from "next/head";
 import {
@@ -24,9 +24,9 @@ import Dashboard from "../components/Dashboard";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
 import PeriodSlider from "../components/PeriodSlider";
-import LomasPolygonsLayer from "../components/LomasPolygonsLayer"
+import LomasPolygonsLayer from "../components/LomasPolygonsLayer";
 import LayersLegendExpansionPanel from "../components/LayersLegendExpansionPanel";
-import { KeyboardDatePicker } from "@material-ui/pickers"
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import moment from "moment";
 import config from "../config";
 
@@ -35,10 +35,10 @@ const { appName } = config;
 const allTypes = ["lomas-changes", "vi-lomas-changes"];
 const typeBasePaths = {
   "lomas-changes": "/lomas",
-  "vi-lomas-changes": "/vi-lomas"
-}
+  "vi-lomas-changes": "/vi-lomas",
+};
 
-const mapboxStyle = "mapbox.streets";
+const mapboxStyle = "mapbox/streets-v11";
 
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -50,7 +50,7 @@ const TileLayer = dynamic(() => import("../components/TileLayer"), {
 });
 
 const GeoJSON = dynamic(() => import("../components/GeoJSON"), {
-  ssr: false
+  ssr: false,
 });
 
 const styles = (theme) => ({
@@ -72,7 +72,7 @@ const styles = (theme) => ({
   },
   bottomRight: {
     bottom: theme.spacing(1),
-    right: theme.spacing(1)
+    right: theme.spacing(1),
   },
   fabContainer: {
     display: "block",
@@ -89,10 +89,10 @@ const styles = (theme) => ({
     margin: theme.spacing(1),
   },
   datePickerControl: {
-    width: '46%',
+    width: "46%",
   },
   periodDatePickerControl: {
-    width: '90%',
+    width: "90%",
   },
   periodPaper: {
     width: theme.spacing(20),
@@ -104,38 +104,38 @@ const styles = (theme) => ({
     width: 450,
   },
   searchControlContent: {
-    flexFlow: "column"
+    flexFlow: "column",
   },
   plotsControl: {
     width: 550,
   },
   plotsControlHeading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular
+    fontWeight: theme.typography.fontWeightRegular,
   },
 });
 
 const legendBySlug = {
   ndvi: {
     items: [
-      { color: '#1F6873', value: '0 - 0.2' },
-      { color: '#1FA188', value: '0.2 - 0.4' },
-      { color: '#70CF57', value: '0.4 - 0.6' },
-      { color: '#FDE725', value: '> 0.8' }
-    ]
-  }
+      { color: "#1F6873", value: "0 - 0.2" },
+      { color: "#1FA188", value: "0.2 - 0.4" },
+      { color: "#70CF57", value: "0.4 - 0.6" },
+      { color: "#FDE725", value: "> 0.8" },
+    ],
+  },
 };
 
 class ScopePolygonsLayer extends React.Component {
-  _style = feature => {
-    const { selectedScope } = this.props
-    const isSelected = feature.properties.id === selectedScope
+  _style = (feature) => {
+    const { selectedScope } = this.props;
+    const isSelected = feature.properties.id === selectedScope;
     const color = isSelected ? "#fff700" : "#ff7b00";
     return {
       color,
       fillColor: color,
       fillOpacity: 0.0,
-      weight: 2
+      weight: 2,
     };
   };
 
@@ -178,17 +178,23 @@ class SearchControl extends Component {
       onScopeSelectChange,
     } = this.props;
 
-    const scopeTypeItems = Object.values(scopeTypes).sort(st => st.type);
-    const scopeItems = scopeTypes[selectedScopeType].scopes.sort(sc => sc.name);
+    const scopeTypeItems = Object.values(scopeTypes).sort((st) => st.type);
+    const scopeItems = scopeTypes[selectedScopeType].scopes.sort(
+      (sc) => sc.name
+    );
 
     const selectedScopeTypeName = scopeTypes[selectedScopeType].name;
-    const selectedScopeName = scopeTypes[selectedScopeType].scopes.find(s => s.pk === selectedScope).name;
+    const selectedScopeName = scopeTypes[selectedScopeType].scopes.find(
+      (s) => s.pk === selectedScope
+    ).name;
 
     return (
       <div className={classes.searchControl}>
         <ExpansionPanel>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography>{selectedScopeTypeName} - {selectedScopeName}</Typography>
+            <Typography>
+              {selectedScopeTypeName} - {selectedScopeName}
+            </Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.searchControlContent}>
             <FormControl className={classes.formControl}>
@@ -197,20 +203,30 @@ class SearchControl extends Component {
                 value={selectedScopeType}
                 onChange={onScopeTypeSelectChange}
               >
-                {scopeTypeItems.map(sc => (<MenuItem key={sc.type} value={sc.type}>{sc.name}</MenuItem>))}
+                {scopeTypeItems.map((sc) => (
+                  <MenuItem key={sc.type} value={sc.type}>
+                    {sc.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="scope">Ámbito</InputLabel>
-              <Select
-                onChange={onScopeSelectChange}
-                value={selectedScope}
-              >
-                {scopeItems.map(sc => (<MenuItem key={sc.pk} value={sc.pk}>{sc.name}</MenuItem>))}
+              <Select onChange={onScopeSelectChange} value={selectedScope}>
+                {scopeItems.map((sc) => (
+                  <MenuItem key={sc.pk} value={sc.pk}>
+                    {sc.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <div>
-              <FormControl className={classnames(classes.formControl, classes.datePickerControl)}>
+              <FormControl
+                className={classnames(
+                  classes.formControl,
+                  classes.datePickerControl
+                )}
+              >
                 <KeyboardDatePicker
                   ampm={false}
                   autoOk={true}
@@ -224,7 +240,12 @@ class SearchControl extends Component {
                   onChange={onDateFromChange}
                 />
               </FormControl>
-              <FormControl className={classnames(classes.formControl, classes.datePickerControl)}>
+              <FormControl
+                className={classnames(
+                  classes.formControl,
+                  classes.datePickerControl
+                )}
+              >
                 <KeyboardDatePicker
                   ampm={false}
                   autoOk={true}
@@ -252,7 +273,11 @@ let PlotsControl = ({ classes, type, periods, scope, customScope }) => (
   <div className={classes.plotsControl}>
     <ExpansionPanel expanded={true}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography className={classes.plotsControlHeading}>{type === "vi-lomas-changes" ? "Variación del área de lomas" : "Cobertura de Loma Perdida"}</Typography>
+        <Typography className={classes.plotsControlHeading}>
+          {type === "vi-lomas-changes"
+            ? "Variación del área de lomas"
+            : "Cobertura de Loma Perdida"}
+        </Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Dashboard
@@ -293,12 +318,12 @@ class ChangesMap extends Component {
     layers: [],
     activeLayers: ["ndvi"],
     layersOpacity: {},
-    currentDate: null
+    currentDate: null,
   };
 
   static getInitialProps = async ({ query }) => ({
     namespacesRequired: ["common"],
-    query
+    query,
   });
 
   constructor(props) {
@@ -322,7 +347,7 @@ class ChangesMap extends Component {
       const selectedScope = scopeTypes[0].scopes[0].pk;
 
       // Convert array to an object by "type"
-      let scopeTypesObj = {}
+      let scopeTypesObj = {};
       for (let i = 0; i < scopeTypes.length; i++) {
         const sc = scopeTypes[i];
         scopeTypesObj[sc.type] = sc;
@@ -347,14 +372,16 @@ class ChangesMap extends Component {
     const basePath = typeBasePaths[type];
 
     try {
-      const response = await axios.get(buildApiUrl(`${basePath}/available-periods/`));
+      const response = await axios.get(
+        buildApiUrl(`${basePath}/available-periods/`)
+      );
       const periodsRaw = response.data;
       const firstDate = new Date(periodsRaw.first_date);
       const lastDate = new Date(periodsRaw.last_date);
-      const periods = periodsRaw.availables.map(p => ({
+      const periods = periodsRaw.availables.map((p) => ({
         id: p.id,
         from: new Date(p.date_from),
-        to: new Date(p.date_to)
+        to: new Date(p.date_to),
       }));
 
       // Select latest period by default
@@ -369,7 +396,6 @@ class ChangesMap extends Component {
         dateFrom: firstDate,
         dateTo: lastDate,
       });
-
     } catch (err) {
       console.error(err);
       this.props.enqueueSnackbar(`Failed to get available periods`, {
@@ -381,21 +407,23 @@ class ChangesMap extends Component {
   fetchAndBuildScopesGeoJSON = async (type) => {
     // console.log("Fetch scopes geometries for:", type);
     const res = {
-      "type": "FeatureCollection",
-      "features": []
+      type: "FeatureCollection",
+      features: [],
     };
 
     try {
-      const response = await axios.get(buildApiUrl("/scopes/"), { params: { type } });
+      const response = await axios.get(buildApiUrl("/scopes/"), {
+        params: { type },
+      });
       const scopes = response.data;
       // console.log("Scopes", response);
-      res['features'] = scopes.map(scope => ({
+      res["features"] = scopes.map((scope) => ({
         type: "Feature",
         geometry: scope.geom,
         properties: {
           id: scope.id,
           name: scope.name,
-        }
+        },
       }));
     } catch (err) {
       console.error(err);
@@ -405,7 +433,7 @@ class ChangesMap extends Component {
     }
 
     return res;
-  }
+  };
 
   fetchRasters = async () => {
     const { type, periods, selectedPeriodId } = this.state;
@@ -415,45 +443,55 @@ class ChangesMap extends Component {
     const params = {
       from: moment(from).utc().format("YYYY-MM-DD"),
       to: moment(to).utc().format("YYYY-MM-DD"),
-    }
+    };
 
     try {
-      const response = await axios.get(buildApiUrl(`${basePath}/rasters/`), { params });
+      const response = await axios.get(buildApiUrl(`${basePath}/rasters/`), {
+        params,
+      });
 
-      const layers = response.data.map(r => ({
+      const layers = response.data.map((r) => ({
         id: r.slug,
         name: r.name,
         tiles_url: r.tiles_url,
-        legend: legendBySlug[r.slug]
-      }))
+        legend: legendBySlug[r.slug],
+      }));
 
-      this.setState({ layers })
-
+      this.setState({ layers });
     } catch (err) {
       console.error(err);
-      this.props.enqueueSnackbar(`Failed to get rasters for currrently selected period`, {
-        variant: "error",
-      });
+      this.props.enqueueSnackbar(
+        `Failed to get rasters for currrently selected period`,
+        {
+          variant: "error",
+        }
+      );
     }
-  }
+  };
 
   componentDidMount() {
     this.fetchScopeTypes();
     this.fetchPeriods();
-  };
+  }
 
   componentDidUpdate = async (_prevProps, prevState) => {
     // If selectedScopeType changed, refresh geojson layer with scopes from scopetype
-    const { selectedScopeType, scopeGeomsByType, selectedPeriodId } = this.state;
+    const {
+      selectedScopeType,
+      scopeGeomsByType,
+      selectedPeriodId,
+    } = this.state;
 
     if (selectedScopeType !== prevState.selectedScopeType) {
       if (!scopeGeomsByType[selectedScopeType]) {
-        const geomData = await this.fetchAndBuildScopesGeoJSON(selectedScopeType);
+        const geomData = await this.fetchAndBuildScopesGeoJSON(
+          selectedScopeType
+        );
         this.setState({
           scopeGeomsByType: {
             ...prevState.scopeGeomsByType,
-            [selectedScopeType]: geomData
-          }
+            [selectedScopeType]: geomData,
+          },
         });
       }
     }
@@ -464,35 +502,35 @@ class ChangesMap extends Component {
     if (selectedPeriodId !== prevState.selectedPeriodId) {
       this.fetchRasters();
     }
-  }
+  };
 
   handleDateFromChange = (datetime) => {
     this.setState({ dateFrom: datetime });
   };
 
   handleDateToChange = (datetime) => {
-    this.setState({ dateTo: datetime })
+    this.setState({ dateTo: datetime });
   };
 
   handleScopeTypeSelectChange = (e) => {
-    const { scopeTypes } = this.state
+    const { scopeTypes } = this.state;
     const type = e.target.value;
 
     this.setState({
       selectedScopeType: type,
-      selectedScope: scopeTypes[type].scopes[0].pk
+      selectedScope: scopeTypes[type].scopes[0].pk,
     });
   };
 
   handleScopeSelectChange = (e) => {
     const scope = e.target.value;
 
-    this.setState({ selectedScope: scope })
+    this.setState({ selectedScope: scope });
   };
 
-  handleScopePolygonClick = scope => {
-    this.setState({ selectedScope: scope })
-  }
+  handleScopePolygonClick = (scope) => {
+    this.setState({ selectedScope: scope });
+  };
 
   handleMapViewportChanged = (viewport) => {
     this.setState({ viewport });
@@ -502,40 +540,40 @@ class ChangesMap extends Component {
     this.setState((prevState) => ({
       viewport: {
         ...prevState.viewport,
-        zoom: Math.min(prevState.viewport.zoom + 1, 21)
-      }
-    }))
-  }
+        zoom: Math.min(prevState.viewport.zoom + 1, 21),
+      },
+    }));
+  };
 
   handleZoomOutClick = () => {
     this.setState((prevState) => ({
       viewport: {
         ...prevState.viewport,
-        zoom: Math.max(prevState.viewport.zoom - 1, 1)
-      }
-    }))
-  }
+        zoom: Math.max(prevState.viewport.zoom - 1, 1),
+      },
+    }));
+  };
 
-  handleToggleLayer = layer => {
+  handleToggleLayer = (layer) => {
     if (!layer) return; // just in case
-    this.setState(prevState => ({
-      activeLayers: this._addOrRemove(prevState.activeLayers, layer.id)
+    this.setState((prevState) => ({
+      activeLayers: this._addOrRemove(prevState.activeLayers, layer.id),
     }));
   };
 
   _addOrRemove(array, item) {
     const include = array.includes(item);
     return include
-      ? array.filter(arrayItem => arrayItem !== item)
+      ? array.filter((arrayItem) => arrayItem !== item)
       : [...array, item];
   }
 
   handleOpacityChange = (id, value) => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       layersOpacity: {
         ...prevState.layersOpacity,
-        [id]: value
-      }
+        [id]: value,
+      },
     }));
   };
 
@@ -552,13 +590,13 @@ class ChangesMap extends Component {
   handleDisabledDate = (datetime) => {
     const { periods } = this.state;
     var disable = true;
-    periods.forEach(p => {     
-      if (p.to.setHours(0,0,0,0) == datetime) {
+    periods.forEach((p) => {
+      if (p.to.setHours(0, 0, 0, 0) == datetime) {
         disable = false;
       }
     });
     return disable;
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -581,17 +619,21 @@ class ChangesMap extends Component {
       layers,
       activeLayers,
       layersOpacity,
-      currentDate
+      currentDate,
     } = this.state;
 
     const loaded = scopesLoaded && periodsLoaded;
     const scopeGeomsData = scopeGeomsByType[selectedScopeType];
-    const filteredPeriods = periods.filter(p => (p.from >= dateFrom && p.to <= dateTo));
-    const visibleLayers = layers.filter(layer => activeLayers.includes(layer.id)).map((layer, i) => ({
-      ...layer,
-      zIndex: layers.length - i,
-      opacity: (layersOpacity[layer.id] || 100) / 100
-    }));
+    const filteredPeriods = periods.filter(
+      (p) => p.from >= dateFrom && p.to <= dateTo
+    );
+    const visibleLayers = layers
+      .filter((layer) => activeLayers.includes(layer.id))
+      .map((layer, i) => ({
+        ...layer,
+        zIndex: layers.length - i,
+        opacity: (layersOpacity[layer.id] || 100) / 100,
+      }));
 
     var periodDate = dateTo;
     if (currentDate) {
@@ -599,9 +641,7 @@ class ChangesMap extends Component {
     }
 
     const layersWithLegend = layers.filter(
-      layer =>
-        activeLayers.includes(layer.id) &&
-        layer.name
+      (layer) => activeLayers.includes(layer.id) && layer.name
     );
 
     return (
@@ -613,26 +653,29 @@ class ChangesMap extends Component {
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
         </Head>
-        {loaded && (<div className={classnames(classes.controlGroup, classes.topLeft)}>
-          <SearchControl
-            scopeTypes={scopeTypes}
-            selectedScopeType={selectedScopeType}
-            selectedScope={selectedScope}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-            firstDate={firstDate}
-            lastDate={lastDate}
-            onDateFromChange={this.handleDateFromChange}
-            onDateToChange={this.handleDateToChange}
-            onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
-            onScopeSelectChange={this.handleScopeSelectChange}
-          />
-          <LayersLegendExpansionPanel layers={layersWithLegend} />
-        </div>)}
+        {loaded && (
+          <div className={classnames(classes.controlGroup, classes.topLeft)}>
+            <SearchControl
+              scopeTypes={scopeTypes}
+              selectedScopeType={selectedScopeType}
+              selectedScope={selectedScope}
+              dateFrom={dateFrom}
+              dateTo={dateTo}
+              firstDate={firstDate}
+              lastDate={lastDate}
+              onDateFromChange={this.handleDateFromChange}
+              onDateToChange={this.handleDateToChange}
+              onScopeTypeSelectChange={this.handleScopeTypeSelectChange}
+              onScopeSelectChange={this.handleScopeSelectChange}
+            />
+            <LayersLegendExpansionPanel layers={layersWithLegend} />
+          </div>
+        )}
         <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
           <ZoomControl
             onZoomInClick={this.handleZoomInClick}
-            onZoomOutClick={this.handleZoomOutClick} />
+            onZoomOutClick={this.handleZoomOutClick}
+          />
           <LayersControl
             layers={layers}
             activeLayers={activeLayers}
@@ -640,23 +683,31 @@ class ChangesMap extends Component {
             onToggle={this.handleToggleLayer}
             onOpacityChange={this.handleOpacityChange}
           />
-          {filteredPeriods.length > 0 && 
-          <div className={classes.periodPaper}><Paper>
-            <FormControl className={classnames(classes.formControl, classes.periodDatePickerControl)}>
-              <KeyboardDatePicker
-                ampm={false}
-                autoOk={true}
-                variant="inline"
-                format="YYYY-MM-DD"
-                id="date-period"
-                minDate={dateFrom}
-                maxDate={dateTo}
-                value={periodDate}
-                shouldDisableDate={this.handleDisabledDate}
-                onChange={this.onPeriodDateChange}
-              />
-            </FormControl>
-          </Paper></div>}
+          {filteredPeriods.length > 0 && (
+            <div className={classes.periodPaper}>
+              <Paper>
+                <FormControl
+                  className={classnames(
+                    classes.formControl,
+                    classes.periodDatePickerControl
+                  )}
+                >
+                  <KeyboardDatePicker
+                    ampm={false}
+                    autoOk={true}
+                    variant="inline"
+                    format="YYYY-MM-DD"
+                    id="date-period"
+                    minDate={dateFrom}
+                    maxDate={dateTo}
+                    value={periodDate}
+                    shouldDisableDate={this.handleDisabledDate}
+                    onChange={this.onPeriodDateChange}
+                  />
+                </FormControl>
+              </Paper>
+            </div>
+          )}
         </div>
         {loaded && (
           <div className={classnames(classes.controlGroup, classes.topRight)}>
@@ -675,23 +726,27 @@ class ChangesMap extends Component {
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
         >
-          {scopeGeomsData && <ScopePolygonsLayer
-            type={selectedScopeType}
-            selectedScope={selectedScope}
-            data={scopeGeomsData}
-            onClick={this.handleScopePolygonClick}
-          />}
+          {scopeGeomsData && (
+            <ScopePolygonsLayer
+              type={selectedScopeType}
+              selectedScope={selectedScope}
+              data={scopeGeomsData}
+              onClick={this.handleScopePolygonClick}
+            />
+          )}
           <LomasPolygonsLayer />
-          {visibleLayers.map(layer => (<TileLayer
-            key={layer.id}
-            type="raster"
-            url={layer.tiles_url}
-            maxNativeZoom={type === "vi-lomas-changes" ? 13 : 14}
-            opacity={layer.opacity}
-            zIndex={layer.zIndex}
-          />))}
+          {visibleLayers.map((layer) => (
+            <TileLayer
+              key={layer.id}
+              type="raster"
+              url={layer.tiles_url}
+              maxNativeZoom={type === "vi-lomas-changes" ? 13 : 14}
+              opacity={layer.opacity}
+              zIndex={layer.zIndex}
+            />
+          ))}
         </Map>
-      </div >
+      </div>
     );
   }
 }

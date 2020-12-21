@@ -22,15 +22,12 @@ const styles = (_theme) => ({
   },
 });
 
-// FIXME Move this to config/
-const MAPBOX_TOKEN =
-  "pk.eyJ1IjoiZ2Vzc2ljYTExMTIiLCJhIjoiY2pvZnYwYmV0MDhrYjNxanRpc2E3enhydiJ9.fawTIAVKzqpOE41wkVw1Zw";
-
 const MapboxBasemap = ({ style }) => {
-  const styleId = style || "mapbox.satellite";
+  const styleId = style || "mapbox/satellite-v8";
+
   return (
     <Basemap
-      url={`https://api.tiles.mapbox.com/v4/${styleId}/{z}/{x}/{y}.png?access_token=${MAPBOX_TOKEN}`}
+      url={`https://api.mapbox.com/styles/v1/${styleId}/tiles/{z}/{x}/{y}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`}
       attribution='&amp;copy <a href="http://mapbox.com/copyright">Mapbox</a> contributors'
     />
   );
