@@ -217,7 +217,7 @@ class ProfileMenuButton extends React.Component {
 ProfileMenuButton = withStyles(styles)(ProfileMenuButton);
 ProfileMenuButton = withTranslation(["me", "common"])(ProfileMenuButton);
 
-class AppbarButtons extends React.Component {
+class AppBarButtons extends React.Component {
   state = {
     loading: true,
     username: null,
@@ -283,11 +283,11 @@ class AppbarButtons extends React.Component {
   }
 }
 
-AppbarButtons.propTypes = {
+AppBarButtons.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-AppbarButtons = withStyles(styles)(AppbarButtons);
-AppbarButtons = withSnackbar(AppbarButtons);
+AppBarButtons = withStyles(styles)(AppBarButtons);
+AppBarButtons = withSnackbar(AppBarButtons);
 
-export default AppbarButtons;
+export default AppBarButtons;

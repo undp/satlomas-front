@@ -5,20 +5,13 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import classnames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import { withTranslation } from "../../i18n";
 import { buildApiUrl } from "../../utils/api";
 import { withSnackbar } from "notistack";
 import LoadingProgress from "../../components/LoadingProgress";
 import MapDrawer from "../../components/MapDrawer";
 import SearchFab from "../../components/SearchFab";
-import SearchField from "../../components/SearchField";
 import config from "../../config";
 
 const { appName } = config;
@@ -103,7 +96,7 @@ class StationsMap extends Component {
     try {
       const response = await axios.get(buildApiUrl(`/stations/stations/`), {
         params,
-        headers
+        headers,
       });
       return response.data || [];
     } catch (err) {
@@ -115,13 +108,15 @@ class StationsMap extends Component {
   }
 
   filterStations(name) {
-    return this.state.stations.filter(o => o['name'].toLowerCase().includes(name.toLowerCase()));
+    return this.state.stations.filter((o) =>
+      o["name"].toLowerCase().includes(name.toLowerCase())
+    );
   }
 
   componentDidMount = async () => {
     const stations = await this.fetchStations();
     this.setState({ stations, filteredStations: stations });
-  }
+  };
 
   componentDidUpdate(_prevProps, prevState) {
     const st = this.state.selectedStation;
@@ -144,9 +139,9 @@ class StationsMap extends Component {
     const filteredStations = this.filterStations(value);
     this.setState({
       searchFieldValue: value,
-      filteredStations
+      filteredStations,
     });
-  }
+  };
 
   handleStationSelect = (station) => {
     this.setState({

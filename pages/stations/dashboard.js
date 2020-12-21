@@ -32,7 +32,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../../utils/api";
 import { isDate } from "../../utils/date";
-import AppbarButtons from "../../components/AppbarButtons";
+import AppBarButtons from "../../components/AppBarButtons";
 import config from "../../config";
 
 const { stationParameters, appName, refreshIntervalMs } = config;
@@ -417,7 +417,7 @@ class StationsDashboard extends React.Component {
                 }
               />
             </div>
-            <AppbarButtons />
+            <AppBarButtons />
           </Toolbar>
         </AppBar>
         <main>

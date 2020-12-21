@@ -2,11 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import { withTranslation, i18n } from "../i18n";
+import { withTranslation } from "../i18n";
 import Head from "next/head";
 import Link from "next/link";
 import Router from "next/router";
-import AppbarButtons from "../components/AppbarButtons";
+import AppBarButtons from "../components/AppBarButtons";
+import AppBarLogoImage from "../components/AppBarLogoImage";
 import config from "../config";
 
 const { appName } = config;
@@ -195,12 +196,10 @@ class Index extends React.Component {
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             {/* <CameraIcon className={classes.icon} /> */}
-            <Typography variant="h6" color="inherit" noWrap>
-              {appName}
-            </Typography>
+            <AppBarLogoImage />
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
-              <AppbarButtons />
+              <AppBarButtons />
             </div>
           </Toolbar>
         </AppBar>

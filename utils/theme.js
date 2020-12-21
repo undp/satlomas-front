@@ -1,5 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
-import { red, teal, pink } from "@material-ui/core/colors";
+import { red, pink } from "@material-ui/core/colors";
 import { esES } from "@material-ui/core/locale";
 
 // Create a theme instance.
