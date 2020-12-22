@@ -58,7 +58,7 @@ let RasterTable = (props) => {
             {rows.map((row) => (
               <TableRow key={row.id + row.type}>
                 <TableCell>{row.slug}</TableCell>
-                <TableCell>{row.period_readeable}</TableCell>
+                <TableCell>{row.periodReadeable}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>
                   <Moment locale={locale} fromNow>
@@ -108,8 +108,7 @@ RasterTable = withStyles(styles)(RasterTable);
 RasterTable = withTranslation(["me", "common"])(RasterTable);
 
 const typeBasePaths = {
-  lomas: "/lomas",
-  "vi-lomas": "/vi-lomas",
+  eoSensors: "/eo-sensors",
 };
 
 class RasterListContent extends React.Component {
@@ -128,30 +127,17 @@ class RasterListContent extends React.Component {
   async fetchData() {
     const { token } = this.props;
 
-    const vi_lomas_response = await axios.get(
-      buildApiUrl("/vi-lomas/rasters"),
-      { headers: { "Accept-Language": i18n.language, Authorization: token } }
-    );
-    let vi_lomas_rasters = vi_lomas_response.data;
-    for (var i = 0; i < vi_lomas_rasters.length; i++) {
-      vi_lomas_rasters[i]["type"] = "vi-lomas";
-      vi_lomas_rasters[i][
-        "period_readeable"
-      ] = `${vi_lomas_rasters[i]["period"]["date_from"]} - ${vi_lomas_rasters[i]["period"]["date_to"]}`;
-    }
-
-    const lomas_response = await axios.get(buildApiUrl("/lomas/rasters"), {
+    const response = await axios.get(buildApiUrl("/eo-sensors/rasters"), {
       headers: { "Accept-Language": i18n.language, Authorization: token },
     });
-    let lomas_rasters = lomas_response.data;
-    for (var i = 0; i < lomas_rasters.length; i++) {
-      lomas_rasters[i]["type"] = "lomas";
-      lomas_rasters[i][
-        "period_readeable"
-      ] = `${lomas_rasters[i]["period"]["date_from"]} - ${lomas_rasters[i]["period"]["date_to"]}`;
+    let result = response.data;
+    for (var i = 0; i < result.length; i++) {
+      result[i]["type"] = "eo-sensors";
+      result[i][
+        "periodReadeable"
+      ] = `${result[i]["period"]["date_from"]} - ${result[i]["period"]["date_to"]}`;
     }
 
-    let result = vi_lomas_rasters.concat(lomas_rasters);
     result.sort(function (a, b) {
       if (a["period"]["date_from"] > ["period"]["date_from"]) {
         return -1;

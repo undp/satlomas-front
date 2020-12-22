@@ -10,8 +10,7 @@ import axios from "axios";
 import { buildApiUrl } from "../utils/api";
 
 const typeBasePaths = {
-  "lomas-changes": "/lomas",
-  "vi-lomas-changes": "/vi-lomas",
+  "eo-sensors": "/eo-sensors",
 };
 
 const styles = (theme) => ({
@@ -41,8 +40,7 @@ class Dashboard extends React.Component {
 
   getTimeSeries = async () => {
     const { type, periods, scope } = this.props;
-    //const basePath = typeBasePaths[type]
-    const basePath = "/vi-lomas";
+    const basePath = typeBasePaths[type]
 
     this.setState({ loading: true });
 
