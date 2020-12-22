@@ -107,6 +107,9 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  footerLogos: {
+    textAlign: "right",
+  },
   toolbarButtons: {
     marginLeft: "auto",
   },
@@ -348,6 +351,22 @@ class Index extends React.Component {
               className={classes.sponsorLogo}
               src="/static/logos/logo5.jpg"
             />
+          </div>
+          <div className={classes.footerLogos}>
+            <a href="//github.com/undp/satlomas-front" target="_blank">
+              <img
+                style={{ height: 20 }}
+                className={classes.sponsorLogo}
+                src="/static/github.jpg"
+              />
+            </a>
+            <a href="https://geolomas.maps.arcgis.com/home/" target="_blank">
+              <img
+                style={{ height: 20 }}
+                className={classes.sponsorLogo}
+                src="/static/geolomas.jpg"
+              />
+            </a>
           </div>
         </footer>
         {/* End footer */}
