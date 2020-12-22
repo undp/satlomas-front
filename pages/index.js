@@ -131,7 +131,14 @@ const cards = [
     description:
       "Mapa de cobertura herbácea de las lomas de Lima, basado en el producto VI del sensor MODIS NDVI, actualizado mensualmente.",
     image: "/static/thumbs/changes-map-vi-lomas.jpg",
-    buttons: [{ name: "Ver", href: "/maps/vi-lomas-changes" }],
+    buttons: [
+      { name: "App", href: "/maps/vi-lomas-changes" },
+      {
+        name: "Info",
+        href:
+          "https://dymaxionlabs.github.io/satlomas-docs/methodology/#modelo-de-deteccion-de-vegetacion",
+      },
+    ],
   },
   {
     key: "changes-map",
@@ -139,7 +146,14 @@ const cards = [
     description:
       "Mapa de pérdida de cobertura de lomas basado en las imágenes de los satélites Sentinel-2 y PeruSat-1, actualizado mensualmente.",
     image: "/static/thumbs/changes-map-lomas.jpg",
-    buttons: [{ name: "Ver", href: "/maps/lomas-changes" }],
+    buttons: [
+      { name: "App", href: "/maps/lomas-changes" },
+      {
+        name: "Info",
+        href:
+          "https://dymaxionlabs.github.io/satlomas-docs/methodology/#modelo-de-clasificacion-de-cobertura-del-suelo-para-invasiones",
+      },
+    ],
   },
   {
     key: "stations-map",
@@ -147,7 +161,13 @@ const cards = [
     description:
       "Mapa con las estaciones meteorológicas instaladas en las lomas de Lima.",
     image: "/static/thumbs/stations-map.jpg",
-    buttons: [{ name: "Ver", href: "/stations/map" }],
+    buttons: [
+      { name: "App", href: "/stations/map" },
+      {
+        name: "Info",
+        href: "https://dymaxionlabs.github.io/satlomas-docs/usage/#mapa",
+      },
+    ],
   },
   {
     key: "station-dashboard",
@@ -314,17 +334,6 @@ class Index extends React.Component {
         </main>
         {/* Footer */}
         <footer className={classes.footer}>
-          {/* <Typography variant="h6" align="center" gutterBottom>
-            Footer
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            align="center"
-            color="textSecondary"
-            component="p"
-          >
-            Something here to give the footer a purpose!
-          </Typography> */}
           <div className={classes.sponsorLogos}>
             <img
               className={classes.sponsorLogo}
