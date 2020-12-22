@@ -84,13 +84,16 @@
     }
   },
   "parameters": {
-    "humidity": "Relative Humidity (%)",
-    "pm25": "Particulate Matter (PM2.5)",
-    "precipitation": "Precipitations (fog)",
-    "pressure": "Atmospheric Pressure (mbar)",
+    "PM10_0": "Particulate Matter (PM2.5)",
+    "PM1_0": "Particulate Matter (PM2.5)",
+    "PM2_5": "Particulate Matter (PM2.5)",
+    "PM4_0": "Particulate Matter (PM2.5)",
+    "altitude": "Altitude (MSL)",
+    "internal_temperature": "Internal Temperature (\u00b0C)",
+    "pressure": "Atmospheric Pressure (hPa)",
+    "relative_humidity": "Relative Humidity (%)",
     "temperature": "Temperature (\u00b0C)",
-    "wind_direction": "Wind Direction (degrees)",
-    "wind_speed": "Wind Speed (m/s)"
+    "tip_count": "Tipping Bucket Count"
   },
   "requests": {
     "area_km2": "Area (km\u00b2)",
