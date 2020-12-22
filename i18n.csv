@@ -204,13 +204,13 @@ me,home.api_descrip2,y podras integrar nuestra api a tu código python. Para mas
 me,home.project_title,Proyectos,Project
 me,home.project_descrip,El identificador del proyecto te será de utilidad para utilizar nuestra API ,The project identifier will be useful to use our API
 me,parameters.altitude,Altitud (msnm),Altitude (MSL)
-me,parameters.temperature,Temperatura de Ambiente (°C),Temperature (°C)
-me,parameters.pressure,Presión Atmosférica (hPa),Atmospheric Pressure (hPa)
+me,parameters.ambient_temperature,Temperatura de Ambiente (°C),Temperature (°C)
+me,parameters.atmospheric_pressure,Presión Atmosférica (hPa),Atmospheric Pressure (hPa)
 me,parameters.internal_temperature,Temperatura Interna (°C),Internal Temperature (°C)
-me,parameters.PM1_0,Material Particulado (PM2.5),Particulate Matter (PM2.5)
+me,parameters.PM1_0,Material Particulado (PM1.0),Particulate Matter (PM1.0)
 me,parameters.PM2_5,Material Particulado (PM2.5),Particulate Matter (PM2.5)
-me,parameters.PM4_0,Material Particulado (PM2.5),Particulate Matter (PM2.5)
-me,parameters.PM10_0,Material Particulado (PM2.5),Particulate Matter (PM2.5)
+me,parameters.PM4_0,Material Particulado (PM4.0),Particulate Matter (PM4.0)
+me,parameters.PM10_0,Material Particulado (PM10.0),Particulate Matter (PM10.0)
 me,parameters.relative_humidity,Humedad Relativa (%),Relative Humidity (%)
 me,parameters.tip_count,Conteo de Tipping Bucket,Tipping Bucket Count
 me,measurement_content_type.vi_lomas_changes,Vegetación de Lomas,Lomas Vegetation

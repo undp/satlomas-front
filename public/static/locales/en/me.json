@@ -84,15 +84,15 @@
     }
   },
   "parameters": {
-    "PM10_0": "Particulate Matter (PM2.5)",
-    "PM1_0": "Particulate Matter (PM2.5)",
+    "PM10_0": "Particulate Matter (PM10.0)",
+    "PM1_0": "Particulate Matter (PM1.0)",
     "PM2_5": "Particulate Matter (PM2.5)",
-    "PM4_0": "Particulate Matter (PM2.5)",
+    "PM4_0": "Particulate Matter (PM4.0)",
     "altitude": "Altitude (MSL)",
+    "ambient_temperature": "Temperature (\u00b0C)",
+    "atmospheric_pressure": "Atmospheric Pressure (hPa)",
     "internal_temperature": "Internal Temperature (\u00b0C)",
-    "pressure": "Atmospheric Pressure (hPa)",
     "relative_humidity": "Relative Humidity (%)",
-    "temperature": "Temperature (\u00b0C)",
     "tip_count": "Tipping Bucket Count"
   },
   "requests": {
