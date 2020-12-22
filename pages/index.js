@@ -126,7 +126,7 @@ const cards = [
     key: "green-map",
     title: "Cobertura verde",
     description:
-      "Mapa de cobertura de vegetación de Lomas, basado en el producto VI de MODIS, actualizado mensualmente.",
+      "Mapa de cobertura herbácea de las lomas de Lima, basado en el producto VI del sensor MODIS NDVI, actualizado mensualmente.",
     image: "/static/thumbs/changes-map-vi-lomas.jpg",
     buttons: [{ name: "Ver", href: "/maps/vi-lomas-changes" }],
   },
@@ -134,7 +134,7 @@ const cards = [
     key: "changes-map",
     title: "Cobertura de Loma perdida",
     description:
-      "Mapa de cobertura de Loma perdida, basado en las imágenes de los satélites Sentinel-1 y Sentinel-2, actualizado mensualmente.",
+      "Mapa de pérdida de cobertura de lomas basado en las imágenes de los satélites Sentinel-2 y PeruSat-1, actualizado mensualmente.",
     image: "/static/thumbs/changes-map-lomas.jpg",
     buttons: [{ name: "Ver", href: "/maps/lomas-changes" }],
   },
@@ -142,7 +142,7 @@ const cards = [
     key: "stations-map",
     title: "Mapa de Estaciones",
     description:
-      "Mapa con las estaciones meteorológicas instaladas actualmente",
+      "Mapa con las estaciones meteorológicas instaladas en las lomas de Lima.",
     image: "/static/thumbs/stations-map.jpg",
     buttons: [{ name: "Ver", href: "/stations/map" }],
   },
@@ -150,7 +150,7 @@ const cards = [
     key: "station-dashboard",
     title: "Dashboard de Estaciones",
     description:
-      "Dashboard de las estaciones meteorológicas, con información actualizada en tiempo real.",
+      "Dashboard de las estaciones meteorológicas con información actualizada a tiempo real.",
     image: "/static/thumbs/stations-dashboard.jpg",
     buttons: [
       { name: "Dashboard", href: "/stations/dashboard" },
@@ -262,7 +262,7 @@ class Index extends React.Component {
               <Typography className={classes.paperParagraph}>
                 Además, cuenta con herramientas que tienen conexión a sensores
                 IoT en tiempo real a fin medir y sistematizar la información de
-                variables meteorológicas de las lomas de Lima
+                variables meteorológicas de las lomas de Lima.
               </Typography>
             </Paper>
 
