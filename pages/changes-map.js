@@ -372,9 +372,9 @@ class ChangesMap extends Component {
         { params: { source: sourcesByType[type] } }
       );
       const datesRaw = response.data;
-      const firstDate = new Date(datesRaw.first_date);
-      const lastDate = new Date(datesRaw.last_date);
-      const dates = datesRaw.availables.sort().map(d => new Date(d));
+      const firstDate = moment(datesRaw.first_date);
+      const lastDate = moment(datesRaw.last_date);
+      const dates = datesRaw.availables.sort().map(d => moment(d));
 
       console.log("Dates:", dates);
       console.log("First date:", firstDate);
@@ -581,19 +581,14 @@ class ChangesMap extends Component {
   handleDateChange = (datetime) => {
     const { dates } = this.state;
     const selectedDateIdx = dates.findIndex(d => moment(d).format('YYYY-MM-DD') == datetime.format("YYYY-MM-DD"));
-    console.log("Current date:", datetime, "idx:", selectedDateIdx);
-    if (selectedDateIdx >= 0) this.setState({ selectedDateIdx, currentDate: new Date(datetime) });
+    const currentDate = dates[selectedDateIdx];
+    console.log("Current date:", currentDate, "idx:", selectedDateIdx);
+    if (selectedDateIdx >= 0) this.setState({ selectedDateIdx, currentDate });
   };
 
   handleDisabledDate = (datetime) => {
     const { dates } = this.state;
-    var disable = true;
-    dates.forEach((date) => {
-      if (date.setHours(0, 0, 0, 0) == datetime) {
-        disable = false;
-      }
-    });
-    return disable;
+    return !dates.some(date => date.isSame(datetime));
   };
 
   render() {
