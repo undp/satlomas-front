@@ -49,14 +49,19 @@ class Dashboard extends React.Component {
     if (scope) {
       const params = {
         source: sourcesByType[type],
+        kind: "V",
         scope,
-        date_from: moment(dateFrom).format(),
-        date_to: moment(dateTo).format(),
+        date_from: moment(dateFrom).format("YYYY-MM-DD"),
+        date_to: moment(dateTo).format("YYYY-MM-DD"),
       };
+
       try {
+        console.log("params:", params);
         const response = await axios.get(buildApiUrl(`/eo-sensors/coverage/`), {
           params,
         });
+        const valuesRaw = response.data;
+        console.log("valuesRaw:", valuesRaw);
         const values = response.data.values.map((value) => ({
           ...value,
           ym: moment(value.date).format("YYYY-MM"),

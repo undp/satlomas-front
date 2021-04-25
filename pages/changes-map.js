@@ -702,12 +702,12 @@ class ChangesMap extends Component {
         </div>
         {loaded && (
           <div className={classnames(classes.controlGroup, classes.topRight)}>
-            {/* <PlotsControl
+            <PlotsControl
               type={type}
               dates={filteredDates}
               scope={selectedScope}
               customScope={customScope}
-            /> */}
+            />
           </div>
         )}
         <Map
