@@ -33,12 +33,8 @@ import config from "../config";
 const { appName } = config;
 
 const allTypes = ["lomas-changes", "vi-lomas-changes"];
-const typeBasePaths = {
-  "lomas-changes": "/lomas",
-  "vi-lomas-changes": "/vi-lomas",
-};
-
-// const mapboxStyle = "mapbox/streets-v11";
+const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" }
+const maxNativeZoomByType = { "lomas-changes": 14, "vi-lomas-changes": 13 }
 
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -269,7 +265,7 @@ class SearchControl extends Component {
 
 SearchControl = withStyles(styles)(SearchControl);
 
-let PlotsControl = ({ classes, type, periods, scope, customScope }) => (
+let PlotsControl = ({ classes, type, dates, scope, customScope }) => (
   <div className={classes.plotsControl}>
     <ExpansionPanel expanded={true}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -282,7 +278,7 @@ let PlotsControl = ({ classes, type, periods, scope, customScope }) => (
       <ExpansionPanelDetails>
         <Dashboard
           type={type}
-          periods={periods}
+          dates={dates}
           scope={scope}
           customScope={customScope}
         />
@@ -307,14 +303,14 @@ class ChangesMap extends Component {
     selectedScopeType: null,
     selectedScope: null,
     scopeGeomsByType: {},
-    periods: [],
-    periodsLoaded: false,
+    dates: [],
+    datesLoaded: false,
     firstDate: null,
     lastDate: null,
     dateFrom: null,
     dateTo: null,
     customScope: null,
-    selectedPeriodId: null,
+    selectedDateIdx: null,
     layers: [],
     activeLayers: ["ndvi"],
     layersOpacity: {},
@@ -341,7 +337,7 @@ class ChangesMap extends Component {
     try {
       const response = await axios.get(buildApiUrl("/scopes/types/"), {});
       const scopeTypes = response.data;
-      // console.log("ScopeTypes:", scopeTypes);
+      console.log("ScopeTypes:", scopeTypes);
 
       const selectedScopeType = scopeTypes[0].type;
       const selectedScope = scopeTypes[0].scopes[0].pk;
@@ -367,30 +363,32 @@ class ChangesMap extends Component {
     }
   };
 
-  fetchPeriods = async () => {
+  fetchDates = async () => {
     const { type } = this.state;
-    const basePath = typeBasePaths[type];
 
     try {
       const response = await axios.get(
-        buildApiUrl(`${basePath}/available-periods/`)
+        buildApiUrl(`/eo-sensors/available-dates/`),
+        { params: { source: sourcesByType[type] } }
       );
-      const periodsRaw = response.data;
-      const firstDate = new Date(periodsRaw.first_date);
-      const lastDate = new Date(periodsRaw.last_date);
-      const periods = periodsRaw.availables.map((p) => ({
-        id: p.id,
-        from: new Date(p.date_from),
-        to: new Date(p.date_to),
-      }));
+      const datesRaw = response.data;
+      const firstDate = new Date(datesRaw.first_date);
+      const lastDate = new Date(datesRaw.last_date);
+      const dates = datesRaw.availables.sort().map(d => new Date(d));
+
+      console.log("Dates:", dates);
+      console.log("First date:", firstDate);
+      console.log("Last date:", firstDate);
 
       // Select latest period by default
-      const selectedPeriodId = periods.length > 0 ? periods.length - 1 : null;
+      const selectedDateIdx = dates.length > 0 ? dates.length - 1 : null;
+      const currentDate = dates[selectedDateIdx];
 
       await this.setState({
-        periods,
-        selectedPeriodId,
-        periodsLoaded: true,
+        dates,
+        selectedDateIdx,
+        currentDate,
+        datesLoaded: true,
         firstDate,
         lastDate,
         dateFrom: firstDate,
@@ -398,7 +396,7 @@ class ChangesMap extends Component {
       });
     } catch (err) {
       console.error(err);
-      this.props.enqueueSnackbar(`Failed to get available periods`, {
+      this.props.enqueueSnackbar(`Failed to get available dates`, {
         variant: "error",
       });
     }
@@ -436,21 +434,24 @@ class ChangesMap extends Component {
   };
 
   fetchRasters = async () => {
-    const { type, periods, selectedPeriodId } = this.state;
-    const basePath = typeBasePaths[type];
+    const { type, dates, selectedDateIdx } = this.state;
+    const date = dates[selectedDateIdx];
 
-    const { from, to } = periods[selectedPeriodId];
     const params = {
-      from: moment(from).utc().format("YYYY-MM-DD"),
-      to: moment(to).utc().format("YYYY-MM-DD"),
+      source: sourcesByType[type],
+      from: moment(date).utc().format("YYYY-MM-DD"),
+      to: moment(date).utc().format("YYYY-MM-DD"),
     };
 
     try {
-      const response = await axios.get(buildApiUrl(`${basePath}/rasters/`), {
+      const response = await axios.get(buildApiUrl(`/eo-sensors/rasters/`), {
         params,
       });
 
-      const layers = response.data.map((r) => ({
+      const layersRaw = response.data;
+      console.log("Layers:", layersRaw);
+
+      const layers = layersRaw.map((r) => ({
         id: r.slug,
         name: r.name,
         tiles_url: r.tiles_url,
@@ -461,7 +462,7 @@ class ChangesMap extends Component {
     } catch (err) {
       console.error(err);
       this.props.enqueueSnackbar(
-        `Failed to get rasters for currrently selected period`,
+        `Failed to get rasters for currrently selected date`,
         {
           variant: "error",
         }
@@ -471,7 +472,7 @@ class ChangesMap extends Component {
 
   componentDidMount() {
     this.fetchScopeTypes();
-    this.fetchPeriods();
+    this.fetchDates();
   }
 
   componentDidUpdate = async (_prevProps, prevState) => {
@@ -479,7 +480,7 @@ class ChangesMap extends Component {
     const {
       selectedScopeType,
       scopeGeomsByType,
-      selectedPeriodId,
+      selectedDateIdx,
     } = this.state;
 
     if (selectedScopeType !== prevState.selectedScopeType) {
@@ -498,8 +499,8 @@ class ChangesMap extends Component {
 
     // TODO If selectedScope changed, highlight new scope and center map
 
-    // TODO If selectedPeriodId changed, fetch rasters from period and update "layers"
-    if (selectedPeriodId !== prevState.selectedPeriodId) {
+    // TODO If selectedDateIdx changed, fetch rasters from date and update "layers"
+    if (selectedDateIdx !== prevState.selectedDateIdx) {
       this.fetchRasters();
     }
   };
@@ -577,21 +578,18 @@ class ChangesMap extends Component {
     }));
   };
 
-  onPeriodDateChange = (datetime) => {
-    const { periods } = this.state;
-    periods.forEach((p, i) => {
-      if (datetime >= p.from && datetime <= p.to) {
-        this.setState({ selectedPeriodId: i, currentDate: p.to });
-        return;
-      }
-    });
+  handleDateChange = (datetime) => {
+    const { dates } = this.state;
+    const selectedDateIdx = dates.findIndex(d => moment(d).format('YYYY-MM-DD') == datetime.format("YYYY-MM-DD"));
+    console.log("Current date:", datetime, "idx:", selectedDateIdx);
+    if (selectedDateIdx >= 0) this.setState({ selectedDateIdx, currentDate: new Date(datetime) });
   };
 
   handleDisabledDate = (datetime) => {
-    const { periods } = this.state;
+    const { dates } = this.state;
     var disable = true;
-    periods.forEach((p) => {
-      if (p.to.setHours(0, 0, 0, 0) == datetime) {
+    dates.forEach((date) => {
+      if (date.setHours(0, 0, 0, 0) == datetime) {
         disable = false;
       }
     });
@@ -610,8 +608,8 @@ class ChangesMap extends Component {
       scopesLoaded,
       scopeGeomsByType,
       customScope,
-      periods,
-      periodsLoaded,
+      dates,
+      datesLoaded,
       firstDate,
       lastDate,
       dateFrom,
@@ -622,10 +620,10 @@ class ChangesMap extends Component {
       currentDate,
     } = this.state;
 
-    const loaded = scopesLoaded && periodsLoaded;
+    const loaded = scopesLoaded && datesLoaded;
     const scopeGeomsData = scopeGeomsByType[selectedScopeType];
-    const filteredPeriods = periods.filter(
-      (p) => p.from >= dateFrom && p.to <= dateTo
+    const filteredDates = dates.filter(
+      date => date >= dateFrom && date <= dateTo
     );
     const visibleLayers = layers
       .filter((layer) => activeLayers.includes(layer.id))
@@ -635,14 +633,11 @@ class ChangesMap extends Component {
         opacity: (layersOpacity[layer.id] || 100) / 100,
       }));
 
-    var periodDate = dateTo;
-    if (currentDate) {
-      periodDate = currentDate;
-    }
-
     const layersWithLegend = layers.filter(
       (layer) => activeLayers.includes(layer.id) && layer.name
     );
+
+    console.log("RENDER currentDate:", currentDate);
 
     return (
       <div className="index">
@@ -683,7 +678,7 @@ class ChangesMap extends Component {
             onToggle={this.handleToggleLayer}
             onOpacityChange={this.handleOpacityChange}
           />
-          {filteredPeriods.length > 0 && (
+          {filteredDates.length > 0 && (
             <div className={classes.periodPaper}>
               <Paper>
                 <FormControl
@@ -700,9 +695,10 @@ class ChangesMap extends Component {
                     id="date-period"
                     minDate={dateFrom}
                     maxDate={dateTo}
-                    value={periodDate}
+                    initialFocusedDate={moment(dateTo).format("YYYY-MM-DD")}
+                    value={moment(currentDate).format("YYYY-MM-DD")}
                     shouldDisableDate={this.handleDisabledDate}
-                    onChange={this.onPeriodDateChange}
+                    onChange={this.handleDateChange}
                   />
                 </FormControl>
               </Paper>
@@ -711,19 +707,18 @@ class ChangesMap extends Component {
         </div>
         {loaded && (
           <div className={classnames(classes.controlGroup, classes.topRight)}>
-            <PlotsControl
+            {/* <PlotsControl
               type={type}
-              periods={filteredPeriods}
+              dates={filteredDates}
               scope={selectedScope}
               customScope={customScope}
-            />
+            /> */}
           </div>
         )}
         <Map
           className={classes.map}
           bounds={bounds}
           viewport={viewport}
-          // basemapStyle={mapboxStyle}
           onViewportChanged={this.handleMapViewportChanged}
         >
           {scopeGeomsData && (
@@ -740,7 +735,7 @@ class ChangesMap extends Component {
               key={layer.id}
               type="raster"
               url={layer.tiles_url}
-              maxNativeZoom={type === "vi-lomas-changes" ? 13 : 14}
+              maxNativeZoom={maxNativeZoomByType[type]}
               opacity={layer.opacity}
               zIndex={layer.zIndex}
             />

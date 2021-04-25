@@ -9,9 +9,7 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
 
-const typeBasePaths = {
-  "eo-sensors": "/eo-sensors",
-};
+const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" }
 
 const styles = (theme) => ({
   progress: {
@@ -39,24 +37,24 @@ class Dashboard extends React.Component {
   }
 
   getTimeSeries = async () => {
-    const { type, periods, scope } = this.props;
-    const basePath = typeBasePaths[type]
+    const { type, dates, scope } = this.props;
 
     this.setState({ loading: true });
 
-    if (periods.length === 0 || !scope) return;
+    if (dates.length === 0 || !scope) return;
 
-    const dateFrom = Math.min(...periods.map((p) => Math.min(p.from, p.to)));
-    const dateTo = Math.max(...periods.map((p) => Math.max(p.from, p.to)));
+    const dateFrom = Math.min(...dates);
+    const dateTo = Math.max(...dates);
 
     if (scope) {
       const params = {
+        source: sourcesByType[type],
         scope,
         date_from: moment(dateFrom).format(),
         date_to: moment(dateTo).format(),
       };
       try {
-        const response = await axios.get(buildApiUrl(`${basePath}/coverage/`), {
+        const response = await axios.get(buildApiUrl(`/eo-sensors/coverage/`), {
           params,
         });
         const values = response.data.values.map((value) => ({
@@ -69,7 +67,7 @@ class Dashboard extends React.Component {
         });
       } catch (err) {
         console.error(err);
-        this.props.enqueueSnackbar(`Failed to get scope types`, {
+        this.props.enqueueSnackbar(`Failed to get time series data`, {
           variant: "error",
         });
       }
@@ -114,7 +112,7 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
-  periods: PropTypes.array.isRequired,
+  dates: PropTypes.array.isRequired,
   scope: PropTypes.number,
   customScope: PropTypes.string,
 };
