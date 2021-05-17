@@ -127,6 +127,18 @@ const legendBySlug = {
       { color: "#FDE725", value: "> 0.8" },
     ],
   },
+  vegetation: {
+    items: [{ color: "#149c01", value: "Vegetación" }],
+  },
+  cloud: {
+    items: [{ color: "#30a7ff", value: "Nubosidad" }],
+  },
+  "vegetation-cloud": {
+    items: [
+      { color: "#149c01", value: "Vegetación" },
+      { color: "#30a7ff", value: "Nubosidad" },
+    ],
+  },
 };
 
 class ScopePolygonsLayer extends React.Component {
