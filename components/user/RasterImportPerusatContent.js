@@ -82,7 +82,7 @@ class RasterImportPerusatContent extends React.Component {
 
     try {
       var response = await axios.post(
-        buildApiUrl("/lomas/import/sftp/list/"),
+        buildApiUrl("/eo-sensors/import/sftp/list/"),
         data,
         {
           headers: {
@@ -113,7 +113,7 @@ class RasterImportPerusatContent extends React.Component {
         connected: !prevState.connected,
         files: [],
         selectedFiles: [],
-        path: (defaultPath || "/"),
+        path: defaultPath || "/",
       }),
       async () => {
         if (this.state.connected) {
@@ -148,14 +148,8 @@ class RasterImportPerusatContent extends React.Component {
     this.setState({ submitting: true });
 
     const token = cookie.get("token");
-    const {
-      hostname,
-      port,
-      username,
-      password,
-      path,
-      selectedFiles,
-    } = this.state;
+    const { hostname, port, username, password, path, selectedFiles } =
+      this.state;
 
     const data = {
       hostname,
@@ -166,7 +160,7 @@ class RasterImportPerusatContent extends React.Component {
     };
 
     try {
-      await axios.post(buildApiUrl("/lomas/import/sftp/"), data, {
+      await axios.post(buildApiUrl("/eo-sensors/import/sftp/"), data, {
         headers: {
           "Accept-Language": i18n.language,
           Authorization: token,
