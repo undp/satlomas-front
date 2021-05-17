@@ -19,7 +19,7 @@ import { withAuthSync } from "../utils/auth";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../utils/api";
 import LoadingProgress from "../components/LoadingProgress";
-import Dashboard from "../components/Dashboard";
+import TimeSeriesControl from "../components/TimeSeriesControl";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
 import PeriodSlider from "../components/PeriodSlider";
@@ -235,17 +235,16 @@ class SearchControl extends Component {
 
 SearchControl = withStyles(styles)(SearchControl);
 
-let PlotsControl = ({ classes, periods, scope, customScope }) => (
+let PlotsControl = ({ classes, periods, scope }) => (
   <div className={classes.plotsControl}>
     <ExpansionPanel expanded={true}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography className={classes.plotsControlHeading}>{"Detección de actividad en Lomas"}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Dashboard
+        <TimeSeriesControl
           periods={periods}
           scope={scope}
-          customScope={customScope}
         />
       </ExpansionPanelDetails>
     </ExpansionPanel>
@@ -273,7 +272,6 @@ class ObjectsMap extends Component {
     lastDate: null,
     dateFrom: null,
     dateTo: null,
-    customScope: null,
     selectedPeriodId: null,
     layers: [],
     activeLayers: ["ps1"],
@@ -553,7 +551,6 @@ class ObjectsMap extends Component {
       selectedScope,
       scopesLoaded,
       scopeGeomsByType,
-      customScope,
       periods,
       periodsLoaded,
       firstDate,
@@ -627,7 +624,6 @@ class ObjectsMap extends Component {
               type={type}
               periods={filteredPeriods}
               scope={selectedScope}
-              customScope={customScope}
             />
           </div>
         )} */}
