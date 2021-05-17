@@ -33,8 +33,8 @@ import config from "../config";
 const { appName } = config;
 
 const allTypes = ["lomas-changes", "vi-lomas-changes"];
-const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" }
-const maxNativeZoomByType = { "lomas-changes": 14, "vi-lomas-changes": 13 }
+const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" };
+const maxNativeZoomByType = { "lomas-changes": 14, "vi-lomas-changes": 13 };
 
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -337,7 +337,7 @@ class ChangesMap extends Component {
     try {
       const response = await axios.get(buildApiUrl("/scopes/types/"), {});
       const scopeTypes = response.data;
-      console.log("ScopeTypes:", scopeTypes);
+      // console.log("ScopeTypes:", scopeTypes);
 
       const selectedScopeType = scopeTypes[0].type;
       const selectedScope = scopeTypes[0].scopes[0].pk;
@@ -374,11 +374,11 @@ class ChangesMap extends Component {
       const datesRaw = response.data;
       const firstDate = moment(datesRaw.first_date);
       const lastDate = moment(datesRaw.last_date);
-      const dates = datesRaw.availables.sort().map(d => moment(d));
+      const dates = datesRaw.availables.sort().map((d) => moment(d));
 
-      console.log("Dates:", dates);
-      console.log("First date:", firstDate);
-      console.log("Last date:", firstDate);
+      // console.log("Dates:", dates);
+      // console.log("First date:", firstDate);
+      // console.log("Last date:", firstDate);
 
       // Select latest period by default
       const selectedDateIdx = dates.length > 0 ? dates.length - 1 : null;
@@ -449,7 +449,7 @@ class ChangesMap extends Component {
       });
 
       const layersRaw = response.data;
-      console.log("Layers:", layersRaw);
+      // console.log("Layers:", layersRaw);
 
       const layers = layersRaw.map((r) => ({
         id: r.slug,
@@ -477,11 +477,7 @@ class ChangesMap extends Component {
 
   componentDidUpdate = async (_prevProps, prevState) => {
     // If selectedScopeType changed, refresh geojson layer with scopes from scopetype
-    const {
-      selectedScopeType,
-      scopeGeomsByType,
-      selectedDateIdx,
-    } = this.state;
+    const { selectedScopeType, scopeGeomsByType, selectedDateIdx } = this.state;
 
     if (selectedScopeType !== prevState.selectedScopeType) {
       if (!scopeGeomsByType[selectedScopeType]) {
@@ -580,15 +576,17 @@ class ChangesMap extends Component {
 
   handleDateChange = (datetime) => {
     const { dates } = this.state;
-    const selectedDateIdx = dates.findIndex(d => moment(d).format('YYYY-MM-DD') == datetime.format("YYYY-MM-DD"));
+    const selectedDateIdx = dates.findIndex(
+      (d) => moment(d).format("YYYY-MM-DD") == datetime.format("YYYY-MM-DD")
+    );
     const currentDate = dates[selectedDateIdx];
-    console.log("Current date:", currentDate, "idx:", selectedDateIdx);
+    // console.log("Current date:", currentDate, "idx:", selectedDateIdx);
     if (selectedDateIdx >= 0) this.setState({ selectedDateIdx, currentDate });
   };
 
   handleDisabledDate = (datetime) => {
     const { dates } = this.state;
-    return !dates.some(date => date.isSame(datetime));
+    return !dates.some((date) => date.isSame(datetime));
   };
 
   render() {
@@ -618,7 +616,7 @@ class ChangesMap extends Component {
     const loaded = scopesLoaded && datesLoaded;
     const scopeGeomsData = scopeGeomsByType[selectedScopeType];
     const filteredDates = dates.filter(
-      date => date >= dateFrom && date <= dateTo
+      (date) => date >= dateFrom && date <= dateTo
     );
     const visibleLayers = layers
       .filter((layer) => activeLayers.includes(layer.id))
@@ -631,8 +629,6 @@ class ChangesMap extends Component {
     const layersWithLegend = layers.filter(
       (layer) => activeLayers.includes(layer.id) && layer.name
     );
-
-    console.log("RENDER currentDate:", currentDate);
 
     return (
       <div className="index">
