@@ -20,7 +20,7 @@ import { withAuthSync } from "../utils/auth";
 import { withSnackbar } from "notistack";
 import { buildApiUrl } from "../utils/api";
 import LoadingProgress from "../components/LoadingProgress";
-import Dashboard from "../components/Dashboard";
+import TimeSeriesControl from "../components/TimeSeriesControl";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
 import PeriodSlider from "../components/PeriodSlider";
@@ -105,8 +105,15 @@ const styles = (theme) => ({
   plotsControl: {
     width: 550,
   },
+  plotsControlSummary: {
+    display: "block",
+  },
   plotsControlHeading: {
     fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  plotsControlSubHeading: {
+    fontSize: theme.typography.pxToRem(13),
     fontWeight: theme.typography.fontWeightRegular,
   },
 });
@@ -265,23 +272,25 @@ class SearchControl extends Component {
 
 SearchControl = withStyles(styles)(SearchControl);
 
-let PlotsControl = ({ classes, type, dates, scope, customScope }) => (
+let PlotsControl = ({ classes, type, dates, scope }) => (
   <div className={classes.plotsControl}>
     <ExpansionPanel expanded={true}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography className={classes.plotsControlHeading}>
-          {type === "vi-lomas-changes"
-            ? "Variación del área de lomas"
-            : "Cobertura de Loma Perdida"}
-        </Typography>
+        <div className={classes.plotsControlSummary}>
+          <Typography variant="h5" className={classes.plotsControlHeading}>
+            {type === "vi-lomas-changes"
+              ? "Variación del área de lomas del ámbito seleccionado"
+              : "Cambios de cobertura de lomas del ámbito seleccionado"}
+          </Typography>
+          <Typography variant="h6" className={classes.plotsControlSubHeading}>
+            {type === "vi-lomas-changes"
+              ? "Análisis en base al NDVI (MODIS VI)"
+              : ""}
+          </Typography>
+        </div>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Dashboard
-          type={type}
-          dates={dates}
-          scope={scope}
-          customScope={customScope}
-        />
+        <TimeSeriesControl type={type} dates={dates} scope={scope} />
       </ExpansionPanelDetails>
     </ExpansionPanel>
   </div>
@@ -309,7 +318,6 @@ class ChangesMap extends Component {
     lastDate: null,
     dateFrom: null,
     dateTo: null,
-    customScope: null,
     selectedDateIdx: null,
     layers: [],
     activeLayers: ["ndvi"],
@@ -600,7 +608,6 @@ class ChangesMap extends Component {
       selectedScope,
       scopesLoaded,
       scopeGeomsByType,
-      customScope,
       dates,
       datesLoaded,
       firstDate,
@@ -702,7 +709,6 @@ class ChangesMap extends Component {
               type={type}
               dates={filteredDates}
               scope={selectedScope}
-              customScope={customScope}
             />
           </div>
         )}

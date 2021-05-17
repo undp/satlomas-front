@@ -5,11 +5,41 @@ import { LinearProgress } from "@material-ui/core";
 import moment from "moment";
 import classNames from "classnames";
 import { withSnackbar } from "notistack";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  BarChart,
+  Legend,
+  Tooltip,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+} from "recharts";
 import axios from "axios";
 import { buildApiUrl } from "../utils/api";
 
-const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" }
+const groupBy = (xs, key) =>
+  xs.reduce((rv, x) => {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+
+const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" };
+const kindsByType = {
+  "lomas-changes": ["C", "D", "U", "V"],
+  "vi-lomas-changes": ["V", "C"],
+};
+const colorsByKind = {
+  "vi-lomas-changes": {
+    V: "#59c798",
+    C: "#8faadc",
+  },
+};
+const namesByKind = {
+  "vi-lomas-changes": {
+    V: "Cobertura de vegetación (ha)",
+    C: "Nubosidad (ha)",
+  },
+};
 
 const styles = (theme) => ({
   progress: {
@@ -26,7 +56,7 @@ const axisStyle = {
   fontFamily: "Roboto, sans-serif",
 };
 
-class Dashboard extends React.Component {
+class TimeSeriesControl extends React.Component {
   state = {
     data: null,
     loading: true,
@@ -49,7 +79,6 @@ class Dashboard extends React.Component {
     if (scope) {
       const params = {
         source: sourcesByType[type],
-        kind: "V",
         scope,
         date_from: moment(dateFrom).format("YYYY-MM-DD"),
         date_to: moment(dateTo).format("YYYY-MM-DD"),
@@ -60,14 +89,28 @@ class Dashboard extends React.Component {
         const response = await axios.get(buildApiUrl(`/eo-sensors/coverage/`), {
           params,
         });
-        const valuesRaw = response.data;
+        const valuesRaw = response.data.values;
         console.log("valuesRaw:", valuesRaw);
-        const values = response.data.values.map((value) => ({
-          ...value,
-          ym: moment(value.date).format("YYYY-MM"),
-          area: value.area / 10000,
-        }));
+
+        const valuesPerDate = groupBy(valuesRaw, "date");
+        console.log("valuesPerDate:", valuesPerDate);
+
+        const kinds = [...new Set(valuesRaw.map((v) => v["kind"]))];
+        console.log("kinds:", kinds);
+
+        const values = Object.values(valuesPerDate).map((dateValues) => {
+          let v = dateValues[0];
+          v["ym"] = moment(v["date"]).format("YYYY-MM");
+          dateValues.forEach((otherValue) => {
+            v[`area_${otherValue["kind"]}`] = Math.round(
+              otherValue["area"] / 10000
+            );
+          });
+          return v;
+        });
+
         this.setState({
+          kinds,
           data: values,
         });
       } catch (err) {
@@ -87,8 +130,9 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, type } = this.props;
     const { data, loading } = this.state;
+
     return (
       <div>
         <LinearProgress
@@ -98,31 +142,41 @@ class Dashboard extends React.Component {
           )}
         />
         {data && (
-          <LineChart
+          <BarChart
             width={500}
             height={300}
             data={data}
             margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
           >
+            <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
             <XAxis dataKey="ym" style={axisStyle} />
             <YAxis style={axisStyle} unit=" ha" />
-            <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-            <Line type="monotone" dataKey="area" stroke="#009688" />
-          </LineChart>
+            <Tooltip />
+            <Legend />
+            {kindsByType[type].map((kind) => (
+              <Bar
+                key={kind}
+                stackId={type}
+                dataKey={`area_${kind}`}
+                fill={colorsByKind[type][kind]}
+                name={namesByKind[type][kind]}
+              />
+            ))}
+          </BarChart>
         )}
       </div>
     );
   }
 }
 
-Dashboard.propTypes = {
+TimeSeriesControl.propTypes = {
   classes: PropTypes.object.isRequired,
   dates: PropTypes.array.isRequired,
   scope: PropTypes.number,
   customScope: PropTypes.string,
 };
 
-Dashboard = withStyles(styles)(Dashboard);
-Dashboard = withSnackbar(Dashboard);
+TimeSeriesControl = withStyles(styles)(TimeSeriesControl);
+TimeSeriesControl = withSnackbar(TimeSeriesControl);
 
-export default Dashboard;
+export default TimeSeriesControl;
