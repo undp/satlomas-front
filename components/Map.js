@@ -46,6 +46,15 @@ const Basemap = ({ url, attribution }) => (
   <TileLayer url={url} attribution={attribution} zIndex={-1} />
 );
 
+const GoogleMapsBasemap = () => (
+  <Basemap
+    // url={`http://ecn.t3.tiles.virtualearth.net/tiles/a{q}.jpeg?g=1`}
+    url={`https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}`}
+    attribution="&copy; Google"
+    zIndex={-1}
+  />
+);
+
 class Map extends React.Component {
   render() {
     const {
@@ -77,7 +86,7 @@ class Map extends React.Component {
         bounds={realBounds}
         {...extraProps}
       >
-        <OSMBasemap />
+        <GoogleMapsBasemap />
         {children}
         {stationMarkers && (
           <StationMarkerList
