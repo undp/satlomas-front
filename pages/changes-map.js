@@ -676,7 +676,10 @@ class ChangesMap extends Component {
             <LayersLegendExpansionPanel layers={layersWithLegend} />
           </div>
         )}
-        <div className={classnames(classes.controlGroup, classes.bottomLeft)}>
+        <div
+          className={classnames(classes.controlGroup, classes.bottomLeft)}
+          style={{ zIndex: 999 }}
+        >
           <ZoomControl
             onZoomInClick={this.handleZoomInClick}
             onZoomOutClick={this.handleZoomOutClick}
