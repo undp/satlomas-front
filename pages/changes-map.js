@@ -150,7 +150,7 @@ class ScopePolygonsLayer extends React.Component {
     return {
       color,
       fillColor: color,
-      fillOpacity: 0.0,
+      fillOpacity: 0.1,
       weight: 2,
     };
   };
