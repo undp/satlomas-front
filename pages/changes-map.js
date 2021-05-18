@@ -98,6 +98,7 @@ const styles = (theme) => ({
   },
   searchControl: {
     width: 450,
+    marginBottom: theme.spacing(2),
   },
   searchControlContent: {
     flexFlow: "column",

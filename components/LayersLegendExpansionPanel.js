@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { withTranslation } from "../i18n";
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 
 import {
   ExpansionPanel,
@@ -12,27 +12,27 @@ import {
   List,
   ListItem,
   ListItemText,
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: theme.spacing(1),
     width: "18%",
     position: "fixed",
     left: 10,
     top: 10,
-    zIndex: 1000
+    zIndex: 1000,
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular
+    fontWeight: theme.typography.fontWeightRegular,
   },
   item: {
-    padding: "0 0 5px 0"
+    padding: "0 0 5px 0",
   },
   itemText: {
-    padding: "0 5px 0 0"
-  }
+    padding: "0 5px 0 0",
+  },
 });
 
 const ColorBlock = ({ value }) => (
@@ -71,8 +71,8 @@ class LayersLegendExpansionPanel extends React.Component {
 
     return (
       <div>
-        {layers.map(layer => (
-          <ExpansionPanel key={layer.id}>
+        {layers.map((layer) => (
+          <ExpansionPanel key={layer.id} className={classes.expansionPanel}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Typography className={classes.heading}>{layer.name}</Typography>
             </ExpansionPanelSummary>
@@ -91,7 +91,9 @@ class LayersLegendExpansionPanel extends React.Component {
 
 LayersLegendExpansionPanel.propTypes = {
   classes: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
 };
 
-export default withTranslation()(withStyles(styles)(LayersLegendExpansionPanel));
+export default withTranslation()(
+  withStyles(styles)(LayersLegendExpansionPanel)
+);
