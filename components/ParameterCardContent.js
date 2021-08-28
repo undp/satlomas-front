@@ -77,6 +77,8 @@ class ParameterCardContent extends React.Component {
 
   getSecondsFromTimeAndUnit(time, unit) {
     switch (unit) {
+      case "minute":
+        return time * 1000 * 60;
       case "hour":
         return time * 1000 * 60 * 60;
       case "day":
@@ -112,7 +114,7 @@ class ParameterCardContent extends React.Component {
   async fetchData() {
     const {
       parameter,
-      stationId,
+      siteId,
       mode,
       timeRangeParams,
       groupingInterval,
@@ -129,7 +131,7 @@ class ParameterCardContent extends React.Component {
     }
 
     const params = {
-      station: stationId,
+      site: siteId,
       parameter,
       start: mStart.format(),
       end: mEnd.format(),

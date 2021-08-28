@@ -14,7 +14,7 @@ import {
   LinearProgress,
   Button,
 } from "@material-ui/core";
-import StationsFilterButton from "../../components/StationsFilterButton";
+import SitesFilterButton from "../../components/SitesFilterButton";
 import TimeRangeFilterButton, {
   DEFAULT_MODE,
   DEFAULT_HISTORIC_START,
@@ -96,10 +96,10 @@ let DataToolbar = ({ classes, onTableClick }) => (
 );
 DataToolbar = withStyles(styles)(DataToolbar);
 
-class StationsDashboard extends React.Component {
+class SitesDashboard extends React.Component {
   state = {
     loading: true,
-    station: null,
+    site: null,
     mode: DEFAULT_MODE,
     realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
     historicParams: {
@@ -108,7 +108,7 @@ class StationsDashboard extends React.Component {
     },
     aggregationFunc: DEFAULT_AGG_FUNC,
     groupingInterval: DEFAULT_GROUP_INT,
-    stationsAnchorEl: null,
+    sitesAnchorEl: null,
     data: {},
   };
 
@@ -117,31 +117,25 @@ class StationsDashboard extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchStations();
+    await this.fetchSites();
 
     const { query } = this.props;
 
-    // Set station filter based on query param
-    const { stations } = this.state;
-    const station =
-      stations &&
+    // Set site filter based on query param
+    const { sites } = this.state;
+    const site =
+      sites &&
       (query.id
-        ? stations.find((station) => station.id === Number(query.id))
-        : stations[0]);
+        ? sites.find((site) => site.id === Number(query.id))
+        : sites[0]);
 
     // Set time range filter based on query param
-    const {
-      mode,
-      lastTime,
-      start,
-      end,
-      aggregationFunc,
-      groupingInterval,
-    } = this.getValidTimeRangeParameters();
+    const { mode, lastTime, start, end, aggregationFunc, groupingInterval } =
+      this.getValidTimeRangeParameters();
 
     this.setState((prevState) => ({
       loading: false,
-      station,
+      site,
       mode,
       realtimeParams: { ...prevState.realtimeParams, lastTime },
       historicParams: { ...prevState.historicParams, start, end },
@@ -158,7 +152,7 @@ class StationsDashboard extends React.Component {
 
   componentDidUpdate(_prevProps, prevState) {
     const {
-      station,
+      site,
       mode,
       realtimeParams: { lastTime },
       historicParams: { start, end },
@@ -177,7 +171,7 @@ class StationsDashboard extends React.Component {
 
     // Update query params based on state
     if (
-      station != prevState.station ||
+      site != prevState.site ||
       mode != prevState.mode ||
       lastTime != prevState.realtimeParams.lastTime ||
       start != prevState.historicParams.start ||
@@ -209,30 +203,30 @@ class StationsDashboard extends React.Component {
     }));
   }
 
-  async fetchStations() {
+  async fetchSites() {
     try {
-      const response = await axios.get(buildApiUrl("/stations/stations/"));
-      this.setState({ stations: response.data });
+      const response = await axios.get(buildApiUrl("/stations/sites/"));
+      this.setState({ sites: response.data });
     } catch (error) {
-      this.props.enqueueSnackbar("Failed to fetch stations", {
+      this.props.enqueueSnackbar("Failed to fetch sites", {
         variant: "error",
       });
     }
   }
 
-  handleStationsClick = (event) => {
-    this.setState({ stationsAnchorEl: event.currentTarget });
+  handleSitesClick = (event) => {
+    this.setState({ sitesAnchorEl: event.currentTarget });
   };
 
-  handleStationsClose = () => {
-    this.setState({ stationsAnchorEl: null });
+  handleSitesClose = () => {
+    this.setState({ sitesAnchorEl: null });
   };
 
-  handleStationsSelectChange = (e) => {
-    const { stations } = this.state;
+  handleSitesSelectChange = (e) => {
+    const { sites } = this.state;
     const newId = e.target.value;
-    const station = stations.find((st) => st.id === newId);
-    this.setState({ station });
+    const site = sites.find((st) => st.id === newId);
+    this.setState({ site });
   };
 
   handleTimeRangeClick = (event) => {
@@ -288,7 +282,7 @@ class StationsDashboard extends React.Component {
 
   pushNewRoute() {
     const {
-      station,
+      site,
       mode,
       realtimeParams: { lastTime },
       historicParams: { start, end },
@@ -303,7 +297,7 @@ class StationsDashboard extends React.Component {
       pathname,
       query: {
         ...query,
-        id: station.id,
+        id: site.id,
         mode,
         lastTime,
         start,
@@ -352,9 +346,9 @@ class StationsDashboard extends React.Component {
     const { classes } = this.props;
     const {
       loading,
-      stations,
-      station,
-      stationsAnchorEl,
+      sites,
+      site,
+      sitesAnchorEl,
       timeRangeAnchorEl,
       mode,
       realtimeParams,
@@ -371,27 +365,25 @@ class StationsDashboard extends React.Component {
         <Head>
           <title>
             {appName} -{" "}
-            {station
-              ? `Dashboard: ${station.name}`
-              : `Estaciones Meteorológicas`}
+            {site ? `Dashboard: ${site.name}` : `Estaciones Meteorológicas`}
           </title>
         </Head>
         <CssBaseline />
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              {station ? `Dashboard: ${station.name}` : `Cargando datos...`}
+              {site ? `Dashboard: ${site.name}` : `Cargando datos...`}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
-              <StationsFilterButton
-                value={station && station.id}
-                stations={stations}
-                popoverOpen={Boolean(stationsAnchorEl)}
-                anchorEl={stationsAnchorEl}
-                onClick={this.handleStationsClick}
-                onPopoverClose={this.handleStationsClose}
-                onSelectChange={this.handleStationsSelectChange}
+              <SitesFilterButton
+                value={site && site.id}
+                sites={sites}
+                popoverOpen={Boolean(sitesAnchorEl)}
+                anchorEl={sitesAnchorEl}
+                onClick={this.handleSitesClick}
+                onPopoverClose={this.handleSitesClose}
+                onSelectChange={this.handleSitesSelectChange}
               />
               <TimeRangeFilterButton
                 mode={mode}
@@ -423,7 +415,7 @@ class StationsDashboard extends React.Component {
         <main>
           <DataToolbar onTableClick={this.handleTableClick} />
 
-          {!loading && station ? (
+          {!loading && site ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
               <Grid container spacing={2}>
                 {stationParameters.map((param) => (
@@ -434,7 +426,7 @@ class StationsDashboard extends React.Component {
                           {param.name}
                         </Typography>
                         <ParameterCardContent
-                          stationId={station.id}
+                          siteId={site.id}
                           parameter={param.id}
                           mode={mode}
                           timeRangeParams={timeRangeParams}
@@ -456,13 +448,13 @@ class StationsDashboard extends React.Component {
   }
 }
 
-StationsDashboard.propTypes = {
+SitesDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-StationsDashboard = withRouter(StationsDashboard);
-StationsDashboard = withSnackbar(StationsDashboard);
-StationsDashboard = withStyles(styles)(StationsDashboard);
+SitesDashboard = withRouter(SitesDashboard);
+SitesDashboard = withSnackbar(SitesDashboard);
+SitesDashboard = withStyles(styles)(SitesDashboard);
 
-export default StationsDashboard;
+export default SitesDashboard;

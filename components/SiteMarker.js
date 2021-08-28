@@ -18,7 +18,7 @@ const styles = (_theme) => ({
   },
 });
 
-class StationMarker extends React.Component {
+class SiteMarker extends React.Component {
   state = {
     parameter: stationParameters[0].id,
   };
@@ -28,7 +28,7 @@ class StationMarker extends React.Component {
   };
 
   render() {
-    const { classes, stationId, code, name, place_name, lat, lon } = this.props;
+    const { classes, id, station_code, name, geom } = this.props;
     const { parameter } = this.state;
 
     const mode = "historic";
@@ -39,11 +39,13 @@ class StationMarker extends React.Component {
     const groupingInterval = "month";
     const aggregationFunc = "avg";
 
+    const [lat, lon] = geom.coordinates;
+
     return (
       <Marker position={[lat, lon]}>
         <Popup className={classes.popup}>
           <Typography variant="h6" className={classes.popupChild}>
-            {name} (<strong>{code}</strong>, {place_name})
+            {name} (<strong>{station_code}</strong>)
           </Typography>
           <SelectControl
             id="parameter"
@@ -53,14 +55,14 @@ class StationMarker extends React.Component {
             onChange={this.handleParameterChange}
           />
           <ParameterCardContent
-            stationId={stationId}
+            siteId={id}
             parameter={parameter}
             mode={mode}
             timeRangeParams={timeRangeParams}
             groupingInterval={groupingInterval}
             aggregationFunc={aggregationFunc}
           />
-          <Link href={`/stations/dashboard?id=${stationId}`}>
+          <Link href={`/stations/dashboard?id=${id}`}>
             <Button variant="contained">Dashboard</Button>
           </Link>
         </Popup>
@@ -69,4 +71,4 @@ class StationMarker extends React.Component {
   }
 }
 
-export default withStyles(styles)(StationMarker);
+export default withStyles(styles)(SiteMarker);

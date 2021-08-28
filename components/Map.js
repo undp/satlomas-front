@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import { Map as LeafletMap, TileLayer, ZoomControl } from "react-leaflet";
-import StationMarkerList from "./StationMarkerList";
+import SiteMarkerList from "./SiteMarkerList";
 import { withStyles } from "@material-ui/core/styles";
 import L from "leaflet";
 
@@ -62,7 +62,7 @@ class Map extends React.Component {
       className,
       children,
       basemapStyle,
-      stationMarkers,
+      siteMarkers,
       selectedMarker,
       boundPoints,
       bounds,
@@ -70,7 +70,7 @@ class Map extends React.Component {
     } = this.props;
 
     let realBounds = bounds;
-    if (!realBounds && boundPoints) {
+    if (!realBounds && boundPoints && boundPoints.length >= 2) {
       const group = new L.FeatureGroup(
         boundPoints.map(([lat, lon]) => L.marker([lat, lon]))
       );
@@ -88,10 +88,10 @@ class Map extends React.Component {
       >
         <GoogleMapsBasemap />
         {children}
-        {stationMarkers && (
-          <StationMarkerList
+        {siteMarkers && (
+          <SiteMarkerList
             selectedMarker={selectedMarker}
-            markers={stationMarkers}
+            markers={siteMarkers}
           />
         )}
       </LeafletMap>

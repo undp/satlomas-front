@@ -22,9 +22,9 @@ const styles = (theme) => ({
   },
 });
 
-let StationsFilterButton = ({
+let SitesFilterButton = ({
   classes,
-  stations,
+  sites,
   value,
   popoverOpen,
   onClick,
@@ -34,8 +34,8 @@ let StationsFilterButton = ({
 }) => (
   <>
     <Tooltip
-      title="Seleccionar estación"
-      aria-label="Seleccionar estación"
+      title="Seleccionar sitio"
+      aria-label="Seleccionar sitio"
       enterDelay={500}
     >
       <Button
@@ -45,7 +45,7 @@ let StationsFilterButton = ({
         color="inherit"
       >
         <DevicesOtherIcon className={classes.buttonIcon} />
-        Estación
+        Sitio
       </Button>
     </Tooltip>
     <Popover
@@ -64,9 +64,9 @@ let StationsFilterButton = ({
       <div className={classes.popover}>
         <form className={classes.form} autoComplete="off">
           <SelectControl
-            id="station"
-            label="Estación"
-            items={stations}
+            id="site"
+            label="Sitio"
+            items={sites}
             value={value}
             onChange={onSelectChange}
           />
@@ -76,6 +76,6 @@ let StationsFilterButton = ({
   </>
 );
 
-StationsFilterButton = withStyles(styles)(StationsFilterButton);
+SitesFilterButton = withStyles(styles)(SitesFilterButton);
 
-export default StationsFilterButton;
+export default SitesFilterButton;

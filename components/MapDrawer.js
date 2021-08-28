@@ -21,7 +21,7 @@ const styles = (theme) => ({
 
 const SensorIcon = () => <img src="/static/sensor_icon.png" height={24} />;
 
-const StationsList = ({ items, onSelect }) => (
+const SitesList = ({ items, onSelect }) => (
   <List>
     {items &&
       items.map((item) => (
@@ -39,47 +39,51 @@ const MapDrawer = ({
   classes,
   open,
   onClose,
-  stations,
+  sites,
   searchFieldValue,
   onSearchFieldChange,
-  onStationSelect,
+  onSiteSelect,
   onMenuClick,
 }) => (
-    <Drawer
-      open={open}
-      onClose={onClose}
-      className={classes.drawer}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-      anchor="left"
-    >
-      <SearchField value={searchFieldValue} onMenuClick={onMenuClick} onChange={onSearchFieldChange} />
-      <Divider />
-      <StationsList items={stations} onSelect={onStationSelect} />
-    </Drawer>
-  );
+  <Drawer
+    open={open}
+    onClose={onClose}
+    className={classes.drawer}
+    classes={{
+      paper: classes.drawerPaper,
+    }}
+    anchor="left"
+  >
+    <SearchField
+      value={searchFieldValue}
+      onMenuClick={onMenuClick}
+      onChange={onSearchFieldChange}
+    />
+    <Divider />
+    <SitesList items={sites} onSelect={onSiteSelect} />
+  </Drawer>
+);
 
 MapDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool,
-  stations: PropTypes.array,
-  selectedStation: PropTypes.object,
+  sites: PropTypes.array,
+  selectedSite: PropTypes.object,
   searchFieldValue: PropTypes.string,
   onClose: PropTypes.func,
   onSearchFieldChange: PropTypes.func,
-  onStationSelect: PropTypes.func,
+  onSiteSelect: PropTypes.func,
   onMenuClick: PropTypes.func,
 };
 
 MapDrawer.defaultProps = {
   open: true,
-  selectedStation: null,
+  selectedSite: null,
   searchFieldValue: "",
-  onClose: () => { },
-  onSearchFieldChange: () => { },
-  onStationSelect: () => { },
-  onMenuClick: () => { },
+  onClose: () => {},
+  onSearchFieldChange: () => {},
+  onSiteSelect: () => {},
+  onMenuClick: () => {},
 };
 
 export default withStyles(styles)(MapDrawer);

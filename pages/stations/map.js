@@ -46,7 +46,7 @@ const Map = dynamic(() => import("../../components/Map"), {
 
 const SensorIcon = () => <img src="/static/sensor_icon.png" height={24} />;
 
-const StationsList = ({ items, selected, onSelect }) => (
+const SitesList = ({ items, selected, onSelect }) => (
   <List>
     {items &&
       items.map((item) => (
@@ -65,7 +65,7 @@ const StationsList = ({ items, selected, onSelect }) => (
   </List>
 );
 
-class StationsMap extends Component {
+class SitesMap extends Component {
   state = {
     map: null,
     bounds: null,
@@ -73,9 +73,9 @@ class StationsMap extends Component {
       center: [-12.046373, -76.542755],
       zoom: 10,
     },
-    stations: [],
-    filteredStations: [],
-    selectedStation: null,
+    sites: [],
+    filteredSites: [],
+    selectedSite: null,
     searchFieldValue: "",
     drawerOpen: false,
   };
@@ -87,44 +87,44 @@ class StationsMap extends Component {
     };
   }
 
-  async fetchStations(name) {
+  async fetchSites(name) {
     const { token } = this.props;
     const headers = token ? { Authorization: token } : {};
 
     const params = name ? { name } : {};
 
     try {
-      const response = await axios.get(buildApiUrl(`/stations/stations/`), {
+      const response = await axios.get(buildApiUrl(`/stations/sites/`), {
         params,
         headers,
       });
       return response.data || [];
     } catch (err) {
-      this.props.enqueueSnackbar("Failed to fetch stations", {
+      this.props.enqueueSnackbar("Failed to fetch sites", {
         variant: "error",
       });
       return [];
     }
   }
 
-  filterStations(name) {
-    return this.state.stations.filter((o) =>
+  filterSites(name) {
+    return this.state.sites.filter((o) =>
       o["name"].toLowerCase().includes(name.toLowerCase())
     );
   }
 
   componentDidMount = async () => {
-    const stations = await this.fetchStations();
-    this.setState({ stations, filteredStations: stations });
+    const sites = await this.fetchSites();
+    this.setState({ sites, filteredSites: sites });
   };
 
   componentDidUpdate(_prevProps, prevState) {
-    const st = this.state.selectedStation;
-    if (st !== prevState.selectedStation) {
+    const site = this.state.selectedSite;
+    if (site !== prevState.selectedSite) {
       this.setState({
         viewport: {
           ...this.state.viewport,
-          center: [st.lat, st.lon],
+          center: site.geom.coordinates,
         },
       });
     }
@@ -136,16 +136,16 @@ class StationsMap extends Component {
 
   handleSearchFieldChange = async (e) => {
     const { value } = e.target;
-    const filteredStations = this.filterStations(value);
+    const filteredSites = this.filterSites(value);
     this.setState({
       searchFieldValue: value,
-      filteredStations,
+      filteredSites,
     });
   };
 
-  handleStationSelect = (station) => {
+  handleSiteSelect = (site) => {
     this.setState({
-      selectedStation: station,
+      selectedSite: site,
       drawerOpen: false,
     });
   };
@@ -167,19 +167,23 @@ class StationsMap extends Component {
     const {
       viewport,
       bounds,
-      stations,
-      filteredStations,
+      sites,
+      filteredSites,
       searchFieldValue,
-      selectedStation,
+      selectedSite,
       drawerOpen,
     } = this.state;
 
-    const stationPoints = stations.map((s) => [s.lat, s.lon]);
+    console.log("Sites", sites);
+    const sitePoints = sites
+      .filter((s) => s.geom?.coordinates)
+      .map((s) => s.geom.coordinates);
+    console.log("sitePoints", sitePoints);
 
     return (
       <div className="index">
         <Head>
-          <title>{appName} - Mapa de Estaciones Meteorológicas</title>
+          <title>{appName} - Mapa de Sitios de Evaluación</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -191,36 +195,36 @@ class StationsMap extends Component {
         <MapDrawer
           open={drawerOpen}
           onClose={this.handleMapDrawerClose}
-          stations={filteredStations}
+          sites={filteredSites}
           searchFieldValue={searchFieldValue}
-          selectedStation={selectedStation}
+          selectedSite={selectedSite}
           onSearchFieldChange={this.handleSearchFieldChange}
-          onStationSelect={this.handleStationSelect}
+          onSiteSelect={this.handleSiteSelect}
           onMenuClick={this.handleMenuClick}
         />
         <Map
           className={classes.map}
           bounds={bounds}
-          boundPoints={stationPoints}
+          boundPoints={sitePoints}
           viewport={viewport}
           onViewportChanged={this.handleMapViewportChanged}
           mapboxStyle={mapboxStyle}
-          stationMarkers={stations}
-          selectedMarker={selectedStation}
+          siteMarkers={sites}
+          selectedMarker={selectedSite}
         />
       </div>
     );
   }
 }
 
-StationsMap.propTypes = {
+SitesMap.propTypes = {
   t: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-StationsMap = withSnackbar(StationsMap);
-StationsMap = withTranslation()(StationsMap);
-StationsMap = withStyles(styles)(StationsMap);
+SitesMap = withSnackbar(SitesMap);
+SitesMap = withTranslation()(SitesMap);
+SitesMap = withStyles(styles)(SitesMap);
 
-export default StationsMap;
+export default SitesMap;

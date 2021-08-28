@@ -44,6 +44,7 @@ export const aggregationFuncItems = {
 };
 
 export const groupingIntervalItems = {
+  minute: "Minuto",
   hour: "Hora",
   day: "Día",
   week: "Semana",

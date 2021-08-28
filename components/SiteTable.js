@@ -42,7 +42,7 @@ export const calculateTimeRange = (mode, params) => {
   }
 };
 
-class StationTable extends React.Component {
+class SiteTable extends React.Component {
   state = {
     loading: true,
     rows: [],
@@ -67,7 +67,7 @@ class StationTable extends React.Component {
 
   async fetchData() {
     const {
-      stationId,
+      siteId,
       parameters,
       mode,
       timeRangeParams,
@@ -88,7 +88,7 @@ class StationTable extends React.Component {
     parameters.forEach((e) => (parameter = parameter.concat(e.id).concat(",")));
     parameter = parameter.substring(0, parameter.length - 1);
     const params = {
-      station: stationId,
+      site: siteId,
       parameter: parameter,
       start: mStart.format(),
       end: mEnd.format(),
@@ -165,6 +165,6 @@ class StationTable extends React.Component {
   }
 }
 
-StationTable = withSnackbar(StationTable);
+SiteTable = withSnackbar(SiteTable);
 
-export default StationTable;
+export default SiteTable;

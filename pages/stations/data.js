@@ -12,7 +12,7 @@ import {
   LinearProgress,
   Button,
 } from "@material-ui/core";
-import StationsFilterButton from "../../components/StationsFilterButton";
+import SitesFilterButton from "../../components/SitesFilterButton";
 import TimeRangeFilterButton, {
   DEFAULT_MODE,
   DEFAULT_HISTORIC_START,
@@ -24,9 +24,7 @@ import TimeRangeFilterButton, {
   aggregationFuncItems,
   groupingIntervalItems,
 } from "../../components/TimeRangeFilterButton";
-import StationTable, {
-  calculateTimeRange,
-} from "../../components/StationTable";
+import SiteTable, { calculateTimeRange } from "../../components/SiteTable";
 import AppBarButtons from "../../components/AppBarButtons";
 import { withStyles } from "@material-ui/core/styles";
 import { withSnackbar } from "notistack";
@@ -101,10 +99,10 @@ let DataToolbar = ({ classes, onDownloadClick, onDashboardClick }) => (
 
 DataToolbar = withStyles(styles)(DataToolbar);
 
-class StationsData extends React.Component {
+class SitesData extends React.Component {
   state = {
     loading: true,
-    station: null,
+    site: null,
     mode: DEFAULT_MODE,
     realtimeParams: { now: new Date(), lastTime: DEFAULT_RT_LAST_TIME },
     historicParams: {
@@ -113,7 +111,7 @@ class StationsData extends React.Component {
     },
     aggregationFunc: DEFAULT_AGG_FUNC,
     groupingInterval: DEFAULT_GROUP_INT,
-    stationsAnchorEl: null,
+    sitesAnchorEl: null,
     data: {},
   };
 
@@ -122,31 +120,25 @@ class StationsData extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchStations();
+    await this.fetchSites();
 
     const { query } = this.props;
 
-    // Set station filter based on query param
-    const { stations } = this.state;
-    const station =
-      stations &&
+    // Set site filter based on query param
+    const { sites } = this.state;
+    const site =
+      sites &&
       (query.id
-        ? stations.find((station) => station.id === Number(query.id))
-        : stations[0]);
+        ? sites.find((site) => site.id === Number(query.id))
+        : sites[0]);
 
     // Set time range filter based on query param
-    const {
-      mode,
-      lastTime,
-      start,
-      end,
-      aggregationFunc,
-      groupingInterval,
-    } = this.getValidTimeRangeParameters();
+    const { mode, lastTime, start, end, aggregationFunc, groupingInterval } =
+      this.getValidTimeRangeParameters();
 
     this.setState((prevState) => ({
       loading: false,
-      station,
+      site,
       mode,
       realtimeParams: { ...prevState.realtimeParams, lastTime },
       historicParams: { ...prevState.historicParams, start, end },
@@ -163,7 +155,7 @@ class StationsData extends React.Component {
 
   componentDidUpdate(_prevProps, prevState) {
     const {
-      station,
+      site,
       mode,
       realtimeParams: { lastTime },
       historicParams: { start, end },
@@ -182,7 +174,7 @@ class StationsData extends React.Component {
 
     // Update query params based on state
     if (
-      station != prevState.station ||
+      site != prevState.site ||
       mode != prevState.mode ||
       lastTime != prevState.realtimeParams.lastTime ||
       start != prevState.historicParams.start ||
@@ -214,12 +206,12 @@ class StationsData extends React.Component {
     }));
   }
 
-  async fetchStations() {
+  async fetchSites() {
     try {
-      const response = await axios.get(buildApiUrl("/stations/stations/"));
-      this.setState({ stations: response.data });
+      const response = await axios.get(buildApiUrl("/stations/sites/"));
+      this.setState({ sites: response.data });
     } catch (error) {
-      this.props.enqueueSnackbar("Failed to fetch stations", {
+      this.props.enqueueSnackbar("Failed to fetch sites", {
         variant: "error",
       });
     }
@@ -227,7 +219,7 @@ class StationsData extends React.Component {
 
   async downloadCSV() {
     const {
-      station,
+      site,
       mode,
       realtimeParams,
       historicParams,
@@ -248,7 +240,7 @@ class StationsData extends React.Component {
     }
 
     const params = {
-      station: station.id,
+      site: site.id,
       parameter,
       start: mStart.format(),
       end: mEnd.format(),
@@ -277,19 +269,19 @@ class StationsData extends React.Component {
     }
   }
 
-  handleStationsClick = (event) => {
-    this.setState({ stationsAnchorEl: event.currentTarget });
+  handleSitesClick = (event) => {
+    this.setState({ sitesAnchorEl: event.currentTarget });
   };
 
-  handleStationsClose = () => {
-    this.setState({ stationsAnchorEl: null });
+  handleSitesClose = () => {
+    this.setState({ sitesAnchorEl: null });
   };
 
-  handleStationsSelectChange = (e) => {
-    const { stations } = this.state;
+  handleSitesSelectChange = (e) => {
+    const { sites } = this.state;
     const newId = e.target.value;
-    const station = stations.find((st) => st.id === newId);
-    this.setState({ station });
+    const site = sites.find((st) => st.id === newId);
+    this.setState({ site });
   };
 
   handleTimeRangeClick = (event) => {
@@ -383,7 +375,7 @@ class StationsData extends React.Component {
 
   pushNewRoute() {
     const {
-      station,
+      site,
       mode,
       realtimeParams: { lastTime },
       historicParams: { start, end },
@@ -398,7 +390,7 @@ class StationsData extends React.Component {
       pathname,
       query: {
         ...query,
-        id: station.id,
+        id: site.id,
         mode,
         lastTime,
         start,
@@ -413,9 +405,9 @@ class StationsData extends React.Component {
     const { classes } = this.props;
     const {
       loading,
-      stations,
-      station,
-      stationsAnchorEl,
+      sites,
+      site,
+      sitesAnchorEl,
       timeRangeAnchorEl,
       mode,
       realtimeParams,
@@ -432,27 +424,25 @@ class StationsData extends React.Component {
         <Head>
           <title>
             {appName} -
-            {station
-              ? `Dashboard: ${station.name}`
-              : `Estaciones Meteorológicas`}
+            {site ? `Dashboard: ${site.name}` : `Estaciones Meteorológicas`}
           </title>
         </Head>
         <CssBaseline />
         <AppBar position="static" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" color="inherit" noWrap>
-              {station ? `Datos: ${station.name}` : `Cargando datos...`}
+              {site ? `Datos: ${site.name}` : `Cargando datos...`}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.rightButtons}>
-              <StationsFilterButton
-                value={station && station.id}
-                stations={stations}
-                popoverOpen={Boolean(stationsAnchorEl)}
-                anchorEl={stationsAnchorEl}
-                onClick={this.handleStationsClick}
-                onPopoverClose={this.handleStationsClose}
-                onSelectChange={this.handleStationsSelectChange}
+              <SitesFilterButton
+                value={site && site.id}
+                sites={sites}
+                popoverOpen={Boolean(sitesAnchorEl)}
+                anchorEl={sitesAnchorEl}
+                onClick={this.handleSitesClick}
+                onPopoverClose={this.handleSitesClose}
+                onSelectChange={this.handleSitesSelectChange}
               />
               <TimeRangeFilterButton
                 mode={mode}
@@ -486,16 +476,16 @@ class StationsData extends React.Component {
             onDownloadClick={this.handleDownloadClick}
             onDashboardClick={this.handleDashboardClick}
           />
-          {!loading && station ? (
+          {!loading && site ? (
             <div className={classNames(classes.layout, classes.cardGrid)}>
-              <StationTable
-                stationId={station.id}
+              <SiteTable
+                siteId={site.id}
                 parameters={stationParameters}
                 mode={mode}
                 timeRangeParams={timeRangeParams}
                 groupingInterval={groupingInterval}
                 aggregationFunc={aggregationFunc}
-              ></StationTable>
+              ></SiteTable>
             </div>
           ) : (
             <LinearProgress />
@@ -506,13 +496,13 @@ class StationsData extends React.Component {
   }
 }
 
-StationsData.propTypes = {
+SitesData.propTypes = {
   classes: PropTypes.object.isRequired,
   enqueueSnackbar: PropTypes.func.isRequired,
 };
 
-StationsData = withRouter(StationsData);
-StationsData = withSnackbar(StationsData);
-StationsData = withStyles(styles)(StationsData);
+SitesData = withRouter(SitesData);
+SitesData = withSnackbar(SitesData);
+SitesData = withStyles(styles)(SitesData);
 
-export default StationsData;
+export default SitesData;
