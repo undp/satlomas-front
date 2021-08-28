@@ -41,6 +41,14 @@ export default {
       id: "tip_count",
       name: "Conteo de Tipping Bucket",
     },
+    {
+      id: "wind_speed",
+      name: "Velocidad del Viento (m/s)",
+    },
+    {
+      id: "wind_direction",
+      name: "Dirección del Viento (grados)",
+    },
   ],
   refreshIntervalMs: 1000 * 60,
   measurementContentTypes: [
