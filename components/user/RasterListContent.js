@@ -36,8 +36,15 @@ const styles = (theme) => ({
 });
 
 let RasterTable = (props) => {
-  const { t, classes, rows, downloadHandler } = props;
+  const { classes, rows, downloadHandler } = props;
   const locale = i18n.language;
+
+  const getFilename = (row) => {
+    const parts = row["file"].split("/");
+    const filename = parts[parts.length - 1];
+    const [name, ext] = filename.split(".").slice(0, 2);
+    return `${row["source"]}_${name}_${row["date"]}.${ext}`;
+  };
 
   return (
     <Paper className={classes.root}>
@@ -73,9 +80,7 @@ let RasterTable = (props) => {
                   </Tooltip>
                   <Tooltip title="Download">
                     <IconButton
-                      onClick={() =>
-                        downloadHandler(row.id, row.name, row.type)
-                      }
+                      onClick={() => downloadHandler(row.id, getFilename(row))}
                       aria-label="Editar regla"
                     >
                       <GetAppIcon />
@@ -126,14 +131,18 @@ class RasterListContent extends React.Component {
     this.setState({ rows });
   }
 
-  downloadRaster(id, name, type) {
+  downloadRaster(id, filename) {
+    this.props.enqueueSnackbar(
+      `Downloading will begin shortly. Please wait a few seconds.`
+    );
+
     axios
-      .get(buildApiUrl(`${typeBasePaths[type]}/download-raster/${id}`), {
+      .get(buildApiUrl(`/eo-sensors/download-raster/${id}`), {
         headers: { Authorization: this.props.token },
         responseType: "blob",
       })
       .then((response) => {
-        FileDownload(response.data, name);
+        FileDownload(response.data, filename);
       });
   }
 
