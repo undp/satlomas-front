@@ -42,15 +42,13 @@ let RasterTable = (props) => {
   return (
     <Paper className={classes.root}>
       <TableContainer>
-        <Table className={classes.table}>
+        <Table className={classes.table} size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Slug</TableCell>
-              <TableCell>Periodo</TableCell>
+              <TableCell>Tipo</TableCell>
+              <TableCell>Fecha</TableCell>
               <TableCell>Archivo</TableCell>
-              <TableCell>Fecha de creación</TableCell>
-              <TableCell>Fecha de modificación</TableCell>
-              <TableCell />
+              <TableCell>Creado</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -58,16 +56,11 @@ let RasterTable = (props) => {
             {rows.map((row) => (
               <TableRow key={row.id + row.type}>
                 <TableCell>{row.slug}</TableCell>
-                <TableCell>{row.periodReadeable}</TableCell>
+                <TableCell>{row.date}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>
                   <Moment locale={locale} fromNow>
                     {row.created_at}
-                  </Moment>
-                </TableCell>
-                <TableCell>
-                  <Moment locale={locale} fromNow>
-                    {row.updated_at}
                   </Moment>
                 </TableCell>
                 <TableCell align="right">
@@ -78,8 +71,6 @@ let RasterTable = (props) => {
                       </IconButton>
                     </CopyToClipboard>
                   </Tooltip>
-                </TableCell>
-                <TableCell align="right">
                   <Tooltip title="Download">
                     <IconButton
                       onClick={() =>
@@ -130,25 +121,9 @@ class RasterListContent extends React.Component {
     const response = await axios.get(buildApiUrl("/eo-sensors/rasters"), {
       headers: { "Accept-Language": i18n.language, Authorization: token },
     });
-    let result = response.data;
-    for (var i = 0; i < result.length; i++) {
-      result[i]["type"] = "eo-sensors";
-      result[i][
-        "periodReadeable"
-      ] = `${result[i]["period"]["date_from"]} - ${result[i]["period"]["date_to"]}`;
-    }
+    const rows = response.data;
 
-    result.sort(function (a, b) {
-      if (a["period"]["date_from"] > ["period"]["date_from"]) {
-        return -1;
-      }
-      if (b["period"]["date_from"] > a["period"]["date_from"]) {
-        return 1;
-      }
-      return 0;
-    });
-
-    this.setState({ rows: result });
+    this.setState({ rows });
   }
 
   downloadRaster(id, name, type) {
