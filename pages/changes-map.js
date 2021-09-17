@@ -35,7 +35,7 @@ const allTypes = ["lomas-changes", "vi-lomas-changes"];
 const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" };
 const maxNativeZoomByType = { "lomas-changes": 14, "vi-lomas-changes": 13 };
 const defaultActiveLayersByType = {
-  "lomas-changes": [],
+  "lomas-changes": ["tci"],
   "vi-lomas-changes": ["ndvi"],
 };
 
@@ -651,7 +651,7 @@ class ChangesMap extends Component {
       }));
 
     const layersWithLegend = layers.filter(
-      (layer) => activeLayers.includes(layer.id) && layer.name
+      (layer) => activeLayers.includes(layer.id) && layer.name && layer.legend
     );
 
     return (
