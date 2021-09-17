@@ -20,6 +20,8 @@ import { logout } from "../../utils/auth";
 import TableRowSkeleton from "../TableRowSkeleton";
 import moment from "moment";
 
+const RUNNING_STATES = ["PENDING", "STARTED"];
+
 const styles = (theme) => ({
   root: {
     width: "100%",
@@ -93,8 +95,12 @@ class JobsContent extends React.Component {
     const { t, classes } = this.props;
     const { loading, jobs } = this.state;
 
-    const runningJobs = jobs.filter((job) => !job.finished_at);
-    const stoppedJobs = jobs.filter((job) => job.finished_at);
+    const runningJobs = jobs.filter((job) =>
+      RUNNING_STATES.includes(job.state)
+    );
+    const stoppedJobs = jobs.filter(
+      (job) => !RUNNING_STATES.includes(job.state)
+    );
 
     const locale = i18n.language;
 
