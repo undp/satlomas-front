@@ -23,7 +23,6 @@ import LoadingProgress from "../components/LoadingProgress";
 import TimeSeriesControl from "../components/TimeSeriesControl";
 import ZoomControl from "../components/ZoomControl";
 import LayersControl from "../components/LayersControl";
-import PeriodSlider from "../components/PeriodSlider";
 import LomasPolygonsLayer from "../components/LomasPolygonsLayer";
 import LayersLegendExpansionPanel from "../components/LayersLegendExpansionPanel";
 import { KeyboardDatePicker } from "@material-ui/pickers";
@@ -35,6 +34,10 @@ const { appName } = config;
 const allTypes = ["lomas-changes", "vi-lomas-changes"];
 const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" };
 const maxNativeZoomByType = { "lomas-changes": 14, "vi-lomas-changes": 13 };
+const defaultActiveLayersByType = {
+  "lomas-changes": [],
+  "vi-lomas-changes": ["ndvi"],
+};
 
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -287,7 +290,7 @@ SearchControl = withStyles(styles)(SearchControl);
 
 let PlotsControl = ({ classes, type, dates, scope }) => (
   <div className={classes.plotsControl}>
-    <ExpansionPanel expanded={true}>
+    <ExpansionPanel>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <div className={classes.plotsControlSummary}>
           <Typography variant="h5" className={classes.plotsControlHeading}>
@@ -333,7 +336,7 @@ class ChangesMap extends Component {
     dateTo: null,
     selectedDateIdx: null,
     layers: [],
-    activeLayers: ["ndvi"],
+    activeLayers: [],
     layersOpacity: {},
     currentDate: null,
   };
@@ -351,6 +354,7 @@ class ChangesMap extends Component {
     // Set current section based on path
     if (type && allTypes.includes(type)) {
       this.state.type = type;
+      this.state.activeLayers = defaultActiveLayersByType[type];
     }
   }
 

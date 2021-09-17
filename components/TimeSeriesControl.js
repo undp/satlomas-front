@@ -23,21 +23,52 @@ const groupBy = (xs, key) =>
     return rv;
   }, {});
 
-const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" };
-const kindsByType = {
-  "lomas-changes": ["C", "D", "U", "V"],
-  "vi-lomas-changes": ["V", "C"],
+const sourcesByType = {
+  "lomas-changes": ["S2", "P1"],
+  "vi-lomas-changes": ["MV"],
 };
-const colorsByKind = {
+const kindsByTypeSource = {
+  "lomas-changes": { P1: ["C", "D", "U", "V"], S2: ["LS", "CL"] },
+  "vi-lomas-changes": { MV: ["V", "C"] },
+};
+const colorsByKindSource = {
   "vi-lomas-changes": {
-    V: "#59c798",
-    C: "#8faadc",
+    MV: {
+      V: "#59c798",
+      C: "#8faadc",
+    },
+  },
+  "lomas-changes": {
+    S2: {
+      LS: "#ff0000",
+      CL: "#00c8ff",
+    },
+    P1: {
+      C: "#c70039",
+      D: "#eddd53",
+      U: "#2a7b9b",
+      V: "#33a02c",
+    },
   },
 };
-const namesByKind = {
+const namesByKindSource = {
   "vi-lomas-changes": {
-    V: "Cobertura de vegetación (ha)",
-    C: "Nubosidad (ha)",
+    MV: {
+      V: "Cobertura de vegetación (ha)",
+      C: "Nubosidad (ha)",
+    },
+  },
+  "lomas-changes": {
+    S2: {
+      LS: "Cobertura perdida (ha)",
+      CL: "Nubosidad (ha)",
+    },
+    P1: {
+      C: "Caminos",
+      D: "Suelo disturbado",
+      U: "Construcciones",
+      V: "Vegetación",
+    },
   },
 };
 
@@ -78,7 +109,7 @@ class TimeSeriesControl extends React.Component {
 
     if (scope) {
       const params = {
-        source: sourcesByType[type],
+        source: sourcesByType[type].join(","),
         scope,
         date_from: moment(dateFrom).format("YYYY-MM-DD"),
         date_to: moment(dateTo).format("YYYY-MM-DD"),
@@ -133,6 +164,8 @@ class TimeSeriesControl extends React.Component {
     const { classes, type } = this.props;
     const { data, loading } = this.state;
 
+    const sources = sourcesByType[type];
+
     return (
       <div>
         <LinearProgress
@@ -141,29 +174,31 @@ class TimeSeriesControl extends React.Component {
             !loading && classes.invisible
           )}
         />
-        {data && (
-          <BarChart
-            width={500}
-            height={300}
-            data={data}
-            margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-          >
-            <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-            <XAxis dataKey="ym" style={axisStyle} />
-            <YAxis style={axisStyle} unit=" ha" />
-            <Tooltip />
-            <Legend />
-            {kindsByType[type].map((kind) => (
-              <Bar
-                key={kind}
-                stackId={type}
-                dataKey={`area_${kind}`}
-                fill={colorsByKind[type][kind]}
-                name={namesByKind[type][kind]}
-              />
-            ))}
-          </BarChart>
-        )}
+        {data &&
+          sources.map((source) => (
+            <BarChart
+              key={source}
+              width={500}
+              height={300}
+              data={data}
+              margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+            >
+              <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+              <XAxis dataKey="ym" style={axisStyle} />
+              <YAxis style={axisStyle} unit=" ha" />
+              <Tooltip />
+              <Legend />
+              {kindsByTypeSource[type][source].map((kind) => (
+                <Bar
+                  key={kind}
+                  stackId={type}
+                  dataKey={`area_${kind}`}
+                  fill={colorsByKindSource[type][source][kind]}
+                  name={namesByKindSource[type][source][kind]}
+                />
+              ))}
+            </BarChart>
+          ))}
       </div>
     );
   }
