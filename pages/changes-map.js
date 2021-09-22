@@ -38,6 +38,10 @@ const defaultActiveLayersByType = {
   "lomas-changes": ["tci"],
   "vi-lomas-changes": ["ndvi"],
 };
+const sortedLayersSlugByType = {
+  "lomas-changes": ["ps1-use", "s2-loss", "tci", "s2-tci"],
+  "vi-lomas-changes": ["vegetation-cloud", "cloud", "vegetation", "ndvi"],
+};
 
 const Map = dynamic(() => import("../components/Map"), {
   ssr: false,
@@ -654,6 +658,11 @@ class ChangesMap extends Component {
       (layer) => activeLayers.includes(layer.id) && layer.name && layer.legend
     );
 
+    const sortedLayersRef = sortedLayersSlugByType[type] || [];
+    const sortedLayers = layers.sort(
+      (a, b) => sortedLayersRef.indexOf(a.id) - sortedLayersRef.indexOf(b.id)
+    );
+
     return (
       <div className="index">
         <Head>
@@ -690,7 +699,7 @@ class ChangesMap extends Component {
             onZoomOutClick={this.handleZoomOutClick}
           />
           <LayersControl
-            layers={layers}
+            layers={sortedLayers}
             activeLayers={activeLayers}
             layersOpacity={layersOpacity}
             onToggle={this.handleToggleLayer}
