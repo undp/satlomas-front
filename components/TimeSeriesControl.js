@@ -64,10 +64,10 @@ const namesByKindSource = {
       CL: "Nubosidad (ha)",
     },
     P1: {
-      C: "Caminos",
-      D: "Suelo disturbado",
-      U: "Construcciones",
-      V: "Vegetación",
+      C: "Caminos (ha)",
+      D: "Suelo disturbado (ha)",
+      U: "Construcciones (ha)",
+      V: "Vegetación (ha)",
     },
   },
 };
@@ -123,27 +123,27 @@ class TimeSeriesControl extends React.Component {
         const valuesRaw = response.data.values;
         console.log("valuesRaw:", valuesRaw);
 
-        const valuesPerDate = groupBy(valuesRaw, "date");
-        console.log("valuesPerDate:", valuesPerDate);
-
-        const kinds = [...new Set(valuesRaw.map((v) => v["kind"]))];
-        console.log("kinds:", kinds);
-
-        const values = Object.values(valuesPerDate).map((dateValues) => {
-          let v = dateValues[0];
-          v["ym"] = moment(v["date"]).format("YYYY-MM");
-          dateValues.forEach((otherValue) => {
-            v[`area_${otherValue["kind"]}`] = Math.round(
-              otherValue["area"] / 10000
-            );
+        const data = {};
+        Object.entries(valuesRaw).forEach(([source, sourceValues]) => {
+          const valuesPerDate = groupBy(sourceValues, "date");
+          console.log("valuesPerDate:", valuesPerDate);
+          const values = Object.values(valuesPerDate).map((dateValues) => {
+            let v = dateValues[0];
+            v["ym"] = moment(v["date"]).format("YYYY-MM");
+            dateValues.forEach((otherValue) => {
+              v[`area_${otherValue["kind"]}`] = Math.round(
+                otherValue["area"] / 10000
+              );
+            });
+            return v;
           });
-          return v;
+
+          data[source] = values;
         });
 
-        this.setState({
-          kinds,
-          data: values,
-        });
+        console.log("Data:", data);
+
+        this.setState({ data });
       } catch (err) {
         console.error(err);
         this.props.enqueueSnackbar(`Failed to get time series data`, {
@@ -180,7 +180,7 @@ class TimeSeriesControl extends React.Component {
               key={source}
               width={500}
               height={300}
-              data={data}
+              data={data[source]}
               margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
             >
               <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
