@@ -35,7 +35,7 @@ const allTypes = ["lomas-changes", "vi-lomas-changes"];
 const sourcesByType = { "lomas-changes": "S2,P1", "vi-lomas-changes": "MV" };
 const maxNativeZoomByType = { "lomas-changes": 18, "vi-lomas-changes": 13 };
 const defaultActiveLayersByType = {
-  "lomas-changes": ["tci"],
+  "lomas-changes": ["tci", "s2-tci"],
   "vi-lomas-changes": ["ndvi"],
 };
 const sortedLayersSlugByType = {

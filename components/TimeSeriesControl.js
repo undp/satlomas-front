@@ -65,7 +65,7 @@ const namesByKindSource = {
     },
     P1: {
       C: "Caminos (ha)",
-      D: "Suelo disturbado (ha)",
+      D: "Posible suelo disturbado (ha)",
       U: "Construcciones (ha)",
       V: "Vegetación (ha)",
     },
