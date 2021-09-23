@@ -81,7 +81,7 @@ class UserProfileContent extends React.Component {
       });
       console.log("/auth/user/", response.data);
 
-      var profileResponse = await axios.get(buildApiUrl(`/alerts/user-profiles/${response.data.username}`), {
+      var profileResponse = await axios.get(buildApiUrl(`/alerts/user-profiles/${response.data.username}/`), {
         headers: {
           "Accept-Language": i18n.language,
           Authorization: token,
