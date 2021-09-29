@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { LinearProgress } from "@material-ui/core";
+import { LinearProgress, Typography } from "@material-ui/core";
 import moment from "moment";
 import classNames from "classnames";
 import { withSnackbar } from "notistack";
@@ -26,6 +26,13 @@ const groupBy = (xs, key) =>
 const sourcesByType = {
   "lomas-changes": ["S2", "P1"],
   "vi-lomas-changes": ["MV"],
+};
+const titlesByType = {
+  "lomas-changes": {
+    S2: "Análisis con imágenes Sentinel-2",
+    P1: "Análisis con imágenes PeruSat-1",
+  },
+  "vi-lomas-changes": {},
 };
 const kindsByTypeSource = {
   "lomas-changes": { P1: ["C", "D", "U", "V"], S2: ["LS", "CL"] },
@@ -78,6 +85,10 @@ const styles = (theme) => ({
   },
   invisible: {
     visibility: "hidden",
+  },
+  chartTitle: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2),
   },
 });
 
@@ -165,39 +176,49 @@ class TimeSeriesControl extends React.Component {
     const { data, loading } = this.state;
 
     const sources = sourcesByType[type];
+    const titles = titlesByType[type];
 
     return (
       <div>
-        <LinearProgress
-          className={classNames(
-            classes.progress,
-            !loading && classes.invisible
-          )}
-        />
+        {loading && (
+          <LinearProgress
+            className={classNames(
+              classes.progress,
+              !loading && classes.invisible
+            )}
+          />
+        )}
         {data &&
           sources.map((source) => (
-            <BarChart
-              key={source}
-              width={500}
-              height={300}
-              data={data[source]}
-              margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-            >
-              <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-              <XAxis dataKey="ym" style={axisStyle} />
-              <YAxis style={axisStyle} unit=" ha" />
-              <Tooltip />
-              <Legend />
-              {kindsByTypeSource[type][source].map((kind) => (
-                <Bar
-                  key={kind}
-                  stackId={type}
-                  dataKey={`area_${kind}`}
-                  fill={colorsByKindSource[type][source][kind]}
-                  name={namesByKindSource[type][source][kind]}
-                />
-              ))}
-            </BarChart>
+            <>
+              {titles[source] && (
+                <Typography class={classes.chartTitle}>
+                  {titles[source]}
+                </Typography>
+              )}
+              <BarChart
+                key={source}
+                width={500}
+                height={300}
+                data={data[source]}
+                margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+              >
+                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                <XAxis dataKey="ym" style={axisStyle} />
+                <YAxis style={axisStyle} unit=" ha" />
+                <Tooltip />
+                <Legend />
+                {kindsByTypeSource[type][source].map((kind) => (
+                  <Bar
+                    key={kind}
+                    stackId={type}
+                    dataKey={`area_${kind}`}
+                    fill={colorsByKindSource[type][source][kind]}
+                    name={namesByKindSource[type][source][kind]}
+                  />
+                ))}
+              </BarChart>
+            </>
           ))}
       </div>
     );
