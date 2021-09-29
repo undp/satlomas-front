@@ -90,6 +90,11 @@ const styles = (theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2),
   },
+  note: {
+    fontSize: "0.75rem",
+    marginTop: theme.spacing(2),
+    width: "80%",
+  },
 });
 
 const axisStyle = {
@@ -199,7 +204,7 @@ class TimeSeriesControl extends React.Component {
               <BarChart
                 key={source}
                 width={500}
-                height={300}
+                height={260}
                 data={data[source]}
                 margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
               >
@@ -220,6 +225,12 @@ class TimeSeriesControl extends React.Component {
               </BarChart>
             </>
           ))}
+        {type == "lomas-changes" && (
+          <Typography className={classes.note}>
+            *Resultados en base a un modelo experimental con imágenes
+            satelitales PeruSat-1 y Sentinel-2.
+          </Typography>
+        )}
       </div>
     );
   }
