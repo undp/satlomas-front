@@ -93,7 +93,6 @@ const styles = (theme) => ({
   note: {
     fontSize: "0.75rem",
     marginTop: theme.spacing(2),
-    width: "80%",
   },
 });
 
@@ -228,7 +227,10 @@ class TimeSeriesControl extends React.Component {
         {type == "lomas-changes" && (
           <Typography className={classes.note}>
             *Resultados en base a un modelo experimental con imágenes
-            satelitales PeruSat-1 y Sentinel-2.
+            satelitales PeruSat-1 y Sentinel-2. Los resultados de los gráficos
+            de barras dependen de la cobertura de la escena satelital que no
+            necesariamente cubren el ámbito de análisis seleccionado por el
+            usuario.
           </Typography>
         )}
       </div>
